@@ -9,6 +9,13 @@ namespace Gameplay
         public float speed;
         public float damage;
 
+        public GameObject impact;
+
+        private void OnEnable()
+        {
+            impact.SetActive(false);
+        }
+
         private void Update()
         {
             transform.position += transform.forward * (speed * Time.deltaTime);
@@ -21,8 +28,10 @@ namespace Gameplay
                 Debug.Log("Hit enemy!");
                 
                 // collision.gameObject.GetComponent<Enemy>().TakeDamage(damage);
-                collision.gameObject.SetActive(false);
+                impact.transform.parent = null;
+                impact.SetActive(true);
                 gameObject.SetActive(false);
+                collision.gameObject.SetActive(false);
             }
             
         }
