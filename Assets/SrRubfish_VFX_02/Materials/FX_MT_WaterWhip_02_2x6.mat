@@ -100,6 +100,8 @@ Material:
     - _EmissionSaturation: 5
     - _FlipbookBlending: 0
     - _FlipbookMode: 0
+    - _MainTexture_FlipUV_U: 0
+    - _MainTexture_FlipUV_V: 0
     - _Mode: 0
     - _OpacitySaturation: 1
     - _PreLerp: 2
