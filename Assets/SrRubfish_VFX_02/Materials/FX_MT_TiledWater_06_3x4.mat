@@ -90,7 +90,7 @@ Material:
     - _CameraNearFadeDistance: 1
     - _CastShadows: 0
     - _ColorMode: 0
-    - _Cull: 2
+    - _Cull: 0
     - _Cutoff: 0.5
     - _DistortionBlend: 0.5
     - _DistortionEnabled: 0
@@ -100,7 +100,9 @@ Material:
     - _EmissionSaturation: 3
     - _FlipbookBlending: 0
     - _FlipbookMode: 0
+    - _FresnelAlpha_Intensity: 1
     - _FresnelIntensity: 1
+    - _InvertFresnelAlpha: 0
     - _Mode: 0
     - _OpacitySaturation: 1
     - _PreLerp: 2
@@ -112,6 +114,7 @@ Material:
     - _SoftParticlesNearFadeDistance: 0
     - _SrcBlend: 5
     - _Surface: 1
+    - _UseFresnelAlpha: 0
     - _UseSoftParticles: 1
     - _UserLerp: 1
     - _ZTest: 4
@@ -127,6 +130,7 @@ Material:
     - _FresnelLow: {r: 0.7735849, g: 0.7735849, b: 0.7735849, a: 0}
     - _HighColor: {r: 0.49644172, g: 1, b: 0.4198113, a: 1}
     - _MainColor: {r: 1, g: 1, b: 1, a: 0}
+    - _PanningSpeed: {r: 0, g: 0, b: 0, a: 0}
     - _SoftParticleFadeParams: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &222629045627859358
