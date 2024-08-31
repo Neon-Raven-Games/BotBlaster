@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -17,6 +18,11 @@ public class VRHand : MonoBehaviour
     {
         Application.focusChanged += OnApplicationFocusChanged;
         _impulsePlayer = GetComponent<HapticImpulsePlayer>();
+    }
+
+    public void OnDestroy()
+    {
+        Application.focusChanged -= OnApplicationFocusChanged;
     }
 
     private void OnApplicationFocusChanged(bool hasFocus)

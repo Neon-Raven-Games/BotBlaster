@@ -6,8 +6,8 @@ public class VignetteController : MonoBehaviour
     [SerializeField] private float entranceTime = 0.4f;
     [SerializeField] private float exitTime = 0.4f;
     [SerializeField] private float targetApertureSize = 0.7f;
-    [SerializeField] private  bool rotationVignette;
-    [SerializeField] private bool locomotionVignette;
+    public bool rotationVignette;
+    public bool locomotionVignette;
     private bool _lerping;
     private MaterialPropertyBlock _propertyBlock;
     private MeshRenderer _meshRenderer;

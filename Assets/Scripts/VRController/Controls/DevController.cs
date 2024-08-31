@@ -48,6 +48,22 @@ public class DevController : MonoBehaviour
     private LocomotionMode locomotionMode;
 
     [SerializeField] private float speed = 5.0f;
+    
+    [Header("Comfort Settings")]
+    [SerializeField] private bool initialRotationVignette;
+    [SerializeField] private bool initialLocomotionVignette;
+
+    public bool RotationVignette
+    {
+        get => _vignetteController.rotationVignette;
+        set => _vignetteController.rotationVignette = value;
+    }
+    
+    public bool LocomotionVignette
+    {
+        get => _vignetteController.locomotionVignette;
+        set => _vignetteController.locomotionVignette = value;
+    }
     // todo, teleporter
 
     // character populated components
