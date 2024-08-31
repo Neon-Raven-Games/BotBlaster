@@ -1,10 +1,15 @@
 using System;
+using System.Collections;
+using Gameplay.Enemies;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public float knockBackForce;
-    
+    public EnemyType enemyType;
+    public Vector2 knockBackForce;
+    [SerializeField] private float knockBackTime = 0.5f;
+    private bool _knockingBack;
+
     [Header("Dynamic Populated Fields from EnemyData, Debug Purposes")]
     public ElementFlag element;
     public int baseHealth;
@@ -21,10 +26,11 @@ public class Enemy : MonoBehaviour
     private float _currentAttackCoolDown;
     
     private Rigidbody _rigidbody;
-    
+    private Transform _player;
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
+        _player = Camera.main.transform;
     }
     public void Initialize(EnemyData enemyData)
     {
@@ -41,30 +47,80 @@ public class Enemy : MonoBehaviour
         _currentSpeed = baseSpeed;
         _currentAttackRange = baseAttackRange;
         _currentAttackCoolDown = baseAttackCoolDown;
+        enemyType = enemyData.enemyType;
+    }
+
+    private void FixedUpdate()
+    {
+        var playerDistance = Vector3.Distance(transform.position, _player.position);
+        if (playerDistance <= _currentAttackRange)
+        {
+            Attack();
+        }
+        else
+        {
+            Move();
+        }
+    }
+
+    private void Attack()
+    {
+        Debug.Log("Attacking player boi!");
+    }
+
+    private void Move()
+    {
+        if (_knockingBack) return;
+        var directionToPlayer = _player.position - transform.position;
+        
+        if (enemyType == EnemyType.Grunt) directionToPlayer.y = 0; 
+        
+        if (directionToPlayer != Vector3.zero) transform.rotation = Quaternion.LookRotation(directionToPlayer);
+        _rigidbody.velocity = directionToPlayer.normalized * (_currentSpeed * Time.deltaTime);
     }
 
     public void TakeDamage(int damage, Vector3 hitDirection)
     {
         if (_currentHealth - damage <= 0)
         {
+            _knockingBack = true;
             Die();
         }
         else
         {
-            KnockBack(hitDirection);
+            if (!_knockingBack)
+            {
+                _knockingBack = true;
+                KnockBack(hitDirection);
+            }
             _currentHealth -= damage;
         }
     }
-    
-    private void Die()
+ 
+    private IEnumerator KnockBackTimer()
     {
-        // play death animation
-        gameObject.SetActive(false);
+        knockBackTime = 0.5f;
+        while (knockBackTime > 0)
+        {
+            knockBackTime -= Time.deltaTime;
+            yield return null;
+        }
+        _knockingBack = false;
     }
     
     private void KnockBack(Vector3 hitDirection)
     {
-        // color red
-        _rigidbody.AddForce(hitDirection * knockBackForce, ForceMode.Impulse);
+        hitDirection.y = 1;
+        _rigidbody.velocity = Vector3.zero;
+        _rigidbody.angularVelocity = Vector3.zero;
+        _rigidbody.AddForce(hitDirection.normalized * knockBackForce, ForceMode.Impulse);
+        StartCoroutine(KnockBackTimer());
     }
+    
+    private void Die()
+    {
+        gameObject.SetActive(false);
+        GameBalancer.KillEnemy();
+    }
+   
 }

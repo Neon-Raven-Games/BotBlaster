@@ -1,11 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Gameplay.Enemies;
 using UnityEngine;
-public enum EnemyType
-{
-    Grunt,
-    Swarm,
-}
+
 
 [System.Serializable]
 public class Wave
