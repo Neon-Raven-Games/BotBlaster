@@ -82,6 +82,8 @@ public class DevController : MonoBehaviour
         _controller = GetComponent<CharacterController>();
         ConfigurationManager.throwConfigIndex =
             SceneManager.GetActiveScene().buildIndex != 0 ? 1 : 0;
+        LocomotionVignette = initialLocomotionVignette;
+        RotationVignette = initialRotationVignette;
     }
 
     private void OnApplicationFocusChanged(bool hasFocus)
@@ -98,17 +100,22 @@ public class DevController : MonoBehaviour
         }
     }
 
+
+    
     private void Awake()
     {
         _moveForwardAction = actionAsset.FindAction("XRI Left Locomotion/Move", true);
-        _lookAction = actionAsset.FindAction("XRI Right Locomotion/Turn", true);
         _moveForwardAction.Enable();
+        
+        _lookAction = actionAsset.FindAction("XRI Right Locomotion/Turn", true);
         _lookAction.Enable();
+        
         _moveForwardAction.performed += ctx => _moveInput = ctx.ReadValue<Vector2>();
         _lookAction.performed += ctx => _lookInput = ctx.ReadValue<Vector2>();
-
+        
         _moveForwardAction.canceled += _ => _moveInput = Vector2.zero;
         _lookAction.canceled += _ => _lookInput = Vector2.zero;
+        
         Application.focusChanged += OnApplicationFocusChanged;
     }
 

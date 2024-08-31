@@ -36,7 +36,6 @@ public class HandCannon : MonoBehaviour
     private BaseHandCanonState _currentState;
     private InputAction _gripAction;
     private InputAction _triggerAction;
-    public float liveBallRange;
     public DevController actor;
 
     private void Start()
@@ -52,16 +51,12 @@ public class HandCannon : MonoBehaviour
     }
     private void PopulateInput()
     {
-        var handSideString = "RightHand";
-
+        var hand = GetComponentInParent<VRHand>().handSide;
+        var handSideString = "Right";
+        if (hand == HandSide.LEFT) handSideString = "Left";
         _triggerAction = actionAsset.FindAction($"XRI {handSideString} Interaction/UI Press");
-        _gripAction = actionAsset.FindAction($"XRI {handSideString} Interaction/Select", true);
-
         _triggerAction.performed += TriggerPerformedAction;
         _triggerAction.canceled += TriggerReleasedAction;
-        
-        _gripAction.performed += GripPerformedAction;
-        _gripAction.canceled += GripReleasedAction;
     }
     public void AddDodgeBall(Projectile ball)
     {
@@ -105,7 +100,6 @@ public class HandCannon : MonoBehaviour
 
     private void Update()
     {
-        // if (cooldownIndicator && cooldownTimer) normalizedCooldownTime = cooldownTimer.NormalizedProgress();
         _currentState?.Update();
     }
 
