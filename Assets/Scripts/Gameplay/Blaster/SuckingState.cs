@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Gameplay;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class SuckingState : BaseHandCanonState

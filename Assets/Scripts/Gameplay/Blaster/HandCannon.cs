@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Gameplay;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 
 public enum CannonState
 {
@@ -12,29 +10,40 @@ public enum CannonState
     Sucking,
     Shooting,
 }
+
+[Flags]
+public enum ElementFlag
+{
+    None = 0,
+    Fire = 1 << 1,
+    Water = 1 << 2,
+    Rock = 1 << 3,
+    Wind = 1 << 4,
+    Electricity = 1 << 5,
+}
+
 public class HandCannon : MonoBehaviour
 {
+    public ElementFlag blasterElement;
+    private ElementFlag _previousElement;
     public AudioSource audioSource;
-    internal List<Projectile> dodgeBallAmmo = new();
+    internal readonly List<Projectile> dodgeBallAmmo = new();
     [SerializeField] private InputActionAsset actionAsset;
     public Transform barrelTransform;
     public Animator animator;
     public bool trajectoryAssist;
 
-    [Header("Shooting Settings")] 
-    public GameObject muzzleFlash;
+    [Header("Shooting Settings")] public GameObject muzzleFlash;
     public float launchForce = 20f;
     public int trajectoryPoints = 8;
-    
-    [Header("Sucking Settings")]
-    public float suctionForce = 10f;
+
+    [Header("Sucking Settings")] public float suctionForce = 10f;
     public float swirlRadius = 1f;
     public float swirlSpeed = 2f;
     public float ballEndScale = 0.4f;
 
     private Dictionary<CannonState, BaseHandCanonState> _states;
     private BaseHandCanonState _currentState;
-    private InputAction _gripAction;
     private InputAction _triggerAction;
     public DevController actor;
 
@@ -42,13 +51,13 @@ public class HandCannon : MonoBehaviour
     {
         _states = new Dictionary<CannonState, BaseHandCanonState>
         {
-            {CannonState.Sucking, new SuckingState(this)},
             {CannonState.Shooting, new ShootingState(this)},
             {CannonState.Idle, new IdleState(this)}
         };
         _currentState = _states[CannonState.Idle];
         _currentState.EnterState();
     }
+
     private void PopulateInput()
     {
         var hand = GetComponentInParent<VRHand>().handSide;
@@ -58,11 +67,12 @@ public class HandCannon : MonoBehaviour
         _triggerAction.performed += TriggerPerformedAction;
         _triggerAction.canceled += TriggerReleasedAction;
     }
+
     public void AddDodgeBall(Projectile ball)
     {
         dodgeBallAmmo.Add(ball);
     }
-    
+
     public void ChangeState(CannonState state)
     {
         _currentState?.ExitState();
@@ -70,30 +80,14 @@ public class HandCannon : MonoBehaviour
         _currentState.EnterState();
     }
 
-    public void GripPerformedAction(InputAction.CallbackContext obj)
-    {
-        Debug.Log("Grip performed");
-        _currentState?.GripAction();
-    }
-
-    public void GripReleasedAction(InputAction.CallbackContext obj)
-    {
-        Debug.Log("Grip Released");
-        _currentState?.GripReleaseAction();
-    }
-
     public void TriggerPerformedAction(InputAction.CallbackContext obj)
     {
-        Debug.Log("Trigger performed");
-        
-        // blocks trigger actions if not in idle state
-        if (_currentState == _states[CannonState.Idle]) 
+        if (_currentState == _states[CannonState.Idle])
             _currentState?.FireAction();
     }
-    
+
     private void TriggerReleasedAction(InputAction.CallbackContext obj)
     {
-        Debug.Log("Trigger Released");
         _currentState?.FireReleaseAction();
     }
 
@@ -112,9 +106,7 @@ public class HandCannon : MonoBehaviour
     {
         PopulateInput();
         _triggerAction.Enable();
-        _gripAction.Enable();
     }
-
 
     public void Shoot()
     {
@@ -126,10 +118,6 @@ public class HandCannon : MonoBehaviour
         _triggerAction.performed -= TriggerPerformedAction;
         _triggerAction.canceled -= TriggerReleasedAction;
         _triggerAction.Disable();
-        
-        _gripAction.performed -= GripPerformedAction;
-        _gripAction.canceled -= GripReleasedAction;
-        _gripAction.Disable();
     }
 
 
@@ -137,7 +125,7 @@ public class HandCannon : MonoBehaviour
     {
         _currentState?.OnTriggerEnter(other);
     }
-    
+
     private void OnTriggerExit(Collider other)
     {
         _currentState?.OnTriggerExit(other);
@@ -149,11 +137,24 @@ public class HandCannon : MonoBehaviour
     }
 
 #if UNITY_EDITOR
-    
     private void OnDrawGizmos()
     {
         _currentState?.OnDrawGizmos();
     }
-    
-    #endif
+
+#endif
+    public void FinalizeElementChange()
+    {
+        if ((_previousElement & blasterElement) == 0)
+        {
+            // this is where we update visuals and pool flags
+            Debug.Log("Changed Element from " + _previousElement + " to " + blasterElement);
+        }
+    }
+
+    public void InitializeElementChange()
+    {
+        _previousElement = blasterElement;
+
+    }
 }

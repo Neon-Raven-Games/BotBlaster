@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit.Inputs.Haptics;
@@ -7,17 +8,20 @@ public class VRHand : MonoBehaviour
     public HandSide handSide;
     [SerializeField] private InputActionAsset actionAsset;
     [SerializeField] private VRUILaserSetup uiLaserSetup;
-    [SerializeField] private GameObject selectUI;
+    [SerializeField] private BlasterSelectUI selectUI;
     [SerializeField] private float uiSpawnDistance = 1f;   
     private HapticImpulsePlayer _impulsePlayer;
     private InputAction _blasterSelect;
+    private HandCannon _handCannon;
 
     public void PlayHapticImpulse(float amplitude, float duration) =>
         _impulsePlayer.SendHapticImpulse(amplitude, duration);
 
     public void Awake()
     {
+        #if !UNITY_EDITOR
         if (Application.isPlaying) Application.focusChanged += OnApplicationFocusChanged;
+        #endif
         _impulsePlayer = GetComponent<HapticImpulsePlayer>();
         
         var handString = handSide == HandSide.LEFT ? "Left" : "Right";
@@ -27,11 +31,15 @@ public class VRHand : MonoBehaviour
         
         _blasterSelect.performed += _ => InitializeChangeBlaster();
         _blasterSelect.canceled += _ => FinalizeChangeBlaster();
+        
+        _handCannon = GetComponentInChildren<HandCannon>();
     }
 
     public void OnDestroy()
     {
+        #if !UNITY_EDITOR
         if (Application.isPlaying) Application.focusChanged -= OnApplicationFocusChanged;
+        #endif
     }
 
     private void OnApplicationFocusChanged(bool hasFocus)
@@ -41,13 +49,17 @@ public class VRHand : MonoBehaviour
 
     private void FinalizeChangeBlaster()
     {
+        _handCannon.FinalizeElementChange();
+        selectUI.gameObject.SetActive(false);
         // change the handside blaster if valid 
     }
 
     private void InitializeChangeBlaster()
     {
+        _handCannon.InitializeElementChange();
         uiLaserSetup.gameObject.SetActive(true);
+        selectUI.SetElements(_handCannon.blasterElement | ElementFlag.None);
         selectUI.transform.position = transform.position + transform.forward * uiSpawnDistance;
-        selectUI.SetActive(true);
+        selectUI.gameObject.SetActive(true);
     }
 }

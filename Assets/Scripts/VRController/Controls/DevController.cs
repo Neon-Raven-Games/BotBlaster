@@ -1,14 +1,6 @@
-using System;
-using System.Collections;
-using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
-using UnityEngine.XR;
-using UnityEngine.XR.Interaction.Toolkit.Locomotion.Comfort;
 
 public enum RotationMode
 {
@@ -36,7 +28,7 @@ public class DevController : MonoBehaviour
 
     [SerializeField] private float analogThreshold = 0.2f;
     [SerializeField] private Transform hmd;
-
+    [SerializeField] private Transform handsAnchor;
     [Header("Rotation Settings")] [SerializeField]
     private RotationMode rotationMode;
 
@@ -146,6 +138,7 @@ public class DevController : MonoBehaviour
         var targetPosition = new Vector3(hmdPos.x, transform.position.y, hmdPos.z);
         var movementOffset = targetPosition - transform.position;
         _controller.Move(movementOffset);
+        handsAnchor.position -= movementOffset;
         hmd.position = hmdPos;
         ResizeControllerHeightToHmd();
     }
