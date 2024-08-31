@@ -55,8 +55,6 @@ public class ConfigurationManager : MonoBehaviour
         skipIntro = PlayerPrefs.GetInt("SkipIntro", 0) == 1;
         GC.Collect(0);
     }
-    
-    
 
     public static AudioClip GetBlasterSound() =>
         _instance.blasterSound;
