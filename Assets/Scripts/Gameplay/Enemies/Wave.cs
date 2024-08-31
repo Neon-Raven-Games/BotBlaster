@@ -8,9 +8,9 @@ using UnityEngine;
 public class Wave
 {
     public int numberOfEnemies;
-    public EnemyType[] enemyTypes; // Array holding the types of enemies in this wave
-    public float spawnInterval; // Time between spawns within the wave
-    public Vector3[] spawnPositions; // Positions where enemies will spawn
+    public EnemyType[] enemyTypes;
+    public float spawnInterval;
+    public Vector3[] spawnPositions;
 
     public Wave(int numberOfEnemies, EnemyType[] enemyTypes, float spawnInterval, Vector3[] spawnPositions)
     {

@@ -5,7 +5,7 @@ using UnityEngine;
 public class WaveController : MonoBehaviour
 {
     public EnemySpawner enemySpawner;
-    public float timeBetweenWaves = 10f;
+    public float timeBetweenWaves = 6f;
     private bool _waveSpawning;
 
     public void StartWaves()

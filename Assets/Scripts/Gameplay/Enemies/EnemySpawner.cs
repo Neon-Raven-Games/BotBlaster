@@ -34,10 +34,11 @@ public class EnemySpawner : MonoBehaviour
         for (var i = 0; i < wave.numberOfEnemies; i++)
         {
             var i1 = i;
+            var enemyType = wave.enemyTypes[i1 % wave.enemyTypes.Length];
+            var spawnPosition = wave.spawnPositions[i1 % wave.spawnPositions.Length];
             TimerManager.AddTimer(wave.spawnInterval * i, () =>
             {
-                SpawnEnemy(wave.enemyTypes[i1 % wave.enemyTypes.Length],
-                        wave.spawnPositions[i1 % wave.spawnPositions.Length]);
+                SpawnEnemy(enemyType, spawnPosition);
             });
         }
     }

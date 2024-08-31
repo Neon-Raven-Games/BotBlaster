@@ -32,6 +32,17 @@ public class Enemy : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
         _player = Camera.main.transform;
     }
+
+    private void OnEnable()
+    {
+        _knockingBack = false;
+        _currentHealth = baseHealth;
+        _currentDamage = baseDamage;
+        _currentSpeed = baseSpeed;
+        _currentAttackRange = baseAttackRange;
+        _currentAttackCoolDown = baseAttackCoolDown;
+    }
+
     public void Initialize(EnemyData enemyData)
     {
         element = enemyData.elementFlag;

@@ -162,8 +162,6 @@ public class HandCannon : MonoBehaviour
     {
         if ((_previousElement & blasterElement) == 0)
         {
-            // this is where we update visuals and pool flags
-            Debug.Log("Changed Element from " + _previousElement + " to " + blasterElement);
             SetBlasterMaterial();
         }
     }

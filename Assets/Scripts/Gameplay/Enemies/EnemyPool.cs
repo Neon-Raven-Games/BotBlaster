@@ -83,7 +83,7 @@ public class EnemyPool : MonoBehaviour
             : null;
         if (enemyCollection != null) return enemyCollection.GetEnemy();
         
-        Debug.LogError("Enemy not found in pool.");
+        Debug.LogError($"Enemy not found in pool. {enemyType.ToString()}");
         return null;
     }
     

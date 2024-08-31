@@ -15,6 +15,7 @@ namespace Gameplay
         {
             impact.transform.parent = null;
         }
+
         private void OnEnable()
         {
             impact.SetActive(false);
@@ -24,15 +25,17 @@ namespace Gameplay
         {
             transform.position += transform.forward * (speed * Time.deltaTime);
         }
-        
+
         private void OnCollisionEnter(Collision collision)
         {
             if (collision.gameObject.CompareTag("Enemy"))
             {
                 collision.gameObject.GetComponent<Enemy>().TakeDamage(damage, transform.forward);
-                impact.SetActive(true);
-                gameObject.SetActive(false);
             }
+
+            impact.transform.position = collision.GetContact(0).point;
+            impact.SetActive(true);
+            gameObject.SetActive(false);
         }
     }
 }

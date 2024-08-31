@@ -6,6 +6,6 @@
         Swarm,
         GlassCannon,
         Tank,
-        Boss
+        // Boss
     }
 }
