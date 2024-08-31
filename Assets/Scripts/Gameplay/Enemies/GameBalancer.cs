@@ -1,18 +1,17 @@
+using Gameplay.Enemies;
 using UnityEngine;
 
 public static class GameBalancer
 {
 
-    public static int KillEnemy(Wave wave)
+    public static void KillEnemy()
     {
-        wave.numberOfEnemies--;
-        return wave.numberOfEnemies;
+        spawner.currentWaveData.numberOfEnemies--;
     }
     // we can use RNG needs to create more fun probability based waves when introducing elements
-    public static Wave GenerateWave(int waveNumber, EnemyType[] availableEnemyTypes, Transform centralPoint)
+    public static Wave GenerateWave(int waveNumber, float spawnRadius, EnemyType[] availableEnemyTypes, Transform centralPoint)
     {
         var numberOfEnemies = Mathf.CeilToInt(waveNumber * 1.5f);
-        var spawnRadius = Mathf.Min(10f + waveNumber, 50f);
         var selectedEnemyTypes = new EnemyType[numberOfEnemies];
         
         for (int i = 0; i < numberOfEnemies; i++)
@@ -24,4 +23,6 @@ public static class GameBalancer
         var spawnInterval = Mathf.Max(1.5f - waveNumber * 0.01f, 0.3f);
         return new Wave(numberOfEnemies, selectedEnemyTypes, spawnInterval, spawnPoints);
     }
+
+    public static EnemySpawner spawner { get; set; }
 }

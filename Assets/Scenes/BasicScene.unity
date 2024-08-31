@@ -979,7 +979,7 @@ MonoBehaviour:
     index: 0
     projectiles: []
   - elementFlag: 4
-    projectile: {fileID: 1597112295188672555, guid: d0730f2f50511e541a5692f6bc7fdec9, type: 3}
+    projectile: {fileID: 1591572969603116560, guid: 7aea3730afb11ba4793afc1179183511, type: 3}
     index: 0
     projectiles: []
   - elementFlag: 8
@@ -1003,7 +1003,7 @@ Transform:
   m_GameObject: {fileID: 520163529}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.3925185, y: -0.041244745, z: -30.215258}
+  m_LocalPosition: {x: 2.3925185, y: -2.63, z: -30.215258}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1468,6 +1468,7 @@ MonoBehaviour:
   - {fileID: 6414696547239353875, guid: 543d783bdefc9f9408b9c21b3679f751, type: 3}
   - {fileID: 1803895991445990651, guid: e93167c262b204c428599806820a1c75, type: 3}
   centralPoint: {fileID: 755571180}
+  spawnRadius: 15
 --- !u!4 &755571180
 Transform:
   m_ObjectHideFlags: 0
@@ -3412,23 +3413,43 @@ MonoBehaviour:
   - enemyType: 0
     elementFlag: 0
     enemyPrefab: {fileID: 6414696547239353875, guid: 543d783bdefc9f9408b9c21b3679f751, type: 3}
-    poolSize: 15
+    poolSize: 10
     minWaveSpawn: 0
     baseHealth: 2
     baseDamage: 2
-    baseSpeed: 2
-    baseAttackRange: 5
+    baseSpeed: 75
+    baseAttackRange: 2.5
     baseAttackCooldown: 1.5
   - enemyType: 1
     elementFlag: 0
     enemyPrefab: {fileID: 1803895991445990651, guid: e93167c262b204c428599806820a1c75, type: 3}
-    poolSize: 15
-    minWaveSpawn: 2
+    poolSize: 10
+    minWaveSpawn: 6
     baseHealth: 1
     baseDamage: 1
-    baseSpeed: 4
-    baseAttackRange: 1
+    baseSpeed: 75
+    baseAttackRange: 2
     baseAttackCooldown: 6
+  - enemyType: 2
+    elementFlag: 0
+    enemyPrefab: {fileID: 6130725222516041695, guid: 78a4be4b10136944ea25028a2339ef66, type: 3}
+    poolSize: 10
+    minWaveSpawn: 4
+    baseHealth: 1
+    baseDamage: 1
+    baseSpeed: 75
+    baseAttackRange: 2
+    baseAttackCooldown: 6
+  - enemyType: 3
+    elementFlag: 0
+    enemyPrefab: {fileID: 5801088316695447527, guid: 2abb17332f1cc1c4db91a83816f1fd8c, type: 3}
+    poolSize: 10
+    minWaveSpawn: 4
+    baseHealth: 6
+    baseDamage: 1
+    baseSpeed: 75
+    baseAttackRange: 2
+    baseAttackCooldown: 2
   waveController: {fileID: 755571178}
 --- !u!1 &2092139007
 GameObject:

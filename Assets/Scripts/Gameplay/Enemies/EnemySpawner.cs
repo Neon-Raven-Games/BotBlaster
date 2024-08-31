@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Gameplay.Enemies;
 using Gameplay.Util;
 using UnityEngine;
 
@@ -8,25 +9,23 @@ public class EnemySpawner : MonoBehaviour
     public GameObject[] enemyPrefabs; // Array of enemy prefabs matching the EnemyType enum
     public Transform centralPoint; // Center point for 360 spawning
 
+    [SerializeField] private float spawnRadius = 15f;
     private int currentWave = 0;
-    private Wave currentWaveData;
+    internal Wave currentWaveData;
+
+    public void Awake()
+    {
+        GameBalancer.spawner = this;
+    }
     public void StartNextWave()
     {
-        currentWaveData = GameBalancer.GenerateWave(currentWave + 1, Enum.GetValues(typeof(EnemyType)).Cast<EnemyType>().ToArray(), centralPoint);
+        currentWaveData = GameBalancer.GenerateWave(currentWave + 1, spawnRadius, Enum.GetValues(typeof(EnemyType)).Cast<EnemyType>().ToArray(), centralPoint);
         SpawnWave(currentWaveData);
         currentWave++;
     }
     
-    public void WaveCompleted()
-    {
-        if (currentWaveData.numberOfEnemies > 0)
-        {
-            Debug.Log("All waves completed!");
-            return;
-        }
-        
-        StartNextWave();
-    }
+    public bool WaveCompleted() =>
+        currentWaveData.numberOfEnemies <= 0;
 
     // todo, create a way to cache this and prevent closure/allocation
     // this needs to be managed much better!

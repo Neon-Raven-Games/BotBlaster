@@ -6,20 +6,33 @@ public class WaveController : MonoBehaviour
 {
     public EnemySpawner enemySpawner;
     public float timeBetweenWaves = 10f;
+    private bool _waveSpawning;
 
     public void StartWaves()
     {
+        _waveSpawning = true;
         WaveRoutine().Forget();
+    }
+    
+    public void StopWaves()
+    {
+        _waveSpawning = false;
+        // cleanup here
     }
 
     // async wave routine for background task processing
     // offload the wave generation async to avoid blocking the main thread
     private async UniTaskVoid WaveRoutine()
     {
-        while (true)
+        enemySpawner.StartNextWave();
+        while (_waveSpawning)
         {
-            enemySpawner.StartNextWave();
-            await UniTask.WaitForSeconds(timeBetweenWaves);
+            if (enemySpawner.WaveCompleted())
+            {
+                enemySpawner.StartNextWave();
+                await UniTask.WaitForSeconds(timeBetweenWaves);
+            }
+            await UniTask.Yield();
         }
     }
 }

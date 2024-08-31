@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Gameplay.Enemies;
 using UnityEngine;
 
 public static class SpawnPointGenerator
@@ -18,7 +19,7 @@ public static class SpawnPointGenerator
             var z = Mathf.Cos(angle * Mathf.Deg2Rad) * spawnRadius;
 
             var isFlying = IsFlyingUnit(enemyTypes[i]);
-            var y = isFlying ? Random.Range(5f, 10f) : 0f;
+            var y = isFlying ? Random.Range(5f, 10f) : 0.55f;
 
             spawnPoints[i] = centralPoint.position + new Vector3(x, y, z);
         }
