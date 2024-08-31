@@ -109,7 +109,7 @@ Material:
     - _Clip: 0
     - _ColorMode: 0
     - _ConservativeDepthOffsetEnable: 0
-    - _Cull: 2
+    - _Cull: 0
     - _CullMode: 2
     - _CullModeForward: 2
     - _Cutoff: 0.5
