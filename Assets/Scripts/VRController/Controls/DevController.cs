@@ -85,6 +85,10 @@ public class DevController : MonoBehaviour
     {
         if (hasFocus)
         {
+            var handPos = handsAnchor.localPosition;
+            handPos.x = 0;
+            handPos.z = 0;
+            handsAnchor.localPosition = handPos;
             Time.timeScale = 1;
             actionAsset.Enable();
         }
@@ -110,16 +114,12 @@ public class DevController : MonoBehaviour
         _moveForwardAction.canceled += _ => _moveInput = Vector2.zero;
         _lookAction.canceled += _ => _lookInput = Vector2.zero;
 
-#if !UNITY_EDITOR
-        Application.focusChanged += OnApplicationFocusChanged;
-#endif
+        if (Application.platform != RuntimePlatform.WindowsEditor) Application.focusChanged += OnApplicationFocusChanged;
     }
 
     private void OnDestroy()
     {
-#if !UNITY_EDITOR
-        Application.focusChanged -= OnApplicationFocusChanged;
-#endif
+        if (Application.platform != RuntimePlatform.WindowsEditor) Application.focusChanged -= OnApplicationFocusChanged;
     }
 
 
@@ -149,8 +149,8 @@ public class DevController : MonoBehaviour
         var targetPosition = new Vector3(hmdPos.x, transform.position.y, hmdPos.z);
         var movementOffset = targetPosition - transform.position;
         _controller.Move(movementOffset);
-        handsAnchor.position -= movementOffset;
         hmd.position = hmdPos;
+        handsAnchor.localPosition = new Vector3(hmd.localPosition.x, handsAnchor.localPosition.y, hmd.localPosition.z);
         ResizeControllerHeightToHmd();
     }
 

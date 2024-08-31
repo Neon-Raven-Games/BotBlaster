@@ -79,6 +79,7 @@ public class HandCannon : MonoBehaviour
         var handSideString = "Right";
         if (hand == HandSide.LEFT) handSideString = "Left";
         _triggerAction = actionAsset.FindAction($"XRI {handSideString} Interaction/UI Press");
+        _triggerAction.Enable();
         _triggerAction.performed += TriggerPerformedAction;
         _triggerAction.canceled += TriggerReleasedAction;
     }
@@ -124,6 +125,7 @@ public class HandCannon : MonoBehaviour
 
     public void Shoot()
     {
+        Debug.Log("Shooting!");
         ChangeState(CannonState.Shooting);
     }
 

@@ -19,9 +19,8 @@ public class VRHand : MonoBehaviour
 
     public void Awake()
     {
-        #if !UNITY_EDITOR
-        if (Application.isPlaying) Application.focusChanged += OnApplicationFocusChanged;
-        #endif
+        if (Application.platform != RuntimePlatform.WindowsEditor)
+            Application.focusChanged += OnApplicationFocusChanged;
         _impulsePlayer = GetComponent<HapticImpulsePlayer>();
         
         var handString = handSide == HandSide.LEFT ? "Left" : "Right";
@@ -37,9 +36,8 @@ public class VRHand : MonoBehaviour
 
     public void OnDestroy()
     {
-        #if !UNITY_EDITOR
-        if (Application.isPlaying) Application.focusChanged -= OnApplicationFocusChanged;
-        #endif
+        if (Application.platform != RuntimePlatform.WindowsEditor)
+            Application.focusChanged -= OnApplicationFocusChanged;
     }
 
     private void OnApplicationFocusChanged(bool hasFocus)
