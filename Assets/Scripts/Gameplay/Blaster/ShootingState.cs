@@ -1,10 +1,12 @@
 using System.Linq;
 using Gameplay;
 using UnityEngine;
+using Util;
 
 public class ShootingState : BaseHandCanonState
 {
     private CharacterController _controller;
+
     public ShootingState(HandCannon handCannon) : base(handCannon)
     {
         controller = handCannon.actor.GetComponent<CharacterController>();
@@ -33,17 +35,11 @@ public class ShootingState : BaseHandCanonState
 
     public override void FixedUpdate()
     {
-        if (launchRequested && handCannon.dodgeBallAmmo.Count > 0)
+        if (launchRequested)
         {
-            if (handCannon.dodgeBallAmmo.Count > 0)
-            {
-                LaunchDodgeball(handCannon.dodgeBallAmmo.FirstOrDefault());
-                handCannon.dodgeBallAmmo.RemoveAt(0);
-            }
-
+            LaunchDodgeball(ElementPool.GetElement(handCannon.blasterElement, handCannon.barrelTransform.position));
             handCannon.muzzleFlash.SetActive(true);
             handCannon.audioSource.PlayOneShot(ConfigurationManager.GetBlasterSound());
-            handCannon.ChangeState(CannonState.Idle);
             launchRequested = false;
             ChangeState(CannonState.Idle);
         }
@@ -52,7 +48,7 @@ public class ShootingState : BaseHandCanonState
 
     private CharacterController controller;
 
-    private void LaunchDodgeball(Projectile dodgeball)
+    private void LaunchDodgeball(GameObject dodgeball)
     {
         // Get the Rigidbody and ensure it is ready for physics interactions
         Rigidbody rb = dodgeball.GetComponent<Rigidbody>();
@@ -63,14 +59,11 @@ public class ShootingState : BaseHandCanonState
         dodgeball.transform.position = handCannon.barrelTransform.position;
         dodgeball.transform.rotation = handCannon.barrelTransform.rotation;
         dodgeball.transform.position += handCannon.barrelTransform.forward * 0.5f;
-        dodgeball.gameObject.SetActive(true);
+        dodgeball.SetActive(true);
 
         var launchVelocity = handCannon.barrelTransform.forward * handCannon.launchForce;
         launchVelocity += controller.velocity;
 
-        // Apply the final velocity
         rb.velocity = launchVelocity;
-
-        // Optionally add additional effects like spin, etc., here
     }
 }

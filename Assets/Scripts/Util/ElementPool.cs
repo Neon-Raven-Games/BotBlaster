@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -32,8 +33,7 @@ namespace Util
         [SerializeField] private int elementsToPool;
         public List<ElementProjectile> elementProjectiles;    
         private static ElementPool _instance;
-        
-        private Dictionary<ElementFlag, ElementProjectile> _elementProjectiles = new();
+        private readonly ConcurrentDictionary<ElementFlag, ElementProjectile> _elementProjectiles = new();
 
         public void Awake()
         {
@@ -85,6 +85,7 @@ namespace Util
                     var obj = Instantiate(elementProjectile.projectile, transform);
                     obj.SetActive(false);
                     elementProjectile.projectiles.Add(obj);
+                    _elementProjectiles.TryAdd(elementProjectile.elementFlag, elementProjectile);
                     await UniTask.Yield();
                 }
             }

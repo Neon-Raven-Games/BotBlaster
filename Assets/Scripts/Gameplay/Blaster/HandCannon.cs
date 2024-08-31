@@ -97,8 +97,7 @@ public class HandCannon : MonoBehaviour
 
     public void TriggerPerformedAction(InputAction.CallbackContext obj)
     {
-        if (_currentState == _states[CannonState.Idle])
-            _currentState?.FireAction();
+        animator.Play("Fire");
     }
 
     private void TriggerReleasedAction(InputAction.CallbackContext obj)
