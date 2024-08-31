@@ -19,6 +19,17 @@ public class BlasterSelectUI : MonoBehaviour
 {
     [SerializeField] private List<BlasterUIElement> elements;
 
+    [SerializeField] private GameObject player;
+    private void Update()
+    {
+        // this is not looking at the camera, it's facing away from the camera
+        // can we invert the rotation, the forward is on the opposite side
+        var forward = player.transform.position - transform.position;
+        transform.rotation = Quaternion.LookRotation(-forward, Vector3.up);
+        // can we only rotate it on the y axis?
+        // transform.rotation = Quaternion.LookRotation(-forward, Vector3.up);
+    }
+
     public void SetElements(ElementFlag mask)
     {
         var i = 0;

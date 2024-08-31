@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Gameplay;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Util;
 
 public enum CannonState
 {
@@ -25,6 +26,9 @@ public enum ElementFlag
 public class HandCannon : MonoBehaviour
 {
     public ElementFlag blasterElement;
+    public List<BlasterElementMaterial> blasterElementMaterials;
+    [SerializeField] private SkinnedMeshRenderer blasterRenderer;
+    private Dictionary<ElementFlag, Material> _elementMaterials;
     private ElementFlag _previousElement;
     public AudioSource audioSource;
     internal readonly List<Projectile> dodgeBallAmmo = new();
@@ -54,8 +58,19 @@ public class HandCannon : MonoBehaviour
             {CannonState.Shooting, new ShootingState(this)},
             {CannonState.Idle, new IdleState(this)}
         };
+        
+        _elementMaterials = new Dictionary<ElementFlag, Material>();
+        foreach (var elementMaterial in blasterElementMaterials)
+            _elementMaterials.Add(elementMaterial.elementFlag, elementMaterial.material);
+        
+        SetBlasterMaterial();
         _currentState = _states[CannonState.Idle];
         _currentState.EnterState();
+    }
+
+    private void SetBlasterMaterial()
+    {
+        blasterRenderer.material = _elementMaterials[blasterElement];
     }
 
     private void PopulateInput()
@@ -149,6 +164,7 @@ public class HandCannon : MonoBehaviour
         {
             // this is where we update visuals and pool flags
             Debug.Log("Changed Element from " + _previousElement + " to " + blasterElement);
+            SetBlasterMaterial();
         }
     }
 

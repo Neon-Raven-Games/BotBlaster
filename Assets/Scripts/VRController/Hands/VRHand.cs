@@ -51,6 +51,7 @@ public class VRHand : MonoBehaviour
     {
         _handCannon.FinalizeElementChange();
         selectUI.gameObject.SetActive(false);
+        uiLaserSetup.gameObject.SetActive(false);
         // change the handside blaster if valid 
     }
 
@@ -60,6 +61,7 @@ public class VRHand : MonoBehaviour
         uiLaserSetup.gameObject.SetActive(true);
         selectUI.SetElements(_handCannon.blasterElement | ElementFlag.None);
         selectUI.transform.position = transform.position + transform.forward * uiSpawnDistance;
+        selectUI.transform.rotation = Quaternion.Euler(0, selectUI.transform.rotation.eulerAngles.y, 0);
         selectUI.gameObject.SetActive(true);
     }
 }

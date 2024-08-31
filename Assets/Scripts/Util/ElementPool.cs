@@ -20,6 +20,13 @@ namespace Util
         }
     }
     
+    [Serializable]
+    public class BlasterElementMaterial
+    {
+        public ElementFlag elementFlag;
+        public Material material;
+    }
+    
     public class ElementPool : MonoBehaviour
     {
         [SerializeField] private int elementsToPool;
