@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -29,6 +30,7 @@ public class DevController : MonoBehaviour
     [SerializeField] private float analogThreshold = 0.2f;
     [SerializeField] private Transform hmd;
     [SerializeField] private Transform handsAnchor;
+
     [Header("Rotation Settings")] [SerializeField]
     private RotationMode rotationMode;
 
@@ -40,9 +42,10 @@ public class DevController : MonoBehaviour
     private LocomotionMode locomotionMode;
 
     [SerializeField] private float speed = 5.0f;
-    
-    [Header("Comfort Settings")]
-    [SerializeField] private bool initialRotationVignette;
+
+    [Header("Comfort Settings")] [SerializeField]
+    private bool initialRotationVignette;
+
     [SerializeField] private bool initialLocomotionVignette;
 
     public bool RotationVignette
@@ -50,7 +53,7 @@ public class DevController : MonoBehaviour
         get => _vignetteController.rotationVignette;
         set => _vignetteController.rotationVignette = value;
     }
-    
+
     public bool LocomotionVignette
     {
         get => _vignetteController.locomotionVignette;
@@ -93,22 +96,30 @@ public class DevController : MonoBehaviour
     }
 
 
-    
     private void Awake()
     {
         _moveForwardAction = actionAsset.FindAction("XRI Left Locomotion/Move", true);
         _moveForwardAction.Enable();
-        
+
         _lookAction = actionAsset.FindAction("XRI Right Locomotion/Turn", true);
         _lookAction.Enable();
-        
+
         _moveForwardAction.performed += ctx => _moveInput = ctx.ReadValue<Vector2>();
         _lookAction.performed += ctx => _lookInput = ctx.ReadValue<Vector2>();
-        
+
         _moveForwardAction.canceled += _ => _moveInput = Vector2.zero;
         _lookAction.canceled += _ => _lookInput = Vector2.zero;
-        
+
+#if !UNITY_EDITOR
         Application.focusChanged += OnApplicationFocusChanged;
+#endif
+    }
+
+    private void OnDestroy()
+    {
+#if !UNITY_EDITOR
+        Application.focusChanged -= OnApplicationFocusChanged;
+#endif
     }
 
 
