@@ -125,7 +125,6 @@ public class HandCannon : MonoBehaviour
 
     public void Shoot()
     {
-        Debug.Log("Shooting!");
         ChangeState(CannonState.Shooting);
     }
 

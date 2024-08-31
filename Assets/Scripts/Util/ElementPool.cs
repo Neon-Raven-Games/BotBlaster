@@ -37,7 +37,6 @@ namespace Util
 
         public static GameObject GetElement(ElementFlag elementFlag, Vector3 position)
         {
-            Debug.Log($"element flag {elementFlag.ToString()}");
             var elementProjectile = _instance._elementProjectiles.TryGetValue(elementFlag, out var projectile)
                 ? projectile
                 : null;
