@@ -7,7 +7,6 @@ namespace Gameplay.Util
     public static class TimerManager
     {
         public static SortedList<float, List<Action>> Timers => _STimers;
-        
         private static readonly SortedList<float, List<Action>> _STimers = new();
         private const float _EPSILON = 0.0001f;
 

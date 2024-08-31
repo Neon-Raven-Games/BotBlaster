@@ -32,6 +32,10 @@ namespace Util
             }
 
             _instance = this;
+            foreach (var elementProjectile in elementProjectiles)
+            {
+                elementProjectile.projectiles = new List<GameObject>(elementsToPool);
+            }
             SpawnProjectiles().Forget();
         }
 
@@ -66,7 +70,6 @@ namespace Util
 
         private async UniTaskVoid SpawnProjectiles()
         {
-            await UniTask.DelayFrame(2);
             foreach (var elementProjectile in elementProjectiles)
             {
                 for (var i = 0; i < elementsToPool; i++)
@@ -76,7 +79,6 @@ namespace Util
                     obj.SetActive(false);
                     elementProjectile.projectiles.Add(obj);
                     _elementProjectiles.TryAdd(elementProjectile.elementFlag, elementProjectile);
-                    await UniTask.Yield();
                 }
             }
         }

@@ -7,10 +7,14 @@ namespace Gameplay
     {
         public ElementFlag elementFlag;
         public float speed;
-        public float damage;
+        public int damage;
 
         public GameObject impact;
 
+        private void Awake()
+        {
+            impact.transform.parent = null;
+        }
         private void OnEnable()
         {
             impact.SetActive(false);
@@ -25,15 +29,10 @@ namespace Gameplay
         {
             if (collision.gameObject.CompareTag("Enemy"))
             {
-                Debug.Log("Hit enemy!");
-                
-                // collision.gameObject.GetComponent<Enemy>().TakeDamage(damage);
-                impact.transform.parent = null;
+                collision.gameObject.GetComponent<Enemy>().TakeDamage(damage, transform.forward);
                 impact.SetActive(true);
                 gameObject.SetActive(false);
-                collision.gameObject.SetActive(false);
             }
-            
         }
     }
 }
