@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3073702003215176028}
   - component: {fileID: 9168801076516632867}
   - component: {fileID: 7237437980696517042}
-  - component: {fileID: 2527538926960470781}
+  - component: {fileID: 6654407131420891722}
   m_Layer: 0
   m_Name: Grunt
   m_TagString: Enemy
@@ -129,7 +129,7 @@ MonoBehaviour:
   baseAttackRange: 0
   baseAttackCoolDown: 0
   minWaveSpawn: 0
---- !u!54 &2527538926960470781
+--- !u!54 &6654407131420891722
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

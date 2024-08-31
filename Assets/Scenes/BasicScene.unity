@@ -987,11 +987,11 @@ MonoBehaviour:
     projectile: {fileID: 1591572969603116560, guid: 7aea3730afb11ba4793afc1179183511, type: 3}
     index: 0
     projectiles: []
-  - elementFlag: 8
-    projectile: {fileID: 1597112295188672555, guid: d0730f2f50511e541a5692f6bc7fdec9, type: 3}
+  - elementFlag: 16
+    projectile: {fileID: 1895688404305102205, guid: 3b68cb47994883f4c9df5f8110a1d6fc, type: 3}
     index: 0
     projectiles: []
-  - elementFlag: 16
+  - elementFlag: 8
     projectile: {fileID: 1597112295188672555, guid: d0730f2f50511e541a5692f6bc7fdec9, type: 3}
     index: 0
     projectiles: []
@@ -4547,7 +4547,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 9000156937861748658, guid: 64cf5ca11e3bab44486abdbbc32bd73e, type: 3}
+    - {fileID: 8843869913354222931, guid: 64cf5ca11e3bab44486abdbbc32bd73e, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

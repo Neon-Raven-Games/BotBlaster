@@ -61,7 +61,7 @@ public class Enemy : MonoBehaviour
         enemyType = enemyData.enemyType;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         var playerDistance = Vector3.Distance(transform.position, _player.position);
         if (playerDistance <= _currentAttackRange)
@@ -76,7 +76,6 @@ public class Enemy : MonoBehaviour
 
     private void Attack()
     {
-        Debug.Log("Attacking player boi!");
     }
 
     private void Move()
