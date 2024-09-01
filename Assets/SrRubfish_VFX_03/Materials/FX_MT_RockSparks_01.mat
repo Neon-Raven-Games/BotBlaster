@@ -154,7 +154,7 @@ Material:
     - _DoubleSidedGIMode: 0
     - _DoubleSidedNormalMode: 2
     - _DstBlend: 10
-    - _EmissionSaturation: 10
+    - _EmissionSaturation: 0.94
     - _EnableBlendModePreserveSpecularLighting: 0
     - _EnableFogOnTransparent: 1
     - _EnvironmentReflections: 1
@@ -217,8 +217,8 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
-    - _HighColor: {r: 1, g: 0.7554077, b: 0.06132078, a: 0}
-    - _MainColor: {r: 1, g: 0, b: 0.010915279, a: 0}
+    - _HighColor: {r: 0.31132078, g: 0.25760707, b: 0.1042631, a: 0}
+    - _MainColor: {r: 0.4528302, g: 0.2896343, b: 0.07475969, a: 0}
     - _MinMaxSmoothStepDissolve: {r: 0, g: 0, b: 0, a: 0}
     - _NoiseColor_Offset: {r: 1, g: 1, b: 0, a: 0}
     - _NoiseColor_Panning: {r: 0, g: 0, b: 0, a: 0}
