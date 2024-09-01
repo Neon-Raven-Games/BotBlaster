@@ -22,7 +22,7 @@ public class Actor : MonoBehaviour
     protected float currentSpeed;
     protected float currentAttackRange;
     protected float currentAttackCoolDown;
-    
+
     private float _lastTick;
 
     private Dictionary<ElementFlag, int> stacks = new();
@@ -78,8 +78,9 @@ public class Actor : MonoBehaviour
 
         return damage;
     }
-    
-    private int ApplyElementalDamage(int damage, ElementFlag characterElement, ElementFlag hitElement, int elementLevel, ElementFlag targetElement)
+
+    private int ApplyElementalDamage(int damage, ElementFlag characterElement, ElementFlag hitElement, int elementLevel,
+        ElementFlag targetElement)
     {
         if (characterElement == ElementFlag.None || (characterElement & targetElement) == 0)
         {
@@ -105,7 +106,7 @@ public class Actor : MonoBehaviour
             isStrong = true;
         }
 
-        var finalDamage = damage + (int)(damage * multiplier * GetStackMultiplier(targetElement));
+        var finalDamage = damage + (int) (damage * multiplier * GetStackMultiplier(targetElement));
         ShowDamageNumber(finalDamage, targetElement, isWeak, isStrong);
 
         return finalDamage;
@@ -116,7 +117,7 @@ public class Actor : MonoBehaviour
         return stacks.ContainsKey(debuffElement) ? stacks[debuffElement] : 1f;
     }
 
-    private ElementFlag WeaknessesFor(ElementFlag current)
+    protected ElementFlag WeaknessesFor(ElementFlag current)
     {
         return current switch
         {
@@ -129,7 +130,7 @@ public class Actor : MonoBehaviour
         };
     }
 
-    private ElementFlag StrengthsFor(ElementFlag current)
+    protected ElementFlag StrengthsFor(ElementFlag current)
     {
         return current switch
         {
@@ -158,14 +159,22 @@ public class Actor : MonoBehaviour
         if (_lastTick < Time.time && stacks[ElementFlag.Fire] > 0)
         {
             _lastTick = Time.time + ElementDecorator.DEBUFF_TICK;
-            var fireDamage = (int) (1.5f * stacks[ElementFlag.Fire]);
+            var fireDamage = ApplyElementalDamage(baseDamage, element, ElementFlag.Fire, stacks[ElementFlag.Fire],
+                ElementFlag.Fire);
             currentHealth -= fireDamage;
-            ShowDamageNumber(fireDamage, ElementFlag.Fire, false, false);
-            if (currentHealth <= 0) Die();
+            
+            if (currentHealth <= 0)
+            {
+                var weak = WeaknessesFor(ElementFlag.Fire);
+                var strong = StrengthsFor(ElementFlag.Fire);
+                if ((weak & element) != 0) Die(StatusEffectiveness.Weak);
+                else if ((strong & element) != 0) Die(StatusEffectiveness.Strong);
+                else Die(StatusEffectiveness.Normal);
+            }
         }
     }
 
-    protected virtual void Die()
+    protected virtual void Die(StatusEffectiveness statusEffectiveness)
     {
     }
 
@@ -199,5 +208,4 @@ public class Actor : MonoBehaviour
             }
         }
     }
-
 }

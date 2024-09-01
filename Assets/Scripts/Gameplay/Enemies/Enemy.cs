@@ -91,7 +91,12 @@ public class Enemy : Actor
         if (currentHealth - damage <= 0)
         {
             _knockingBack = true;
-            Die();
+            var weak = WeaknessesFor(ElementFlag.Fire);
+            var strong = StrengthsFor(ElementFlag.Fire);
+            
+            if ((weak & element) != 0) Die(StatusEffectiveness.Weak);
+            else if ((strong & element) != 0) Die(StatusEffectiveness.Strong);
+            else Die(StatusEffectiveness.Normal);
         }
         else
         {
@@ -124,9 +129,9 @@ public class Enemy : Actor
         StartCoroutine(KnockBackTimer());
     }
     
-    protected override void Die()
+    protected override void Die(StatusEffectiveness status)
     {
         gameObject.SetActive(false);
-        GameBalancer.KillEnemy();
+        GameBalancer.KillEnemy(status);
     }
 }
