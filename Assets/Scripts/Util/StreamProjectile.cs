@@ -6,5 +6,6 @@ namespace Util
     public class StreamProjectile : MonoBehaviour
     {
         [SerializeField] private List<ParticleSystem> zAxisParticles;
+        [SerializeField] private GameObject projectileImpact;
     }
 }
