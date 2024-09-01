@@ -6,21 +6,27 @@ Texture2D:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: z_ColorRampTexGradientTex{"mode":0,"colorKeys":[{"color":{"r":0.2401960790157318,"g":0.43927010893821719,"b":0.4901960790157318,"a":1.0},"time":0.0},{"color":{"r":1.0,"g":1.0,"b":1.0,"a":1.0},"time":1.0}],"alphaKeys":[{"alpha":1.0,"time":0.0},{"alpha":1.0,"time":1.0}]}
+  m_Name: z_ColorRampTexGradientTex{"mode":0,"colorKeys":[{"color":{"r":0.5660377740859985,"g":0.5388434529304504,"b":0.49928805232048037,"a":1.0},"time":0.0941176488995552},{"color":{"r":0.35686275362968447,"g":0.2666666805744171,"b":0.14509804546833039,"a":1.0},"time":0.6235294342041016}],"alphaKeys":[{"alpha":1.0,"time":0.6000000238418579},{"alpha":0.0,"time":1.0}]}
   m_ImageContentsHash:
     serializedVersion: 2
     Hash: 00000000000000000000000000000000
   m_ForcedFallbackFormat: 4
   m_DownscaleFallback: 0
+  m_IsAlphaChannelOptional: 0
   serializedVersion: 2
   m_Width: 64
   m_Height: 1
   m_CompleteImageSize: 256
+  m_MipsStripped: 0
   m_TextureFormat: 4
   m_MipCount: 1
   m_IsReadable: 1
+  m_IsPreProcessed: 0
+  m_IgnoreMipmapLimit: 0
+  m_MipmapLimitGroupName: 
   m_StreamingMipmaps: 0
   m_StreamingMipmapsPriority: 0
+  m_VTOnly: 0
   m_AlphaIsTransparency: 0
   m_ImageCount: 1
   m_TextureDimension: 2
@@ -34,29 +40,43 @@ Texture2D:
     m_WrapW: 1
   m_LightmapFormat: 0
   m_ColorSpace: 0
+  m_PlatformBlob: 
   image data: 256
-  _typelessdata: 3d707dff40727fff437581ff467783ff4a7985ff4d7b87ff507e89ff53808bff56828eff598490ff5c8792ff5f8994ff628b96ff658e98ff68909aff6b929cff6e949eff7297a0ff7599a2ff789ba4ff7b9da6ff7ea0a8ff81a2aaff84a4acff87a6afff8aa9b1ff8dabb3ff90adb5ff93b0b7ff96b2b9ff9ab4bbff9db6bdffa0b9bfffa3bbc1ffa6bdc3ffa9bfc5ffacc2c7ffafc4c9ffb2c6cbffb5c9cdffb8cbd0ffbbcdd2ffbecfd4ffc1d2d6ffc5d4d8ffc8d6daffcbd8dcffcedbdeffd1dde0ffd4dfe2ffd7e1e4ffdae4e6ffdde6e8ffe0e8eaffe3ebecffe6edeeffe9eff1ffedf1f3fff0f4f5fff3f6f7fff6f8f9fff9fafbfffcfdfdffffffffff
+  _typelessdata: 90897fff90897fff90897fff90897fff90897fff90897fff90897fff8f877cff8d857aff8b8377ff8a8174ff887f72ff877d6fff857b6cff837969ff827767ff807464ff7f7261ff7d705fff7b6e5cff7a6c59ff786a57ff776854ff756651ff73644eff72624cff706049ff6f5e46ff6d5b44ff6b5941ff6a573eff68553bff675339ff655136ff634f33ff624d31ff604b2eff5f492bff5d4728fd5b4526f35b4425e95b4425df5b4425d55b4425ca5b4425c05b4425b65b4425ac5b4425a25b4425985b44258e5b4425845b4425795b44256f5b4425655b44255b5b4425515b4425475b44253d5b4425335b4425285b44251e5b4425145b44250a5b442500
   m_StreamData:
+    serializedVersion: 2
     offset: 0
     size: 0
     path: 
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: 14_Base
   m_Shader: {fileID: 4800000, guid: 6eb86e4931b506a408fd1477edec61ea, type: 3}
-  m_ShaderKeywords: ADDITIVECONFIG_ON COLORRAMPGRAD_ON COLORRAMP_ON POLARUVDISTORT_ON
-    POLARUV_ON PREMULTIPLYCOLOR_ON SHAPE1CONTRAST_ON SHAPE1DISTORT_ON SHAPE2_ON
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - ADDITIVECONFIG_ON
+  - COLORRAMPGRAD_ON
+  - COLORRAMP_ON
+  - POLARUVDISTORT_ON
+  - POLARUV_ON
+  - PREMULTIPLYCOLOR_ON
+  - SHAPE1CONTRAST_ON
+  - SHAPE1DISTORT_ON
+  - SHAPE2_ON
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -89,7 +109,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: fcb027caad6963b4a80539bbce0d10e9, type: 3}
+        m_Texture: {fileID: 2800000, guid: a9bf69081420b4143b27a1512ce6f936, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskTex:
@@ -128,6 +148,7 @@ Material:
         m_Texture: {fileID: 2800000, guid: 48da24d771916524899d36e4bfe7f762, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - _Alpha: 1
     - _AlphaBrightness: 0
@@ -243,7 +264,7 @@ Material:
     - _ShapeRotationOffset: 0
     - _ShapeRotationSpeed: 0
     - _ShapeXSpeed: 0
-    - _ShapeYSpeed: 0.5
+    - _ShapeYSpeed: 2.39
     - _SoftFactor: 0.5
     - _SrcMode: 1
     - _TextureScrollXSpeed: 1
@@ -281,3 +302,4 @@ Material:
     - _Shape2Color: {r: 1, g: 1, b: 1, a: 1}
     - _Shape3Color: {r: 1, g: 1, b: 1, a: 1}
     - _ShapeColor: {r: 1, g: 1, b: 1, a: 1}
+  m_BuildTextureStacks: []
