@@ -8,7 +8,8 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Char_MT_Dummy_01
-  m_Shader: {fileID: -6465566751694194690, guid: d25ae369cd9a1fc46bef6bfbbee1947b, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: d25ae369cd9a1fc46bef6bfbbee1947b,
+    type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []

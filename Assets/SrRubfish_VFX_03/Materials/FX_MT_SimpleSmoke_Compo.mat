@@ -8,13 +8,13 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: FX_MT_SimpleSmoke_Compo
-  m_Shader: {fileID: -6465566751694194690, guid: 81a925152c3a1724286eb724c3ab0f15, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
+  m_Shader: {fileID: -6465566751694194690, guid: 81a925152c3a1724286eb724c3ab0f15,
+    type: 3}
   m_ValidKeywords:
-  - _SURFACE_TYPE_TRANSPARENT
+  - _BUILTIN_SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords:
   - _ENABLE_FOG_ON_TRANSPARENT
+  - _SURFACE_TYPE_TRANSPARENT
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -26,7 +26,6 @@ Material:
   - TransparentDepthPrepass
   - TransparentDepthPostpass
   - TransparentBackface
-  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -80,10 +79,10 @@ Material:
     - _BUILTIN_AlphaClip: 0
     - _BUILTIN_Blend: 0
     - _BUILTIN_CullMode: 2
-    - _BUILTIN_DstBlend: 0
-    - _BUILTIN_QueueControl: -1
+    - _BUILTIN_DstBlend: 10
+    - _BUILTIN_QueueControl: 1
     - _BUILTIN_QueueOffset: 0
-    - _BUILTIN_SrcBlend: 1
+    - _BUILTIN_SrcBlend: 5
     - _BUILTIN_Surface: 1
     - _BUILTIN_ZTest: 4
     - _BUILTIN_ZWrite: 0
@@ -115,7 +114,7 @@ Material:
     - _EmissionSaturation: 1
     - _EnableBlendModePreserveSpecularLighting: 0
     - _EnableFogOnTransparent: 1
-    - _FlatDissolve: 0.84
+    - _FlatDissolve: 1
     - _FlipbookBlending: 0
     - _FlipbookMode: 0
     - _MainLightAffects: 1
@@ -175,9 +174,9 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
-    - _HighColor: {r: 0.8349056, g: 0.9458653, b: 1, a: 0}
+    - _HighColor: {r: 1, g: 1, b: 1, a: 0}
     - _MainColor: {r: 0.5, g: 0.5, b: 0.5, a: 0}
-    - _MinMaxSmoothStepDissolve: {r: 0, g: 0.2, b: 0, a: 0}
+    - _MinMaxSmoothStepDissolve: {r: 0, g: 0.05, b: 0, a: 0}
     - _NoiseColor_Offset: {r: 1, g: 1, b: 0, a: 0}
     - _NoiseColor_Panning: {r: 0, g: 0, b: 0, a: 0}
     - _NoiseColor_Tiling: {r: 1, g: 1, b: 0, a: 0}
