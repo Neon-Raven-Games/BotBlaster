@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-9179452535176698138
+--- !u!114 &-8656653054350819916
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,23 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 639247ca83abc874e893eb93af2b5e44, type: 3}
+  m_Script: {fileID: 11500000, guid: da692e001514ec24dbc4cca1949ff7e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: 0
---- !u!114 &-8370759892713883871
-MonoBehaviour:
-  m_ObjectHideFlags: 11
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 7
+  version: 12
+  hdPluginSubTargetMaterialVersions:
+    m_Keys: []
+    m_Values: 
 --- !u!21 &2100000
 Material:
   serializedVersion: 8
@@ -33,8 +23,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: FX_MT_NoiseFire_01
-  m_Shader: {fileID: -6465566751694194690, guid: 4b5e22c7347272747be7687d1afca001, type: 3}
+  m_Name: FX_MT_RockSparks_01
+  m_Shader: {fileID: -6465566751694194690, guid: 81a925152c3a1724286eb724c3ab0f15, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
@@ -49,6 +39,7 @@ Material:
     RenderType: Transparent
   disabledShaderPasses:
   - DepthOnly
+  - SHADOWCASTER
   - TransparentDepthPrepass
   - TransparentDepthPostpass
   - TransparentBackface
@@ -57,10 +48,22 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
-        m_Texture: {fileID: 2800000, guid: aa3ab7c582b15624da1ac2410a00fa89, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -68,19 +71,35 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _MainTexture:
+    - _MainTex:
         m_Texture: {fileID: 0}
-        m_Scale: {x: 0.5, y: -1}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _MainTexture_Dissolve:
-        m_Texture: {fileID: 2800000, guid: 5a22200c6c4f39b4ea1f8babfa16d1ca, type: 3}
-        m_Scale: {x: 0.5, y: 1}
+    - _MainTexture:
+        m_Texture: {fileID: 2800000, guid: 00ee0d579edb6ef4dbd51d4387e2e9a2, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NoiseColor_Texture:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NoiseOpacity_Texture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SpecGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -99,8 +118,6 @@ Material:
     m_Ints: []
     m_Floats:
     - _AddPrecomputedVelocity: 0
-    - _AddShadow: 0
-    - _AdditionalLightAffects: 0.5
     - _AlphaClip: 0
     - _AlphaCutoffEnable: 0
     - _AlphaDstBlend: 10
@@ -120,54 +137,47 @@ Material:
     - _BUILTIN_ZWriteControl: 0
     - _Blend: 0
     - _BlendMode: 0
-    - _BlendOp: 0
-    - _CameraFadingEnabled: 0
-    - _CameraFarFadeDistance: 2
-    - _CameraNearFadeDistance: 1
-    - _CastShadows: 1
-    - _ColorMode: 0
+    - _BumpScale: 1
+    - _CastShadows: 0
+    - _ClearCoatMask: 0
+    - _ClearCoatSmoothness: 0
     - _ConservativeDepthOffsetEnable: 0
-    - _ConvetToNormalStrenght: 0
     - _Cull: 0
     - _CullMode: 2
     - _CullModeForward: 2
-    - _CustomDataForDissolve: 1
+    - _CustomDataForDissolve: 0
     - _Cutoff: 0.5
     - _DepthOffsetEnable: 0
-    - _Dissolve: 1
-    - _DissolveAmmount: 1
-    - _DistortionBlend: 0.5
-    - _DistortionEnabled: 0
-    - _DistortionStrength: 1
-    - _DistortionStrengthScaled: 0.1
+    - _DetailAlbedoMapScale: 1
+    - _DetailNormalMapScale: 1
     - _DoubleSidedEnable: 0
     - _DoubleSidedGIMode: 0
     - _DoubleSidedNormalMode: 2
     - _DstBlend: 10
-    - _EmissionSaturation: 2
+    - _EmissionSaturation: 10
     - _EnableBlendModePreserveSpecularLighting: 0
     - _EnableFogOnTransparent: 1
+    - _EnvironmentReflections: 1
     - _FlatDissolve: 1
-    - _FlipbookBlending: 0
-    - _FlipbookMode: 0
-    - _MainLightAffects: 0.5
-    - _MainTexture_FlipUV_U: 0
-    - _MainTexture_FlipUV_V: 0
-    - _Mode: 0
+    - _GlossMapScale: 0
+    - _Glossiness: 0
+    - _GlossyReflections: 0
+    - _Metallic: 0
     - _NoiseEmissive: 0
     - _NoiseOpacity: 0
-    - _NormalStrenght: 0
+    - _OcclusionStrength: 1
     - _OpacitySaturation: 1
     - _OpaqueCullMode: 2
+    - _Parallax: 0.005
     - _PreLerp: 1
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _ReceiveShadows: 1
     - _RenderQueueType: 3
-    - _ShadowAmmount: 0.5
+    - _Smoothness: 0.5
+    - _SmoothnessTextureChannel: 0
     - _SoftParticle: 0
-    - _SoftParticlesEnabled: 0
-    - _SoftParticlesFarFadeDistance: 1
-    - _SoftParticlesNearFadeDistance: 0
+    - _SpecularHighlights: 1
     - _SrcBlend: 5
     - _StencilRef: 0
     - _StencilRefDepth: 0
@@ -191,12 +201,11 @@ Material:
     - _UseCustomPanningForMain: 0
     - _UseDissolve_VertexAlphaByDeffault: 1
     - _UseGradient: 0
-    - _UseLight: 0
     - _UseShadowThreshold: 0
-    - _UseSoftParticles: 1
+    - _UseSoftParticles: 0
     - _UseVertexForAlpha: 0
-    - _Use_Custom_Data_for_Dissolve_instead_of_VertexAlpha: 1
     - _UserLerp: 1
+    - _WorkflowMode: 1
     - _ZTest: 4
     - _ZTestDepthEqualForOpaque: 4
     - _ZTestGBuffer: 4
@@ -205,14 +214,11 @@ Material:
     - _ZWriteControl: 0
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _BaseColorAddSubDiff: {r: 0, g: 0, b: 0, a: 0}
-    - _CameraFadeParams: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _DissolveStep: {r: 0, g: 0, b: 0, a: 0}
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
-    - _HighColor: {r: 1, g: 1, b: 1, a: 0}
-    - _MainColor: {r: 1, g: 1, b: 1, a: 0}
+    - _HighColor: {r: 1, g: 0.7554077, b: 0.06132078, a: 0}
+    - _MainColor: {r: 1, g: 0, b: 0.010915279, a: 0}
     - _MinMaxSmoothStepDissolve: {r: 0, g: 0, b: 0, a: 0}
     - _NoiseColor_Offset: {r: 1, g: 1, b: 0, a: 0}
     - _NoiseColor_Panning: {r: 0, g: 0, b: 0, a: 0}
@@ -221,11 +227,9 @@ Material:
     - _NoiseOpacity_Panning: {r: 0, g: 0, b: 0, a: 0}
     - _NoiseOpacity_Tiling: {r: 1, g: 1, b: 0, a: 0}
     - _Panning: {r: 0, g: 0, b: 0, a: 0}
-    - _PanningSpeed: {r: -1, g: 0, b: 0, a: 0}
-    - _SoftParticleFadeParams: {r: 0, g: 0, b: 0, a: 0}
-    - _Tab_MinMax_0_1_Value_Range: {r: 0, g: 0, b: 0, a: 0}
+    - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
---- !u!114 &4444465909220797832
+--- !u!114 &5574838385163147737
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -234,10 +238,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da692e001514ec24dbc4cca1949ff7e8, type: 3}
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: 12
-  hdPluginSubTargetMaterialVersions:
-    m_Keys: []
-    m_Values: 
+  version: 7
+--- !u!114 &8305335550366030036
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 639247ca83abc874e893eb93af2b5e44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 0
