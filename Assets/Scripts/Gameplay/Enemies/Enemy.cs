@@ -129,5 +129,4 @@ public class Enemy : Actor
         gameObject.SetActive(false);
         GameBalancer.KillEnemy();
     }
-   
 }
