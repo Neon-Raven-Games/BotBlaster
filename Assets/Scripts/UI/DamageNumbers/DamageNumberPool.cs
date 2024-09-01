@@ -12,10 +12,6 @@ public class DamageNumberPool : MonoBehaviour
     private static DamageNumberPool _instance;
     private List<DamageNumber> _damageNumbers;
 
-    void Start()
-    {
-    }
-
     public void Awake()
     {
         if (_instance != null)
@@ -44,10 +40,10 @@ public class DamageNumberPool : MonoBehaviour
         return damageNumber;
     }
     
-    public static void SetElementDamageNumber(ElementFlag elementFlag, Vector3 position, StatusEffectiveness statusEffectiveness)
+    public static void SetElementDamageNumber(ElementFlag elementFlag, Vector3 position, StatusEffectiveness statusEffectiveness, int number)
     {
         var damageNumber = GetDamageNumber(position);
-        damageNumber.SetElementText(elementFlag, statusEffectiveness);
+        damageNumber.SetElementText(elementFlag, statusEffectiveness, number);
     }
     
     public static void SetScoreDamageNumber(Vector3 position, int score, int multiplier)

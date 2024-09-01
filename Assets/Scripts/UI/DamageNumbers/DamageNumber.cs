@@ -12,37 +12,30 @@ public class DamageNumberIndex
     public ElementFlag elementFlag;
     public TextMeshPro text;
 }
+
 public class DamageNumber : MonoBehaviour
 {
     private Transform _mainCamera;
-    public List<DamageNumberIndex> damageNumbers;
-    private readonly Dictionary<ElementFlag, TextMeshPro> _damageNumberDictionary = new();
-
+    private TextMeshPro text;
     public void SetScoreText(int score, int multiplier)
     {
-        if (_damageNumberDictionary.TryGetValue(ElementFlag.None, out var text))
-            ScoreTextTween.TweenScoreText(text, score, multiplier);
+        ScoreTextTween.TweenScoreText(text, score, multiplier);
     }
-    public void SetElementText(ElementFlag elementFlag, StatusEffectiveness statusEffectiveness)
+
+    public void SetElementText(ElementFlag elementFlag, StatusEffectiveness statusEffectiveness, int number)
     {
-        if (_damageNumberDictionary.TryGetValue(elementFlag, out var text))
-            ElementTextTween.TweenElementText(text, elementFlag, statusEffectiveness);
-    }
- 
-    private void Start()
-    {
-        foreach(var damageNumber in damageNumbers)
-            _damageNumberDictionary.Add(damageNumber.elementFlag, damageNumber.text);
+        ElementTextTween.TweenElementText(text, elementFlag, statusEffectiveness, number);
     }
 
     private void Awake()
     {
         _mainCamera = Camera.main.transform;
+        text = GetComponent<TextMeshPro>();
     }
+
     private void Update()
     {
         var forward = _mainCamera.position - transform.position;
-        transform.rotation = Quaternion.LookRotation(-forward, Vector3.up);
+        if (forward != Vector3.zero) transform.rotation = Quaternion.LookRotation(-forward, Vector3.up);
     }
-
 }

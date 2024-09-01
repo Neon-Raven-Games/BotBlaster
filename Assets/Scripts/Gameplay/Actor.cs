@@ -52,38 +52,13 @@ public class Actor : MonoBehaviour
         currentAttackCoolDown = actorData.baseAttackCooldown;
     }
 
-    [SerializeField] private TextMeshPro damageTextPrefab;
-    // todo, pool the numbers
-
-    private void ShowDamageNumber(int damage, ElementFlag element, bool isWeak, bool isStrong)
+    private void ShowDamageNumber(int damage, ElementFlag damageElementType, bool isWeak, bool isStrong)
     {
-        // todo, change the looks/animation based on element
-        var damageText = Instantiate(damageTextPrefab, transform.position, Quaternion.identity);
-        damageText.text = damage.ToString();
-
-        Vector3 targetScale = Vector3.one;
-        if (isStrong)
-        {
-            targetScale = Vector3.one * 1.5f; 
-            damageText.color = Color.red; 
-        }
-        else if (isWeak)
-        {
-            targetScale = Vector3.one * 0.75f; 
-            damageText.color = Color.blue; 
-        }
-        else
-        {
-            damageText.color = Color.white; 
-        }
-
-        // Use DoTween to animate both the movement and the scaling
-        damageText.transform.DOScale(targetScale, 1.0f).SetEase(Ease.OutBack);
-        damageText.transform.DOMoveY(damageText.transform.position.y + 1, 1.0f)
-            .SetEase(Ease.OutCubic)
-            .OnComplete(() => damageText.gameObject.SetActive(false)); 
+        var status = StatusEffectiveness.Normal;
+        if (isWeak) status = StatusEffectiveness.Weak;
+        if (isStrong) status = StatusEffectiveness.Strong;
+        DamageNumberPool.SetElementDamageNumber(damageElementType, transform.position, status, damage);
     }
-
 
     public int ApplyDamage(int damage, ElementFlag hitElement, int elementLevel = 1)
     {

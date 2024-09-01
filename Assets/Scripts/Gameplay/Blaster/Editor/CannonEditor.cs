@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using Gameplay.Enemies;
+using UnityEditor;
 using UnityEngine;
 
 [CustomEditor(typeof(HandCannon))]
@@ -13,6 +14,5 @@ public class CannonEditor : Editor
             cannon.TriggerPerformedAction(default);
         if (GUILayout.Button("Fire Release Action"))
             cannon.TriggerPerformedAction(default);
-        
     }
 }
