@@ -8,9 +8,8 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: FX_MT_ImpactLight
-  m_Shader: {fileID: -6465566751694194690, guid: 81a925152c3a1724286eb724c3ab0f15, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
+  m_Shader: {fileID: -6465566751694194690, guid: 81a925152c3a1724286eb724c3ab0f15,
+    type: 3}
   m_ValidKeywords:
   - _SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords:
@@ -26,7 +25,6 @@ Material:
   - TransparentDepthPrepass
   - TransparentDepthPostpass
   - TransparentBackface
-  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -118,7 +116,7 @@ Material:
     - _DoubleSidedGIMode: 0
     - _DoubleSidedNormalMode: 2
     - _DstBlend: 1
-    - _EmissionSaturation: 1.98
+    - _EmissionSaturation: 4
     - _EnableBlendModePreserveSpecularLighting: 0
     - _EnableFogOnTransparent: 1
     - _FlatDissolve: 0.52
@@ -184,7 +182,7 @@ Material:
     - _DoubleSidedConstants: {r: 1, g: 1, b: -1, a: 0}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _HighColor: {r: 1, g: 1, b: 1, a: 0}
-    - _MainColor: {r: 1, g: 1, b: 1, a: 0}
+    - _MainColor: {r: 0, g: 0, b: 0, a: 0}
     - _MinMaxSmoothStepDissolve: {r: 0, g: 0.2, b: 0, a: 0}
     - _NoiseColor_Offset: {r: 1, g: 1, b: 0, a: 0}
     - _NoiseColor_Panning: {r: 0, g: 0, b: 0, a: 0}
