@@ -62,6 +62,7 @@ public class HandCannon : MonoBehaviour
     private void PopulateInput()
     {
         var hand = GetComponentInParent<VRHand>();
+        if (!hand || soloCannon) return;
         var side =hand.handSide;
         var handSideString = "Right";
         if (side == HandSide.LEFT) handSideString = "Left";
@@ -108,6 +109,7 @@ public class HandCannon : MonoBehaviour
     {
         if (soloCannon) return;
         PopulateInput();
+        if (_triggerAction == null) return;
         _triggerAction.Enable();
     }
 
