@@ -119,10 +119,12 @@ Material:
     - _EmissionSaturation: 1
     - _EnvironmentReflections: 1
     - _FlatDissolve: 1
+    - _FresnelAlpha_Intensity: 1
     - _FresnelIntensity: 1.39
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
+    - _InvertFresnelAlpha: 0
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _OffsetAmmount: 1
@@ -139,6 +141,7 @@ Material:
     - _SrcBlend: 5
     - _Surface: 1
     - _UseDissolve_VertexAlphaByDeffault: 0
+    - _UseFresnelAlpha: 0
     - _UseGradient: 0
     - _UseSoftParticles: 0
     - _UseVertexForAlpha: 0
@@ -157,6 +160,7 @@ Material:
     - _MainColor: {r: 0.5707547, g: 0.8463754, b: 1, a: 0}
     - _MinMaxSmoothStepDissolve: {r: 0, g: 0.2, b: 0, a: 0}
     - _Panning: {r: -1, g: 0, b: 0, a: 0}
+    - _PanningSpeed: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &2732482794187312366
