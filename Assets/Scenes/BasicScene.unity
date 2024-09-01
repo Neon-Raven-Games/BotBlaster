@@ -1049,6 +1049,38 @@ MonoBehaviour:
     projectile: {fileID: 1023320097464174183, guid: 6ef1fcdf00ba0a54b85aa2184505dda8, type: 3}
     index: 0
     projectiles: []
+  - elementFlag: 36
+    projectile: {fileID: 1023320097464174183, guid: 6ef1fcdf00ba0a54b85aa2184505dda8, type: 3}
+    index: 0
+    projectiles: []
+  - elementFlag: 12
+    projectile: {fileID: 1023320097464174183, guid: 6ef1fcdf00ba0a54b85aa2184505dda8, type: 3}
+    index: 0
+    projectiles: []
+  - elementFlag: 6
+    projectile: {fileID: 1023320097464174183, guid: 6ef1fcdf00ba0a54b85aa2184505dda8, type: 3}
+    index: 0
+    projectiles: []
+  - elementFlag: 10
+    projectile: {fileID: 1023320097464174183, guid: 6ef1fcdf00ba0a54b85aa2184505dda8, type: 3}
+    index: 0
+    projectiles: []
+  - elementFlag: 18
+    projectile: {fileID: 1023320097464174183, guid: 6ef1fcdf00ba0a54b85aa2184505dda8, type: 3}
+    index: 0
+    projectiles: []
+  - elementFlag: 34
+    projectile: {fileID: 1023320097464174183, guid: 6ef1fcdf00ba0a54b85aa2184505dda8, type: 3}
+    index: 0
+    projectiles: []
+  - elementFlag: 24
+    projectile: {fileID: 1023320097464174183, guid: 6ef1fcdf00ba0a54b85aa2184505dda8, type: 3}
+    index: 0
+    projectiles: []
+  - elementFlag: 40
+    projectile: {fileID: 1023320097464174183, guid: 6ef1fcdf00ba0a54b85aa2184505dda8, type: 3}
+    index: 0
+    projectiles: []
 --- !u!4 &520163531
 Transform:
   m_ObjectHideFlags: 0
