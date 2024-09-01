@@ -1,4 +1,5 @@
 ﻿using System;
+using Gameplay.Enemies;
 using UnityEngine;
 
 namespace Gameplay
@@ -30,7 +31,7 @@ namespace Gameplay
         {
             if (collision.gameObject.CompareTag("Enemy"))
             {
-                collision.gameObject.GetComponent<Enemy>().TakeDamage(damage, transform.forward);
+                collision.gameObject.GetComponent<Enemy>().TakeDamage(damage, transform.forward, elementFlag);
             }
 
             impact.transform.position = collision.GetContact(0).point;

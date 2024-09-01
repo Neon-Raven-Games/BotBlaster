@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Gameplay.Enemies;
 using Gameplay.Util;
 using UnityEngine;
 

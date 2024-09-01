@@ -3,32 +3,19 @@ using System.Collections;
 using Gameplay.Enemies;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : Actor
 {
     public EnemyType enemyType;
     public Vector2 knockBackForce;
     [SerializeField] private float knockBackTime = 0.5f;
     private bool _knockingBack;
-
-    [Header("Dynamic Populated Fields from EnemyData, Debug Purposes")]
-    public ElementFlag element;
-    public int baseHealth;
-    public int baseDamage;
-    public float baseSpeed;
-    public float baseAttackRange;
-    public float baseAttackCoolDown;
     public int minWaveSpawn;
-
-    private int _currentHealth;
-    private int _currentDamage;
-    private float _currentSpeed;
-    private float _currentAttackRange;
-    private float _currentAttackCoolDown;
     
     private Rigidbody _rigidbody;
     private Transform _player;
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         _rigidbody = GetComponent<Rigidbody>();
         _player = Camera.main.transform;
     }
@@ -36,36 +23,44 @@ public class Enemy : MonoBehaviour
     private void OnEnable()
     {
         _knockingBack = false;
-        _currentHealth = baseHealth;
-        _currentDamage = baseDamage;
-        _currentSpeed = baseSpeed;
-        _currentAttackRange = baseAttackRange;
-        _currentAttackCoolDown = baseAttackCoolDown;
+        currentHealth = baseHealth;
+        currentDamage = baseDamage;
+        currentSpeed = baseSpeed;
+        currentAttackRange = baseAttackRange;
+        currentAttackCoolDown = baseAttackCoolDown;
     }
 
     public void Initialize(EnemyData enemyData)
     {
+        base.Initialize(enemyData);
         element = enemyData.elementFlag;
-        baseHealth = enemyData.baseHealth;
-        baseDamage = enemyData.baseDamage;
-        baseSpeed = enemyData.baseSpeed;
-        baseAttackRange = enemyData.baseAttackRange;
-        baseAttackCoolDown = enemyData.baseAttackCooldown;
         minWaveSpawn = enemyData.minWaveSpawn;
-        
-        _currentHealth = baseHealth;
-        _currentDamage = baseDamage;
-        _currentSpeed = baseSpeed;
-        _currentAttackRange = baseAttackRange;
-        _currentAttackCoolDown = baseAttackCoolDown;
         enemyType = enemyData.enemyType;
     }
 
-    private void Update()
+    private float _lastAttackTime;
+    
+    private bool CanAttack()
     {
-        var playerDistance = Vector3.Distance(transform.position, _player.position);
-        if (playerDistance <= _currentAttackRange)
+        var timeSinceLastAttack = Time.time - _lastAttackTime;
+
+        // Apply attack speed boost if Wind element is active
+        var adjustedAttackCooldown = currentAttackCoolDown;
+        if ((element & ElementFlag.Wind) != 0)
         {
+            adjustedAttackCooldown /= ElementDecorator.STRENGTH_MULTIPLIER;
+        }
+
+        return timeSinceLastAttack >= adjustedAttackCooldown;
+    }
+    
+    protected override void Update()
+    {
+        base.Update();
+        var playerDistance = Vector3.Distance(transform.position, _player.position);
+        if (playerDistance <= currentAttackRange && CanAttack())
+        {
+            _lastAttackTime = Time.time;
             Attack();
         }
         else
@@ -83,15 +78,17 @@ public class Enemy : MonoBehaviour
         if (_knockingBack) return;
         var directionToPlayer = _player.position - transform.position;
         
-        if (enemyType == EnemyType.Grunt) directionToPlayer.y = 0; 
+        if (enemyType == EnemyType.Grunt || enemyType == EnemyType.Tank) directionToPlayer.y = 0; 
         
         if (directionToPlayer != Vector3.zero) transform.rotation = Quaternion.LookRotation(directionToPlayer);
-        _rigidbody.velocity = directionToPlayer.normalized * (_currentSpeed * Time.deltaTime);
+        _rigidbody.velocity = directionToPlayer.normalized * (GetMovementCurrentSpeed() * Time.deltaTime);
     }
 
-    public void TakeDamage(int damage, Vector3 hitDirection)
+    public void TakeDamage(int damage, Vector3 hitDirection, ElementFlag elementFlag)
     {
-        if (_currentHealth - damage <= 0)
+        
+        damage = ApplyDamage(damage, elementFlag);
+        if (currentHealth - damage <= 0)
         {
             _knockingBack = true;
             Die();
@@ -103,7 +100,7 @@ public class Enemy : MonoBehaviour
                 _knockingBack = true;
                 KnockBack(hitDirection);
             }
-            _currentHealth -= damage;
+            currentHealth -= damage;
         }
     }
  
@@ -120,14 +117,14 @@ public class Enemy : MonoBehaviour
     
     private void KnockBack(Vector3 hitDirection)
     {
-        hitDirection.y = 1;
         _rigidbody.velocity = Vector3.zero;
         _rigidbody.angularVelocity = Vector3.zero;
+        hitDirection.y = 1;
         _rigidbody.AddForce(hitDirection.normalized * knockBackForce, ForceMode.Impulse);
         StartCoroutine(KnockBackTimer());
     }
     
-    private void Die()
+    protected override void Die()
     {
         gameObject.SetActive(false);
         GameBalancer.KillEnemy();

@@ -1,27 +1,12 @@
 using System;
 using System.Collections.Generic;
 using Gameplay;
+using Gameplay.Enemies;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Util;
 
-public enum CannonState
-{
-    Idle,
-    Sucking,
-    Shooting,
-}
 
-[Flags]
-public enum ElementFlag
-{
-    None = 0,
-    Fire = 1 << 1,
-    Water = 1 << 2,
-    Rock = 1 << 3,
-    Wind = 1 << 4,
-    Electricity = 1 << 5,
-}
 
 public class HandCannon : MonoBehaviour
 {
@@ -51,6 +36,7 @@ public class HandCannon : MonoBehaviour
     private InputAction _triggerAction;
     public DevController actor;
 
+    [SerializeField] private bool soloCannon;
     private void Start()
     {
         _states = new Dictionary<CannonState, BaseHandCanonState>
@@ -75,9 +61,10 @@ public class HandCannon : MonoBehaviour
 
     private void PopulateInput()
     {
-        var hand = GetComponentInParent<VRHand>().handSide;
+        var hand = GetComponentInParent<VRHand>();
+        var side =hand.handSide;
         var handSideString = "Right";
-        if (hand == HandSide.LEFT) handSideString = "Left";
+        if (side == HandSide.LEFT) handSideString = "Left";
         _triggerAction = actionAsset.FindAction($"XRI {handSideString} Interaction/UI Press");
         _triggerAction.Enable();
         _triggerAction.performed += TriggerPerformedAction;
@@ -119,6 +106,7 @@ public class HandCannon : MonoBehaviour
 
     private void OnEnable()
     {
+        if (soloCannon) return;
         PopulateInput();
         _triggerAction.Enable();
     }
@@ -130,6 +118,7 @@ public class HandCannon : MonoBehaviour
 
     private void OnDisable()
     {
+        if (soloCannon) return;
         _triggerAction.performed -= TriggerPerformedAction;
         _triggerAction.canceled -= TriggerReleasedAction;
         _triggerAction.Disable();
