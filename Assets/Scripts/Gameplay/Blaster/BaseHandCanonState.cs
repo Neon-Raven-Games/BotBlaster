@@ -20,8 +20,7 @@ public abstract class BaseHandCanonState
 
     public virtual void Update()
     {
-        if (handCannon && handCannon.trajectoryAssist)
-            DrawTrajectory();
+
     }
 
     public virtual void FixedUpdate()
@@ -30,23 +29,6 @@ public abstract class BaseHandCanonState
     }
 
     protected void ChangeState(CannonState state) => handCannon.ChangeState(state);
-
-    private void DrawTrajectory()
-    {
-        return;
-        Vector3[] points = new Vector3[handCannon.trajectoryPoints];
-        Vector3 startPosition = handCannon.barrelTransform.position;
-        Vector3 velocity = handCannon.barrelTransform.forward * handCannon.launchForce;
-
-        for (int i = 0; i < handCannon.trajectoryPoints; i++)
-        {
-            float time = i * 0.1f;
-            points[i] = startPosition + velocity * time + Physics.gravity * time * time / 2f;
-        }
-
-        // handCannon.trajectoryLineRenderer.positionCount = handCannon.trajectoryPoints;
-        // handCannon.trajectoryLineRenderer.SetPositions(points);
-    }
 
     public virtual void GripAction()
     {

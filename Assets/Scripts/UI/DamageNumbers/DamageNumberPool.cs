@@ -32,7 +32,7 @@ public class DamageNumberPool : MonoBehaviour
         if (damageNumber == null)
         {
                 index = 0;
-                damageNumber = Instantiate(damageNumber, _instance.transform);
+                damageNumber = Instantiate(_instance.damageNumberPrefab, _instance.transform);
                 damageNumber.gameObject.SetActive(false);
                 _instance._damageNumbers.Add(damageNumber);
         }

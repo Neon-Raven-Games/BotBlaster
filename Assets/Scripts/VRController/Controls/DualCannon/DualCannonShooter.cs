@@ -12,13 +12,14 @@ public class DualCannonShooter : MonoBehaviour
 
     [SerializeField] private HandCannon bigCannon;
     [SerializeField] private InputActionAsset actionAsset;
+    
     private VRHand _leftHand;
     private VRHand _rightHand;
     public bool _merged;
     private InputAction _leftTrigger;
     private InputAction _rightTrigger;
     
-    void Awake()
+    private void Awake()
     {
         _leftTrigger = actionAsset.FindAction("XRI Left Interaction/UI Press", true);
         _rightTrigger = actionAsset.FindAction("XRI Right Interaction/UI Press", true);
@@ -30,7 +31,7 @@ public class DualCannonShooter : MonoBehaviour
         _rightHand = rightHandTracker.GetComponent<VRHand>();
     }
 
-    void Update()
+    private void Update()
     {
         var handDistance = Vector3.Distance(_leftHand.transform.position, _rightHand.transform.position);
         if (handDistance < handSpreadDistance) CombinedCannon();
@@ -41,10 +42,16 @@ public class DualCannonShooter : MonoBehaviour
     {
         if (!_merged) return;
         _merged = false;
+        
         _rightTrigger.performed -= bigCannon.TriggerPerformedAction;
         _leftTrigger.performed -= bigCannon.TriggerPerformedAction;
+        _rightTrigger.canceled -= bigCannon.TriggerReleasedAction;
+        _leftTrigger.canceled -= bigCannon.TriggerReleasedAction;
+        
         _rightTrigger.Disable();
         _leftTrigger.Disable();
+        
+        bigCannon.TriggerReleasedAction(default);
         SetCannonsActive(true);
     }
 
@@ -54,16 +61,22 @@ public class DualCannonShooter : MonoBehaviour
         {
             _merged = true;
             SetCannonsActive(false);
-            bigCannon.blasterElement = leftCannon.blasterElement;
+            
+            bigCannon.blasterElement = leftCannon.blasterElement | rightCannon.blasterElement;
+            
             _rightTrigger.Enable();
             _leftTrigger.Enable();
             _rightTrigger.performed += bigCannon.TriggerPerformedAction;
             _leftTrigger.performed += bigCannon.TriggerPerformedAction;
+            
+            _rightTrigger.canceled += bigCannon.TriggerReleasedAction;
+            _leftTrigger.canceled += bigCannon.TriggerReleasedAction;
         }
         
         var combinedPosition = (_leftHand.transform.position + _rightHand.transform.position) / 2;
         bigCannon.transform.position = combinedPosition;
-        Vector3 averageDirection = (_leftHand.transform.forward + _rightHand.transform.forward).normalized;
+        
+        var averageDirection = (_leftHand.transform.forward + _rightHand.transform.forward).normalized;
         bigCannon.transform.rotation = Quaternion.LookRotation(averageDirection);
     }
 

@@ -13,6 +13,7 @@ public class ShootingState : BaseHandCanonState
 
     public override void EnterState()
     {
+        if (beam || beamObject) return;
         handCannon.muzzleFlash.SetActive(false);
         base.EnterState();
         RequestLaunch();
@@ -36,20 +37,48 @@ public class ShootingState : BaseHandCanonState
     {
         if (launchRequested)
         {
-            LaunchDodgeball(ElementPool.GetElement(handCannon.blasterElement, handCannon.barrelTransform.position));
+            if (handCannon.soloCannon && handCannon.blasterElement != ElementFlag.Electricity && 
+                handCannon.blasterElement != ElementFlag.Fire && handCannon.blasterElement != ElementFlag.Water &&
+                handCannon.blasterElement != ElementFlag.Wind && handCannon.blasterElement != ElementFlag.Rock)
+            {
+                beamObject = ElementPool.GetElement(handCannon.blasterElement, handCannon.barrelTransform.position);
+                beam = true;
+                launchRequested = false;
+                beamObject.SetActive(true);
+                return;
+            }
+            
+            var ball = ElementPool.GetElement(handCannon.blasterElement, handCannon.barrelTransform.position);
+            LaunchDodgeball(ball);
             handCannon.muzzleFlash.SetActive(true);
             handCannon.audioSource.PlayOneShot(ConfigurationManager.GetBlasterSound());
             launchRequested = false;
             ChangeState(CannonState.Idle);
         }
-        else if (launchRequested) ChangeState(CannonState.Idle);
     }
 
+    private bool beam;
+    private GameObject beamObject;
     private CharacterController controller;
+    public override void Update()
+    {
+        base.Update();
+        if (!beam) return;
+        beamObject.transform.position = handCannon.barrelTransform.position;
+        beamObject.transform.rotation = handCannon.barrelTransform.rotation;
+    }
+
+    public override void FireReleaseAction()
+    {
+        base.FireReleaseAction();
+        beamObject.SetActive(false);
+        beamObject = null;
+        beam = false;
+        ChangeState(CannonState.Idle);
+    }
 
     private void LaunchDodgeball(GameObject dodgeball)
     {
-        // Get the Rigidbody and ensure it is ready for physics interactions
         Rigidbody rb = dodgeball.GetComponent<Rigidbody>();
         rb.isKinematic = false;
         rb.velocity = Vector3.zero;

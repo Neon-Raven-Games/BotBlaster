@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7756390720428950660}
   - component: {fileID: 3352024189769664274}
   - component: {fileID: 8012099187630485828}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Radial
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4899,7 +4899,7 @@ GameObject:
   - component: {fileID: 1023320095958518849}
   - component: {fileID: 1023320095958518851}
   - component: {fileID: 1023320095958518850}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: LaserCore_Range
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5281,7 +5281,7 @@ ParticleSystem:
     startSizeZ:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 3.1
+      scalar: 1.8000001
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -9877,7 +9877,7 @@ GameObject:
   - component: {fileID: 1023320095998972628}
   - component: {fileID: 1023320095998972630}
   - component: {fileID: 1023320095998972629}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: WaterAOE_Waterfront
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14765,7 +14765,7 @@ GameObject:
   - component: {fileID: 1023320096195558947}
   - component: {fileID: 1023320096195558949}
   - component: {fileID: 1023320096195558948}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Dots
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19595,7 +19595,7 @@ GameObject:
   - component: {fileID: 1023320096242673111}
   - component: {fileID: 1023320096242673129}
   - component: {fileID: 1023320096242673128}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: LaserCore_Range
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19977,7 +19977,7 @@ ParticleSystem:
     startSizeZ:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 3.1
+      scalar: 1.8000001
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -24573,7 +24573,7 @@ GameObject:
   - component: {fileID: 1023320096623121407}
   - component: {fileID: 1023320096623121393}
   - component: {fileID: 1023320096623121392}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: LaserCore_Range
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24955,7 +24955,7 @@ ParticleSystem:
     startSizeZ:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 3.1
+      scalar: 1.8000001
       minScalar: 3.1
       maxCurve:
         serializedVersion: 2
@@ -29551,7 +29551,7 @@ GameObject:
   - component: {fileID: 1023320097133855043}
   - component: {fileID: 1023320097133855045}
   - component: {fileID: 1023320097133855044}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: LaserCore_Range
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29933,7 +29933,7 @@ ParticleSystem:
     startSizeZ:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 3.1
+      scalar: 1.8000001
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -34529,7 +34529,7 @@ GameObject:
   - component: {fileID: 1023320097193177682}
   - component: {fileID: 1023320097193177684}
   - component: {fileID: 1023320097193177683}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: WaterAOE_Waterback
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39417,7 +39417,7 @@ GameObject:
   - component: {fileID: 1023320097254348458}
   - component: {fileID: 1023320097254348460}
   - component: {fileID: 1023320097254348459}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: WaterTiling02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44254,7 +44254,7 @@ GameObject:
   - component: {fileID: 1023320097355105764}
   - component: {fileID: 1023320097355105766}
   - component: {fileID: 1023320097355105765}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Splashes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -49084,7 +49084,7 @@ GameObject:
   - component: {fileID: 1023320097414237377}
   - component: {fileID: 1023320097414237379}
   - component: {fileID: 1023320097414237378}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: DotsDirectional
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -53933,7 +53933,7 @@ GameObject:
   - component: {fileID: 1023320097464174201}
   - component: {fileID: 1023320097464174200}
   - component: {fileID: 2843362467241160518}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: FX_PF_WaterLaser_Stream
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -58941,7 +58941,7 @@ GameObject:
   - component: {fileID: 1505226023029094697}
   - component: {fileID: 6262544149282441023}
   - component: {fileID: 4169384610034863317}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Impact
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -63829,7 +63829,7 @@ GameObject:
   - component: {fileID: 2104648369112762692}
   - component: {fileID: 9136064702011197183}
   - component: {fileID: 4389074602996864680}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ImpactSpikes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -68717,7 +68717,7 @@ GameObject:
   - component: {fileID: 6814210166435106549}
   - component: {fileID: 5393621380451294236}
   - component: {fileID: 8901911014242469509}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CenterImpact
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73605,7 +73605,7 @@ GameObject:
   - component: {fileID: 3973563402448662303}
   - component: {fileID: 1194244534163047454}
   - component: {fileID: 144056895067309260}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Dots
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -78493,7 +78493,7 @@ GameObject:
   - component: {fileID: 5321875786953527023}
   - component: {fileID: 6161432209813298779}
   - component: {fileID: 3176996537400295327}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: WaterAOE_Waterfront
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -83381,7 +83381,7 @@ GameObject:
   - component: {fileID: 2565170784862081188}
   - component: {fileID: 4907609116133621028}
   - component: {fileID: 2802740190780657170}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GlowMask
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -88269,7 +88269,7 @@ GameObject:
   - component: {fileID: 4339900991964045422}
   - component: {fileID: 1303269262479007453}
   - component: {fileID: 6020609542746437876}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ShockWave_Radial
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93166,7 +93166,7 @@ GameObject:
   - component: {fileID: 6762833885195742288}
   - component: {fileID: 4865504478378644935}
   - component: {fileID: 7515547159452468391}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Jet_Stream_Impact
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93182,8 +93182,8 @@ Transform:
   m_GameObject: {fileID: 5398824451142410171}
   serializedVersion: 2
   m_LocalRotation: {x: 0.9998569, y: 0, z: 0, w: 0.01692017}
-  m_LocalPosition: {x: -0.3, y: -0.41, z: 17.908}
-  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
+  m_LocalPosition: {x: 0.06, y: -0.4, z: 11.41}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2957657522847819042}
@@ -98011,7 +98011,7 @@ GameObject:
   - component: {fileID: 4106397987121191925}
   - component: {fileID: 11027626118521646}
   - component: {fileID: 1727662910652347962}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: DarkImpact
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98028,7 +98028,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 6762833885195742288}
@@ -102899,7 +102899,7 @@ GameObject:
   - component: {fileID: 9094751142625306217}
   - component: {fileID: 1831378702533211068}
   - component: {fileID: 6024552048405600031}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GlowSecond
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -102916,7 +102916,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.4791108, y: 0.47911087, z: 0.47911072}
+  m_LocalScale: {x: 0.2395554, y: 0.47911087, z: 0.47911072}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6762833885195742288}
@@ -107787,7 +107787,7 @@ GameObject:
   - component: {fileID: 4812806920452551305}
   - component: {fileID: 2577591036950589750}
   - component: {fileID: 2577431488160237379}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: LightImpact
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -107804,7 +107804,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 6762833885195742288}
@@ -112674,7 +112674,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2411942831152486411}
   - component: {fileID: 832573648072476384}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ColliderTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -112728,7 +112728,7 @@ GameObject:
   - component: {fileID: 5785120728991132703}
   - component: {fileID: 6617691046727156334}
   - component: {fileID: 9092207128992557816}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: WaterDirectionalImpact
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117616,7 +117616,7 @@ GameObject:
   - component: {fileID: 2957657522847819042}
   - component: {fileID: 4302663649038288718}
   - component: {fileID: 2357649240703078014}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: WaterTiling
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -122453,7 +122453,7 @@ GameObject:
   - component: {fileID: 6861460808451771711}
   - component: {fileID: 2960693381284141048}
   - component: {fileID: 4114327978958832854}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: WaterAOE_Waterback
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -127341,7 +127341,7 @@ GameObject:
   - component: {fileID: 8620537164432859370}
   - component: {fileID: 1690365830838180312}
   - component: {fileID: 194178730100287882}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Glow_Heart
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -132229,7 +132229,7 @@ GameObject:
   - component: {fileID: 7279425501180175357}
   - component: {fileID: 7728084593836204102}
   - component: {fileID: 8736070977628363477}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -137117,7 +137117,7 @@ GameObject:
   - component: {fileID: 4420197831507372090}
   - component: {fileID: 3800021725355385268}
   - component: {fileID: 3949734139914869662}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: WaterDirectionalImpact2
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5037921662979730218}
   - component: {fileID: 2325842800726554900}
   - component: {fileID: 4868728466148814429}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Rock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4946,7 +4946,7 @@ GameObject:
   - component: {fileID: 1606740795844324245}
   - component: {fileID: 5384403157507227050}
   - component: {fileID: 3340572940615577214}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: RockTrail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9795,7 +9795,7 @@ GameObject:
   - component: {fileID: 6314352689526329377}
   - component: {fileID: 3209978441445762775}
   - component: {fileID: 5076905169640285566}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Rock_Projectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9817,6 +9817,7 @@ Transform:
   m_Children:
   - {fileID: 5037921662979730218}
   - {fileID: 7506859035931112261}
+  - {fileID: 4530300119323859286}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6314352689526329377
@@ -9834,6 +9835,7 @@ MonoBehaviour:
   elementFlag: 8
   speed: 10
   damage: 1
+  muzzleFlash: {fileID: 5295187425801623940}
   impact: {fileID: 7506859035931275105}
 --- !u!54 &3209978441445762775
 Rigidbody:
@@ -9883,6 +9885,37 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.12
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &5295187425801623940
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4530300119323859286}
+  m_Layer: 6
+  m_Name: MuzzleFlash
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4530300119323859286
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5295187425801623940}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8708701010820558219}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6834728096806296666
 GameObject:
   m_ObjectHideFlags: 0
@@ -9894,7 +9927,7 @@ GameObject:
   - component: {fileID: 611187584330376973}
   - component: {fileID: 4020150037877988359}
   - component: {fileID: 3831062010153467774}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: WindNoise
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14814,6 +14847,22 @@ PrefabInstance:
     - target: {fileID: 100000, guid: e716f20fa2e331744a256ca65b770354, type: 3}
       propertyPath: m_Name
       value: CFX4 Black Monster Explosion (Big)
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: e716f20fa2e331744a256ca65b770354, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: e716f20fa2e331744a256ca65b770354, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 100004, guid: e716f20fa2e331744a256ca65b770354, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 100006, guid: e716f20fa2e331744a256ca65b770354, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: e716f20fa2e331744a256ca65b770354, type: 3}
       propertyPath: m_LocalScale.x

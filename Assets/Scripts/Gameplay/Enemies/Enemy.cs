@@ -69,11 +69,12 @@ public class Enemy : Actor
         }
     }
 
-    private void Attack()
+    protected virtual void Attack()
     {
+        
     }
 
-    private void Move()
+    protected virtual void Move()
     {
         if (_knockingBack) return;
         var directionToPlayer = _player.position - transform.position;
@@ -105,6 +106,7 @@ public class Enemy : Actor
                 _knockingBack = true;
                 KnockBack(hitDirection);
             }
+            
             currentHealth -= damage;
         }
     }

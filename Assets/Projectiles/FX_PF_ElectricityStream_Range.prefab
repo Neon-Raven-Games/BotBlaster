@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 75650330032711542}
   - component: {fileID: 7531428792789133323}
   - component: {fileID: 1310315945436954188}
-  m_Layer: 0
+  - component: {fileID: 7184346653281214893}
+  m_Layer: 6
   m_Name: FX_PF_ElectricityStream_Range
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +41,6 @@ Transform:
   - {fileID: 8583380361111648017}
   - {fileID: 30932532658993131}
   - {fileID: 8596443324580604155}
-  - {fileID: 227455405500890087}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!198 &7531428792789133323
@@ -4837,7 +4837,7 @@ ParticleSystemRenderer:
   m_SortingFudge: 0
   m_NormalDirection: 1
   m_ShadowBias: 0
-  m_RenderAlignment: 1
+  m_RenderAlignment: 2
   m_Pivot: {x: 0, y: 0, z: 0}
   m_Flip: {x: 0.5, y: 0, z: 1}
   m_EnableGPUInstancing: 1
@@ -4858,6 +4858,25 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &7184346653281214893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 89012649378840505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1b742a3eae243debdc05291f366697b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  zAxisParticles:
+  - {fileID: 2443703122642956408}
+  - {fileID: 632559426794815413}
+  - {fileID: 2569994595034193125}
+  projectileImpact: {fileID: 5010405368599082351}
+  endDistance: 10
+  jetSpeed: 8
 --- !u!1 &134367178789503346
 GameObject:
   m_ObjectHideFlags: 0
@@ -4869,7 +4888,7 @@ GameObject:
   - component: {fileID: 3980874967963928613}
   - component: {fileID: 8321413719975486844}
   - component: {fileID: 5226550150755630015}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Core
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9784,7 +9803,7 @@ GameObject:
   - component: {fileID: 6777132640468460166}
   - component: {fileID: 2443703122642956408}
   - component: {fileID: 5057037227209013505}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: LaserCore_Range
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14762,7 +14781,7 @@ GameObject:
   - component: {fileID: 8583380361111648017}
   - component: {fileID: 6567862027756199075}
   - component: {fileID: 6873589152488453928}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: SparksLinger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19637,7 +19656,7 @@ GameObject:
   - component: {fileID: 7158746232833880069}
   - component: {fileID: 6258753465628817975}
   - component: {fileID: 8916747735461563192}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Impact
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24534,7 +24553,7 @@ GameObject:
   - component: {fileID: 2591118229745780446}
   - component: {fileID: 3176537695673160633}
   - component: {fileID: 7090816818524962448}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29431,7 +29450,7 @@ GameObject:
   - component: {fileID: 7682169483371278768}
   - component: {fileID: 2569994595034193125}
   - component: {fileID: 3557333967337974415}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Lightning_Range
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34279,7 +34298,7 @@ GameObject:
   - component: {fileID: 2479558284637452230}
   - component: {fileID: 5681064164547831191}
   - component: {fileID: 3683787272977236333}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: FX_PF_Electricity_AroundBodySparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39130,7 +39149,7 @@ GameObject:
   - component: {fileID: 5110273669694817985}
   - component: {fileID: 6171693955821357458}
   - component: {fileID: 2074751377600965331}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Circle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44027,7 +44046,7 @@ GameObject:
   - component: {fileID: 9179531815154700620}
   - component: {fileID: 3655275093480100134}
   - component: {fileID: 3149888650110699212}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: BigGlow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48875,13 +48894,13 @@ GameObject:
   - component: {fileID: 8596443324580604155}
   - component: {fileID: 5729946950997406353}
   - component: {fileID: 966135108475992066}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ElectricityStream_StarImpact
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8596443324580604155
 Transform:
   m_ObjectHideFlags: 0
@@ -48892,8 +48911,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 17.6}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 388997198671099653}
   - {fileID: 7158746232833880069}
@@ -53789,7 +53808,7 @@ GameObject:
   - component: {fileID: 4626765889344610763}
   - component: {fileID: 4403034196217702095}
   - component: {fileID: 2888678362258186109}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ContrastImpact
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -58695,7 +58714,7 @@ GameObject:
   - component: {fileID: 7245998912239122246}
   - component: {fileID: 1573170453509441877}
   - component: {fileID: 8971177968275217122}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -63601,7 +63620,7 @@ GameObject:
   - component: {fileID: 30932532658993131}
   - component: {fileID: 119766932729446311}
   - component: {fileID: 7388252322478813250}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GlowADD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -68431,7 +68450,7 @@ GameObject:
   - component: {fileID: 7908111471431236038}
   - component: {fileID: 6689930541650325671}
   - component: {fileID: 6809226294405628018}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73279,7 +73298,7 @@ GameObject:
   - component: {fileID: 3952427773213321409}
   - component: {fileID: 6080926221437407065}
   - component: {fileID: 6792477906968417026}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Small arcs after
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -78179,7 +78198,7 @@ GameObject:
   - component: {fileID: 1308227749766222775}
   - component: {fileID: 2490353809391304459}
   - component: {fileID: 6518477110881957136}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ContrastCircle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -83076,7 +83095,7 @@ GameObject:
   - component: {fileID: 388997198671099653}
   - component: {fileID: 9014833352257238414}
   - component: {fileID: 6321228585582348386}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: 'Distort '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -87964,7 +87983,7 @@ GameObject:
   - component: {fileID: 6018845071993456662}
   - component: {fileID: 729935665812781602}
   - component: {fileID: 1123762149610162469}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92794,7 +92813,7 @@ GameObject:
   - component: {fileID: 1533439218567716160}
   - component: {fileID: 632559426794815413}
   - component: {fileID: 6266582814019503069}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: LaserCore_Range (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97772,7 +97791,7 @@ GameObject:
   - component: {fileID: 2532299774370287930}
   - component: {fileID: 7856921148021028079}
   - component: {fileID: 5017194254110223766}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Sparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -102600,77 +102619,3 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
---- !u!1001 &2735208717052092692
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 75650330032711542}
-    m_Modifications:
-    - target: {fileID: 989855718986624371, guid: 1a30fdf8ffa5c124fa4f734ef3eeada8, type: 3}
-      propertyPath: m_Name
-      value: Ball Launcher
-      objectReference: {fileID: 0}
-    - target: {fileID: 2800531614649441011, guid: 1a30fdf8ffa5c124fa4f734ef3eeada8, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 2800531614649441011, guid: 1a30fdf8ffa5c124fa4f734ef3eeada8, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 2800531614649441011, guid: 1a30fdf8ffa5c124fa4f734ef3eeada8, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 2800531614649441011, guid: 1a30fdf8ffa5c124fa4f734ef3eeada8, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2800531614649441011, guid: 1a30fdf8ffa5c124fa4f734ef3eeada8, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2800531614649441011, guid: 1a30fdf8ffa5c124fa4f734ef3eeada8, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2800531614649441011, guid: 1a30fdf8ffa5c124fa4f734ef3eeada8, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2800531614649441011, guid: 1a30fdf8ffa5c124fa4f734ef3eeada8, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2800531614649441011, guid: 1a30fdf8ffa5c124fa4f734ef3eeada8, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2800531614649441011, guid: 1a30fdf8ffa5c124fa4f734ef3eeada8, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2800531614649441011, guid: 1a30fdf8ffa5c124fa4f734ef3eeada8, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2800531614649441011, guid: 1a30fdf8ffa5c124fa4f734ef3eeada8, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2800531614649441011, guid: 1a30fdf8ffa5c124fa4f734ef3eeada8, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 1a30fdf8ffa5c124fa4f734ef3eeada8, type: 3}
---- !u!4 &227455405500890087 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2800531614649441011, guid: 1a30fdf8ffa5c124fa4f734ef3eeada8, type: 3}
-  m_PrefabInstance: {fileID: 2735208717052092692}
-  m_PrefabAsset: {fileID: 0}

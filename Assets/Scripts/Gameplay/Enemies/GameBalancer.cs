@@ -15,7 +15,7 @@ public static class GameBalancer
         var numberOfEnemies = Mathf.CeilToInt(waveNumber * 1.5f);
         var selectedEnemyTypes = new EnemyType[numberOfEnemies];
         
-        for (int i = 0; i < numberOfEnemies; i++)
+        for (var i = 0; i < numberOfEnemies; i++)
         {
             selectedEnemyTypes[i] = availableEnemyTypes[Random.Range(0, availableEnemyTypes.Length)];
         }

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Gameplay;
 using Gameplay.Enemies;
@@ -16,27 +15,20 @@ public class HandCannon : MonoBehaviour
     private Dictionary<ElementFlag, Material> _elementMaterials;
     private ElementFlag _previousElement;
     public AudioSource audioSource;
-    internal readonly List<Projectile> dodgeBallAmmo = new();
     [SerializeField] private InputActionAsset actionAsset;
     public Transform barrelTransform;
     public Animator animator;
-    public bool trajectoryAssist;
 
-    [Header("Shooting Settings")] public GameObject muzzleFlash;
+    [Header("Shooting Settings")] 
+    public GameObject muzzleFlash;
     public float launchForce = 20f;
-    public int trajectoryPoints = 8;
-
-    [Header("Sucking Settings")] public float suctionForce = 10f;
-    public float swirlRadius = 1f;
-    public float swirlSpeed = 2f;
-    public float ballEndScale = 0.4f;
-
+    
     private Dictionary<CannonState, BaseHandCanonState> _states;
     private BaseHandCanonState _currentState;
     private InputAction _triggerAction;
     public DevController actor;
 
-    [SerializeField] private bool soloCannon;
+    [SerializeField] internal bool soloCannon;
     private void Start()
     {
         _states = new Dictionary<CannonState, BaseHandCanonState>
@@ -56,6 +48,7 @@ public class HandCannon : MonoBehaviour
 
     private void SetBlasterMaterial()
     {
+        if (soloCannon) return;
         blasterRenderer.material = _elementMaterials[blasterElement];
     }
 
@@ -72,11 +65,6 @@ public class HandCannon : MonoBehaviour
         _triggerAction.canceled += TriggerReleasedAction;
     }
 
-    public void AddDodgeBall(Projectile ball)
-    {
-        dodgeBallAmmo.Add(ball);
-    }
-
     public void ChangeState(CannonState state)
     {
         _currentState?.ExitState();
@@ -89,11 +77,10 @@ public class HandCannon : MonoBehaviour
         animator.Play("Fire");
     }
 
-    private void TriggerReleasedAction(InputAction.CallbackContext obj)
+    internal void TriggerReleasedAction(InputAction.CallbackContext obj)
     {
         _currentState?.FireReleaseAction();
     }
-
 
     private void Update()
     {
@@ -142,19 +129,9 @@ public class HandCannon : MonoBehaviour
         _currentState?.OnTriggerStay(other);
     }
 
-#if UNITY_EDITOR
-    private void OnDrawGizmos()
-    {
-        _currentState?.OnDrawGizmos();
-    }
-
-#endif
     public void FinalizeElementChange()
     {
-        if ((_previousElement & blasterElement) == 0)
-        {
-            SetBlasterMaterial();
-        }
+        if ((_previousElement & blasterElement) == 0) SetBlasterMaterial();
     }
 
     public void InitializeElementChange()

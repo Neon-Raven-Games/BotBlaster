@@ -24,7 +24,7 @@ public class VRHand : MonoBehaviour
         _impulsePlayer = GetComponent<HapticImpulsePlayer>();
         
         var handString = handSide == HandSide.LEFT ? "Left" : "Right";
-        _blasterSelect = actionAsset.FindAction($"XRI {handString} Interaction/Scale Toggle", true);
+        _blasterSelect = actionAsset.FindAction($"XRI {handString} Interaction/Select", true);
         
         _blasterSelect.Enable();
         

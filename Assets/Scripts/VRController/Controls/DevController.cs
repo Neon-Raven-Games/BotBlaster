@@ -24,6 +24,8 @@ public enum HandSide
 [RequireComponent(typeof(CharacterController))]
 public class DevController : MonoBehaviour
 {
+    // muzzle flash distance from barrel
+    // hold trigger to shoot
     [Header("Input Settings")] [SerializeField]
     private InputActionAsset actionAsset;
 
@@ -90,15 +92,12 @@ public class DevController : MonoBehaviour
             handPos.z = 0;
             handsAnchor.localPosition = handPos;
             Time.timeScale = 1;
-            actionAsset.Enable();
         }
         else
         {
             Time.timeScale = 0;
-            actionAsset.Disable();
         }
     }
-
 
     private void Awake()
     {
