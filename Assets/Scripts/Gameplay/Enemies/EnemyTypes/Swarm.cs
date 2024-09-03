@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -41,6 +42,17 @@ namespace Gameplay.Enemies.EnemyTypes
             }
 
             SetSwarmActive(swarmCount);
+        }
+
+        private void OnDisable()
+        {
+            SleepSwarm();
+        }
+        
+        private void SleepSwarm()
+        {
+            foreach (var swarmUnit in _swarmUnits)
+                swarmUnit.gameObject.SetActive(false);
         }
 
         private void SetSwarmActive(int count)

@@ -5827,6 +5827,14 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 8549592419308501402, guid: 64cf5ca11e3bab44486abdbbc32bd73e, type: 3}
+      propertyPath: baseHealth
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 8549592419308501402, guid: 64cf5ca11e3bab44486abdbbc32bd73e, type: 3}
+      propertyPath: showDamageNumbers
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8799156264762784458, guid: 64cf5ca11e3bab44486abdbbc32bd73e, type: 3}
       propertyPath: m_Layer
       value: 7

@@ -40,9 +40,14 @@ namespace Gameplay
         private void OnCollisionEnter(Collision collision)
         {
             if (collision.gameObject.CompareTag("Enemy"))
-                collision.gameObject.GetComponent<Enemy>().TakeDamage(damage, transform.forward, elementFlag);
+            {
+                var enemy = collision.gameObject.GetComponent<Enemy>();
+                if (enemy) enemy.TakeDamage(damage, transform.forward, elementFlag);
+            }
             else if (collision.gameObject.CompareTag("Player"))
+            {
                 collision.gameObject.GetComponent<Actor>().ApplyDamage(damage, elementFlag, collision.GetContact(0).point );
+            }
             
             impact.transform.position = collision.GetContact(0).point;
             impact.SetActive(true);

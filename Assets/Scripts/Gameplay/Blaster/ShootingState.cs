@@ -37,7 +37,7 @@ public class ShootingState : BaseHandCanonState
     {
         if (launchRequested)
         {
-            if (handCannon.soloCannon && handCannon.blasterElement != ElementFlag.Electricity && 
+            if (handCannon.soloCannon && handCannon.blasterElement != ElementFlag.Electricity &&
                 handCannon.blasterElement != ElementFlag.Fire && handCannon.blasterElement != ElementFlag.Water &&
                 handCannon.blasterElement != ElementFlag.Wind && handCannon.blasterElement != ElementFlag.Rock)
             {
@@ -47,7 +47,7 @@ public class ShootingState : BaseHandCanonState
                 beamObject.SetActive(true);
                 return;
             }
-            
+
             var ball = ElementPool.GetElement(handCannon.blasterElement, handCannon.barrelTransform.position);
             LaunchDodgeball(ball);
             handCannon.muzzleFlash.SetActive(true);
@@ -60,6 +60,7 @@ public class ShootingState : BaseHandCanonState
     private bool beam;
     private GameObject beamObject;
     private CharacterController controller;
+
     public override void Update()
     {
         base.Update();
@@ -71,8 +72,12 @@ public class ShootingState : BaseHandCanonState
     public override void FireReleaseAction()
     {
         base.FireReleaseAction();
-        beamObject.SetActive(false);
-        beamObject = null;
+        if (beamObject)
+        {
+            beamObject.SetActive(false);
+            beamObject = null;
+        }
+
         beam = false;
         ChangeState(CannonState.Idle);
     }
