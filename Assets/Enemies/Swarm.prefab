@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 9057061048987540016}
   - component: {fileID: 1789080663349411075}
   - component: {fileID: 1232796391620522368}
-  - component: {fileID: -7477255493524569796}
   - component: {fileID: 893144348338180501}
+  - component: {fileID: 7765424138048340372}
   m_Layer: 0
   m_Name: Swarm
   m_TagString: Enemy
@@ -107,30 +107,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.2, y: 1.2, z: 1.2}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-7477255493524569796
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1803895991445990651}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a334cb229e9aa14fb751c7856cc06fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  element: 0
-  baseHealth: 0
-  baseDamage: 0
-  baseSpeed: 0
-  baseAttackRange: 0
-  baseAttackCoolDown: 0
-  debuffs: 0
-  damageTextPrefab: {fileID: 2864685057116797952, guid: 8c21919c3ffac294cadf2762d612eda7, type: 3}
-  enemyType: 0
-  knockBackForce: {x: 1, y: 1}
-  knockBackTime: 0.5
-  minWaveSpawn: 0
 --- !u!54 &893144348338180501
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -158,3 +134,44 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &7765424138048340372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1803895991445990651}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8cb03d5c1ff4a6cb2f5d4dc9c08c068, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  element: 0
+  baseHealth: 0
+  baseDamage: 0
+  baseSpeed: 0
+  baseAttackRange: 0
+  baseAttackCoolDown: 0
+  debuffs: 0
+  showDamageNumbers: 1
+  enemyType: 1
+  knockBackForce: {x: 0, y: 0}
+  knockBackTime: 0.5
+  minWaveSpawn: 0
+  swarmUnitPrefab: {fileID: 3647163213140596350, guid: abda2d0504910294b8a7966588fa12bb, type: 3}
+  swarmCount: 5
+  circleRadius: 20
+  diveBombPercentage: 0.2
+  diveBombCooldown: 5
+  swarmRadius: 2
+  orbitSpeed: 0.3
+  closingSpeedMultiplier: 0.1
+  cohesionFactor: 12
+  separationFactor: 5
+  alignmentFactor: 0.7
+  randomFactor: 0.53
+  rotationSpeed: 8
+  swayAmplitude: 2
+  swayFrequency: 1
+  noiseScale: 0.2
+  circleRadiusMinDist: 15

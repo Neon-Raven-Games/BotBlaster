@@ -10,17 +10,19 @@ public class Enemy : Actor
     [SerializeField] private float knockBackTime = 0.5f;
     private bool _knockingBack;
     public int minWaveSpawn;
-    
-    private Rigidbody _rigidbody;
-    private Transform _player;
+
+    protected Rigidbody rigidbody;
+    protected Transform player;
+    protected Actor playerComponent;
     protected override void Awake()
     {
         base.Awake();
-        _rigidbody = GetComponent<Rigidbody>();
-        _player = Camera.main.transform;
+        rigidbody = GetComponent<Rigidbody>();
+        player = Camera.main.transform;
+        playerComponent = FindObjectOfType<DevController>();
     }
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         _knockingBack = false;
         currentHealth = baseHealth;
@@ -38,11 +40,11 @@ public class Enemy : Actor
         enemyType = enemyData.enemyType;
     }
 
-    private float _lastAttackTime;
-    
+    protected float lastAttackTime;
+
     private bool CanAttack()
     {
-        var timeSinceLastAttack = Time.time - _lastAttackTime;
+        var timeSinceLastAttack = Time.time - lastAttackTime;
 
         // Apply attack speed boost if Wind element is active
         var adjustedAttackCooldown = currentAttackCoolDown;
@@ -57,10 +59,10 @@ public class Enemy : Actor
     protected override void Update()
     {
         base.Update();
-        var playerDistance = Vector3.Distance(transform.position, _player.position);
+        var playerDistance = Vector3.Distance(transform.position, player.position);
         if (playerDistance <= currentAttackRange && CanAttack())
         {
-            _lastAttackTime = Time.time;
+            lastAttackTime = Time.time;
             Attack();
         }
         else
@@ -77,18 +79,17 @@ public class Enemy : Actor
     protected virtual void Move()
     {
         if (_knockingBack) return;
-        var directionToPlayer = _player.position - transform.position;
+        var directionToPlayer = player.position - transform.position;
         
         if (enemyType == EnemyType.Grunt || enemyType == EnemyType.Tank) directionToPlayer.y = 0; 
         
         if (directionToPlayer != Vector3.zero) transform.rotation = Quaternion.LookRotation(directionToPlayer);
-        _rigidbody.velocity = directionToPlayer.normalized * (GetMovementCurrentSpeed() * Time.deltaTime);
+        rigidbody.velocity = directionToPlayer.normalized * (GetMovementCurrentSpeed() * Time.deltaTime);
     }
 
     public void TakeDamage(int damage, Vector3 hitDirection, ElementFlag elementFlag)
     {
-        
-        damage = ApplyDamage(damage, elementFlag);
+        damage = ApplyDamage(damage, elementFlag, transform.position);
         if (currentHealth - damage <= 0)
         {
             _knockingBack = true;
@@ -111,6 +112,7 @@ public class Enemy : Actor
         }
     }
  
+    // this needs to work for both flying and ground enemies
     private IEnumerator KnockBackTimer()
     {
         knockBackTime = 0.5f;
@@ -121,13 +123,13 @@ public class Enemy : Actor
         }
         _knockingBack = false;
     }
-    
+
     private void KnockBack(Vector3 hitDirection)
     {
-        _rigidbody.velocity = Vector3.zero;
-        _rigidbody.angularVelocity = Vector3.zero;
+        rigidbody.velocity = Vector3.zero;
+        rigidbody.angularVelocity = Vector3.zero;
         hitDirection.y = 1;
-        _rigidbody.AddForce(hitDirection.normalized * knockBackForce, ForceMode.Impulse);
+        rigidbody.AddForce(hitDirection.normalized * knockBackForce, ForceMode.Impulse);
         StartCoroutine(KnockBackTimer());
     }
     

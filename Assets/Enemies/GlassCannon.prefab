@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1954751887206145093
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3318481387949043830}
+  m_Layer: 0
+  m_Name: Barrel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3318481387949043830
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1954751887206145093}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.005, y: 0, z: 1.938}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 879073631608234235}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6130725222516041695
 GameObject:
   m_ObjectHideFlags: 0
@@ -12,8 +43,8 @@ GameObject:
   - component: {fileID: 558204888002321684}
   - component: {fileID: 5305877061521776356}
   - component: {fileID: 2271136408689997598}
-  - component: {fileID: 544105818078655088}
   - component: {fileID: 7811408499682634929}
+  - component: {fileID: 7770364312419224945}
   m_Layer: 0
   m_Name: GlassCannon
   m_TagString: Enemy
@@ -33,7 +64,8 @@ Transform:
   m_LocalPosition: {x: 13.189458, y: 2.05, z: 0.077941895}
   m_LocalScale: {x: 0.39999995, y: 0.4, z: 0.39999995}
   m_ConstrainProportionsScale: 1
-  m_Children: []
+  m_Children:
+  - {fileID: 3318481387949043830}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 5.283, z: 0}
 --- !u!33 &558204888002321684
@@ -107,30 +139,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.18, y: 1.34, z: 3.19}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &544105818078655088
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6130725222516041695}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a334cb229e9aa14fb751c7856cc06fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  element: 0
-  baseHealth: 0
-  baseDamage: 0
-  baseSpeed: 0
-  baseAttackRange: 0
-  baseAttackCoolDown: 0
-  debuffs: 0
-  damageTextPrefab: {fileID: 2864685057116797952, guid: 8c21919c3ffac294cadf2762d612eda7, type: 3}
-  enemyType: 2
-  knockBackForce: {x: 1, y: 1}
-  knockBackTime: 0.5
-  minWaveSpawn: 0
 --- !u!54 &7811408499682634929
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -158,3 +166,36 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &7770364312419224945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6130725222516041695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a6a9e58035347d49e76231647f42ea3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  element: 32
+  baseHealth: 0
+  baseDamage: 0
+  baseSpeed: 0
+  baseAttackRange: 0
+  baseAttackCoolDown: 0
+  debuffs: 0
+  showDamageNumbers: 1
+  enemyType: 2
+  knockBackForce: {x: 1, y: 1}
+  knockBackTime: 0.5
+  minWaveSpawn: 0
+  barrelTransform: {fileID: 3318481387949043830}
+  chargeTime: 1.5
+  ySpawnHeightRange: {x: 4, y: 8}
+  rotationSpeed: 16
+  strafeSpeed: 1
+  strafeDistance: 9
+  targetHeight: 7.52
+  swoopSpeed: 6
+  swoopBufferDistance: 15

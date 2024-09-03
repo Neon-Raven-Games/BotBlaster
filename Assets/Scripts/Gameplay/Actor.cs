@@ -1,10 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using DG.Tweening;
 using Gameplay.Enemies;
 using Gameplay.Util;
-using TMPro;
 using UnityEngine;
 
 public class Actor : MonoBehaviour
@@ -27,6 +24,7 @@ public class Actor : MonoBehaviour
 
     private Dictionary<ElementFlag, int> stacks = new();
     public ElementFlag debuffs;
+    [SerializeField] private bool showDamageNumbers = true;
 
     protected virtual void Awake()
     {
@@ -52,23 +50,24 @@ public class Actor : MonoBehaviour
         currentAttackCoolDown = actorData.baseAttackCooldown;
     }
 
-    private void ShowDamageNumber(int damage, ElementFlag damageElementType, bool isWeak, bool isStrong)
+    private static void ShowDamageNumber(int damage, ElementFlag damageElementType, bool isWeak, bool isStrong, Vector3 position)
     {
         var status = StatusEffectiveness.Normal;
         if (isWeak) status = StatusEffectiveness.Weak;
         if (isStrong) status = StatusEffectiveness.Strong;
-        DamageNumberPool.SetElementDamageNumber(damageElementType, transform.position, status, damage);
+        DamageNumberPool.SetElementDamageNumber(damageElementType, position, status, damage);
     }
 
-    public int ApplyDamage(int damage, ElementFlag hitElement, int elementLevel = 1)
+    public int ApplyDamage(int damage, ElementFlag hitElement, Vector3 position, int elementLevel = 1)
     {
         // our character has element, and this is passing in the hit element.
         // we want to check if our element is strong or weak against the hit element
-        damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Rock);
-        damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Water);
-        damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Fire);
-        damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Wind);
-        damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Electricity);
+        damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Rock, position);
+        damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Water, position);
+        damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Fire, position);
+        damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Wind, position);
+        damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Electricity, position);
+        
         // remove elements without status effects
         hitElement &= ~ElementFlag.Rock;
         hitElement &= ~ElementFlag.Wind;
@@ -80,12 +79,12 @@ public class Actor : MonoBehaviour
     }
 
     private int ApplyElementalDamage(int damage, ElementFlag characterElement, ElementFlag hitElement, int elementLevel,
-        ElementFlag targetElement)
+        ElementFlag targetElement, Vector3 position)
     {
         if (characterElement == ElementFlag.None || (characterElement & targetElement) == 0)
         {
-            // Show the damage number without any elemental multipliers
-            ShowDamageNumber(damage, targetElement, false, false);
+            if (showDamageNumbers)
+                ShowDamageNumber(damage, targetElement, false, false, position);
             return damage;
         }
 
@@ -107,7 +106,8 @@ public class Actor : MonoBehaviour
         }
 
         var finalDamage = damage + (int) (damage * multiplier * GetStackMultiplier(targetElement));
-        ShowDamageNumber(finalDamage, targetElement, isWeak, isStrong);
+        if (showDamageNumbers)
+            ShowDamageNumber(finalDamage, targetElement, isWeak, isStrong, position);
 
         return finalDamage;
     }
@@ -160,7 +160,7 @@ public class Actor : MonoBehaviour
         {
             _lastTick = Time.time + ElementDecorator.DEBUFF_TICK;
             var fireDamage = ApplyElementalDamage(baseDamage, element, ElementFlag.Fire, stacks[ElementFlag.Fire],
-                ElementFlag.Fire);
+                ElementFlag.Fire, transform.position);
             currentHealth -= fireDamage;
             
             if (currentHealth <= 0)
@@ -189,6 +189,8 @@ public class Actor : MonoBehaviour
             }
         }
     }
+    
+    
 
     private void ApplyDebuff(ElementFlag element)
     {

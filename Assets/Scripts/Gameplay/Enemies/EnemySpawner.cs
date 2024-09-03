@@ -46,6 +46,7 @@ public class EnemySpawner : MonoBehaviour
     private static void SpawnEnemy(EnemyType type, Vector3 position)
     {
         var enemy = EnemyPool.GetEnemy(type);
+        enemy.element = ElementFlag.Water;
         enemy.transform.position = position;
         enemy.gameObject.SetActive(true);
     }

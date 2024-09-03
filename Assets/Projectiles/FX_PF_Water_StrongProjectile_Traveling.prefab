@@ -24327,7 +24327,7 @@ GameObject:
   - component: {fileID: 4030494813822503813}
   m_Layer: 6
   m_Name: FX_PF_Water_StrongProjectile_Traveling
-  m_TagString: Untagged
+  m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

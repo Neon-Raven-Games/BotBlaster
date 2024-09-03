@@ -22,7 +22,7 @@ public enum HandSide
 }
 
 [RequireComponent(typeof(CharacterController))]
-public class DevController : MonoBehaviour
+public class DevController : Actor
 {
     // muzzle flash distance from barrel
     // hold trigger to shoot
@@ -83,6 +83,7 @@ public class DevController : MonoBehaviour
         RotationVignette = initialRotationVignette;
     }
 
+    // todo, validate this does not headlock in headset
     private void OnApplicationFocusChanged(bool hasFocus)
     {
         if (hasFocus)
@@ -134,7 +135,7 @@ public class DevController : MonoBehaviour
         _lookAction.Disable();
     }
 
-    private void Update()
+    protected override void Update()
     {
         SynchBaseObjectWithCamera();
         HandleRotation();
