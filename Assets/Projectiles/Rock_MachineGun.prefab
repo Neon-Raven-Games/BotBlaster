@@ -9791,9 +9791,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8708701010820558219}
-  - component: {fileID: 6314352689526329377}
   - component: {fileID: 3209978441445762775}
   - component: {fileID: 5076905169640285566}
+  - component: {fileID: 6913240071183213966}
   m_Layer: 0
   m_Name: Rock_MachineGun
   m_TagString: Projectile
@@ -9819,23 +9819,6 @@ Transform:
   - {fileID: 7506859035931112261}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6314352689526329377
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4800944978843762705}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73e8c5a68e12402abcf7c8ca5f562aa1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  elementFlag: 8
-  speed: 10
-  damage: 1
-  muzzleFlash: {fileID: 0}
-  impact: {fileID: 7506859035931275105}
 --- !u!54 &3209978441445762775
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -9884,6 +9867,24 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.12
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6913240071183213966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4800944978843762705}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1b742a3eae243debdc05291f366697b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  zAxisParticles:
+  - {fileID: 4020150037877988359}
+  - {fileID: 2325842800726554900}
+  projectileImpact: {fileID: 7506859035931275105}
+  endDistance: 10
+  jetSpeed: 8
 --- !u!1 &6834728096806296666
 GameObject:
   m_ObjectHideFlags: 0
@@ -15136,6 +15137,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 11400000, guid: e716f20fa2e331744a256ca65b770354, type: 3}
+    - {fileID: 11400002, guid: e716f20fa2e331744a256ca65b770354, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

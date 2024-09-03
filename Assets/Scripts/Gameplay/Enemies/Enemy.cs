@@ -14,12 +14,32 @@ public class Enemy : Actor
     protected Rigidbody rigidbody;
     protected Transform player;
     protected Actor playerComponent;
+
     protected override void Awake()
     {
         base.Awake();
         rigidbody = GetComponent<Rigidbody>();
         player = Camera.main.transform;
         playerComponent = FindObjectOfType<DevController>();
+    }
+
+    protected void RotateToPlayer(float rotationSpeed)
+    {
+        var playerDirection = player.position - transform.position;
+        if (playerDirection == Vector3.zero) return;
+
+        var targetRotation = Quaternion.LookRotation(playerDirection.normalized);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+    }
+
+    protected void RotateToFlatPlayer(float rotationSpeed)
+    {
+        var playerDirection = player.position - transform.position;
+        playerDirection.y = 0;
+        if (playerDirection == Vector3.zero) return;
+        
+        var targetRotation = Quaternion.LookRotation(playerDirection.normalized);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
     }
 
     protected virtual void OnEnable()
@@ -55,7 +75,7 @@ public class Enemy : Actor
 
         return timeSinceLastAttack >= adjustedAttackCooldown;
     }
-    
+
     protected override void Update()
     {
         base.Update();
@@ -73,16 +93,15 @@ public class Enemy : Actor
 
     protected virtual void Attack()
     {
-        
     }
 
     protected virtual void Move()
     {
         if (_knockingBack) return;
         var directionToPlayer = player.position - transform.position;
-        
-        if (enemyType == EnemyType.Grunt || enemyType == EnemyType.Tank) directionToPlayer.y = 0; 
-        
+
+        if (enemyType == EnemyType.Grunt || enemyType == EnemyType.Tank) directionToPlayer.y = 0;
+
         if (directionToPlayer != Vector3.zero) transform.rotation = Quaternion.LookRotation(directionToPlayer);
         rigidbody.velocity = directionToPlayer.normalized * (GetMovementCurrentSpeed() * Time.deltaTime);
     }
@@ -95,7 +114,7 @@ public class Enemy : Actor
             _knockingBack = true;
             var weak = WeaknessesFor(ElementFlag.Fire);
             var strong = StrengthsFor(ElementFlag.Fire);
-            
+
             if ((weak & element) != 0) Die(StatusEffectiveness.Weak);
             else if ((strong & element) != 0) Die(StatusEffectiveness.Strong);
             else Die(StatusEffectiveness.Normal);
@@ -107,11 +126,11 @@ public class Enemy : Actor
                 _knockingBack = true;
                 KnockBack(hitDirection);
             }
-            
+
             currentHealth -= damage;
         }
     }
- 
+
     // this needs to work for both flying and ground enemies
     private IEnumerator KnockBackTimer()
     {
@@ -121,6 +140,7 @@ public class Enemy : Actor
             knockBackTime -= Time.deltaTime;
             yield return null;
         }
+
         _knockingBack = false;
     }
 
@@ -132,7 +152,7 @@ public class Enemy : Actor
         rigidbody.AddForce(hitDirection.normalized * knockBackForce, ForceMode.Impulse);
         StartCoroutine(KnockBackTimer());
     }
-    
+
     protected override void Die(StatusEffectiveness status)
     {
         gameObject.SetActive(false);

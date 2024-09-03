@@ -10,24 +10,27 @@ namespace Gameplay.Enemies.EnemyTypes
         [SerializeField] private float chargeTime;
         [SerializeField] private Vector2 ySpawnHeightRange;
         [SerializeField] private float rotationSpeed;
-        
-        [Header("Strafe Settings")]
-        [SerializeField] private float strafeSpeed; 
+
+        [Header("Strafe Settings")] [SerializeField]
+        private float strafeSpeed;
+
         [SerializeField] private float strafeDistance;
-        
-        [Header("Swoop Settings")]
-        [SerializeField] private float targetHeight;
+
+        [Header("Swoop Settings")] [SerializeField]
+        private float targetHeight;
+
         [SerializeField] private float swoopSpeed;
         [SerializeField] private float swoopBufferDistance = 2f;
-        
+
         private bool _isCharging;
         private float _strafeAngle;
+
         protected override void OnEnable()
         {
             base.OnEnable();
             _isCharging = false;
             _strafeAngle = 0f;
-            
+
             var pos = transform.position;
             pos.y = Random.Range(ySpawnHeightRange.x, ySpawnHeightRange.y);
             transform.position = pos;
@@ -46,7 +49,7 @@ namespace Gameplay.Enemies.EnemyTypes
             var projectile = ElementPool.GetElement(element, barrelTransform.position);
             projectile.GetComponent<Projectile>().damage = currentDamage;
             projectile.transform.LookAt(player);
-            
+
             // play animation/particle.sound
             var t = 0f;
             while (t < chargeTime)
@@ -57,7 +60,7 @@ namespace Gameplay.Enemies.EnemyTypes
                 projectile.transform.Translate(Vector3.forward * t);
                 yield return null;
             }
-            
+
             projectile.gameObject.SetActive(true);
             _isCharging = false;
             lastAttackTime = Time.time;
@@ -74,7 +77,8 @@ namespace Gameplay.Enemies.EnemyTypes
                 var targetPosition = player.position;
                 targetPosition.y = Mathf.Lerp(transform.position.y, targetHeight, Time.deltaTime * swoopSpeed);
 
-                transform.position = Vector3.MoveTowards(transform.position, targetPosition, currentSpeed * Time.deltaTime);
+                transform.position =
+                    Vector3.MoveTowards(transform.position, targetPosition, currentSpeed * Time.deltaTime);
             }
             else
             {
@@ -85,11 +89,7 @@ namespace Gameplay.Enemies.EnemyTypes
                 transform.position = Vector3.Lerp(transform.position, strafePosition, Time.deltaTime * currentSpeed);
             }
 
-            var playerDirection = player.position - transform.position;
-            if (playerDirection == Vector3.zero) return;
-            
-            var targetRotation = Quaternion.LookRotation(playerDirection.normalized);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+            RotateToPlayer(rotationSpeed);
         }
     }
 }

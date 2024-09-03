@@ -6,9 +6,7 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    public GameObject[] enemyPrefabs; // Array of enemy prefabs matching the EnemyType enum
     public Transform centralPoint; // Center point for 360 spawning
-
     [SerializeField] private float spawnRadius = 15f;
     private int currentWave = 0;
     internal Wave currentWaveData;

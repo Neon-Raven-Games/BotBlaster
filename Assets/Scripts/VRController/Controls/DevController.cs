@@ -1,7 +1,9 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public enum RotationMode
 {
@@ -24,8 +26,9 @@ public enum HandSide
 [RequireComponent(typeof(CharacterController))]
 public class DevController : Actor
 {
-    // muzzle flash distance from barrel
-    // hold trigger to shoot
+    [Header("Health Settings")]
+    [SerializeField] private Slider healthBarSlider;  
+    
     [Header("Input Settings")] [SerializeField]
     private InputActionAsset actionAsset;
 
@@ -75,6 +78,8 @@ public class DevController : Actor
 
     private void Start()
     {
+        currentHealth = baseHealth;
+        
         _vignetteController = GetComponentInChildren<VignetteController>();
         _controller = GetComponent<CharacterController>();
         ConfigurationManager.throwConfigIndex =
@@ -134,13 +139,40 @@ public class DevController : Actor
         _moveForwardAction.Disable();
         _lookAction.Disable();
     }
-
+    
     protected override void Update()
     {
+        UpdateHealthBar();
         SynchBaseObjectWithCamera();
         HandleRotation();
         HandleMovement();
         _vignetteController.StopVignette();
+    }
+    private void UpdateHealthBar()
+    {
+        if (currentHealth <= 0 || !healthBarSlider) return;
+        var healthPercentage = currentHealth / (float)baseHealth;
+        healthBarSlider.value = healthPercentage;
+    }
+
+    protected override void Die(StatusEffectiveness statusEffectiveness)
+    {
+        base.Die(statusEffectiveness);
+        Debug.Log("Player dead :(");
+        WaveController.EndGame();
+        StartCoroutine(HealthUpRoutine(baseHealth));
+    }
+
+    private IEnumerator HealthUpRoutine(int targetHp)
+    {
+        var t = 0f;
+        while (t < 2f)
+        {
+            t += Time.deltaTime;
+            currentHealth = (int) Mathf.Lerp(currentHealth, targetHp, t / 3f);
+            yield return null;
+        }
+        currentHealth = baseHealth;
     }
 
     private void SynchBaseObjectWithCamera()

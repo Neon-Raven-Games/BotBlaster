@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 330612801887573200}
   - component: {fileID: 3073702003215176028}
   - component: {fileID: 9168801076516632867}
-  - component: {fileID: 7237437980696517042}
+  - component: {fileID: -4008873166985404945}
   - component: {fileID: 6654407131420891722}
   m_Layer: 0
   m_Name: Grunt
@@ -107,7 +107,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &7237437980696517042
+--- !u!114 &-4008873166985404945
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -116,7 +116,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6414696547239353875}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a334cb229e9aa14fb751c7856cc06fe, type: 3}
+  m_Script: {fileID: 11500000, guid: 38fd7a02308f4360b27578c6199f52c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   element: 0
@@ -126,11 +126,16 @@ MonoBehaviour:
   baseAttackRange: 0
   baseAttackCoolDown: 0
   debuffs: 0
-  damageTextPrefab: {fileID: 2864685057116797952, guid: 8c21919c3ffac294cadf2762d612eda7, type: 3}
+  showDamageNumbers: 1
   enemyType: 0
-  knockBackForce: {x: 3, y: 1.5}
+  knockBackForce: {x: 0.5, y: 1}
   knockBackTime: 0.5
   minWaveSpawn: 0
+  dashingChance: 0.003
+  dashSpeed: 32
+  attackDuration: 0.4
+  dashDuration: 4
+  rotationSpeed: 16
 --- !u!54 &6654407131420891722
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -75,6 +75,18 @@ public class Actor : MonoBehaviour
         // Apply other debuff stacks (Fire, Wind, Electric)
         ApplyDebuff(hitElement);
 
+        if (this is DevController)
+        {
+            currentHealth -= damage;
+            if (currentHealth <= 0)
+            {
+                var weak = WeaknessesFor(ElementFlag.Fire);
+                var strong = StrengthsFor(ElementFlag.Fire);
+                if ((weak & element) != 0) Die(StatusEffectiveness.Weak);
+                else if ((strong & element) != 0) Die(StatusEffectiveness.Strong);
+                else Die(StatusEffectiveness.Normal);
+            }
+        }
         return damage;
     }
 

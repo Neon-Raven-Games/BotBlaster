@@ -121,6 +121,16 @@ public class EnemyPool : MonoBehaviour
             }
         }
 
-        _instance.waveController.StartWaves();
+        _instance.waveController.Ready();
+    }
+
+    public static void SleepAll()
+    {
+        foreach (var enemyCollection in _SEnemyPool.Values)
+        {
+            foreach (var enemy in enemyCollection.enemies)
+                enemy.gameObject.SetActive(false);
+        }
+        _instance.waveController.Ready();
     }
 }

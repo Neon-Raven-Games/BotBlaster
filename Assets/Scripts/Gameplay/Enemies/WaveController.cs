@@ -4,9 +4,21 @@ using UnityEngine;
 
 public class WaveController : MonoBehaviour
 {
+    [SerializeField] public GameObject ui;
     public EnemySpawner enemySpawner;
     public float timeBetweenWaves = 6f;
     private bool _waveSpawning;
+    private static WaveController _instance;
+    private void Awake()
+    {
+        if (_instance != null)
+        {
+            Destroy(this);
+            return;
+        }
+
+        _instance = this;
+    }
 
     public void StartWaves()
     {
@@ -17,6 +29,7 @@ public class WaveController : MonoBehaviour
     public void StopWaves()
     {
         _waveSpawning = false;
+        EnemyPool.SleepAll();
         // cleanup here
     }
 
@@ -34,5 +47,16 @@ public class WaveController : MonoBehaviour
             }
             await UniTask.Yield();
         }
+    }
+
+    public static void EndGame()
+    {
+        _instance.StopWaves();
+        ScoreManager.FinalizeScore();
+    }
+
+    public void Ready()
+    {
+        ui.SetActive(true);
     }
 }
