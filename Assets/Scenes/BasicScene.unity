@@ -1074,7 +1074,7 @@ MonoBehaviour:
     index: 0
     projectiles: []
   - elementFlag: 24
-    projectile: {fileID: 1023320097464174183, guid: 6ef1fcdf00ba0a54b85aa2184505dda8, type: 3}
+    projectile: {fileID: 4800944978843762705, guid: 326144ca4c4a92b4b8299fda2c0fe7d8, type: 3}
     index: 0
     projectiles: []
   - elementFlag: 40

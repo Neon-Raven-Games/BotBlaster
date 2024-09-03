@@ -44,6 +44,7 @@ namespace Gameplay.Enemies.EnemyTypes
             var playerPosition = player.position;
             transform.LookAt(player);
             var projectile = ElementPool.GetElement(element, barrelTransform.position);
+            projectile.GetComponent<Projectile>().damage = currentDamage;
             projectile.transform.LookAt(player);
             
             // play animation/particle.sound
