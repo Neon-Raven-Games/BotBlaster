@@ -109,7 +109,7 @@ MonoBehaviour:
   knockBackTime: 0.5
   minWaveSpawn: 0
   swarmUnitPrefab: {fileID: 3647163213140596350, guid: abda2d0504910294b8a7966588fa12bb, type: 3}
-  swarmCount: 5
+  swarmCount: 4
   circleRadius: 20
   diveBombPercentage: 0.2
   diveBombCooldown: 5

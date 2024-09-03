@@ -33,6 +33,9 @@ public class DevController : Actor
     [Header("Input Settings")] [SerializeField]
     private InputActionAsset actionAsset;
 
+    [SerializeField] private VRHand leftHand;
+    [SerializeField] private VRHand rightHand;
+    
     [SerializeField] private float analogThreshold = 0.2f;
     [SerializeField] private Transform hmd;
     [SerializeField] private Transform handsAnchor;
@@ -87,6 +90,22 @@ public class DevController : Actor
         RotationVignette = initialRotationVignette;
     }
 
+    public void HapticFeedback()
+    {
+        leftHand.PlayHapticImpulse(0.5f, 0.5f);
+        rightHand.PlayHapticImpulse(0.5f, 0.5f);
+    }
+
+    public void PlayLeftFeedback()
+    {
+        leftHand.PlayHapticImpulse(0.75f, 0.2f);
+    }
+    
+    public void PlayRightFeedback()
+    {
+        rightHand.PlayHapticImpulse(0.75f, 0.2f);
+    }
+    
     private void OnApplicationFocusChanged(bool hasFocus)
     {
         if (hasFocus)
@@ -94,6 +113,7 @@ public class DevController : Actor
             var handPos = handsAnchor.localPosition;
             handPos.x = 0;
             handPos.z = 0;
+            handPos.y = _controller.height;
             handsAnchor.localPosition = handPos;
             WaveController.paused = false;
         }
@@ -125,7 +145,7 @@ public class DevController : Actor
         if (Application.platform != RuntimePlatform.WindowsEditor) Application.focusChanged -= OnApplicationFocusChanged;
     }
 
-
+    
     private void OnEnable()
     {
         if (_moveForwardAction != null) _moveForwardAction.Enable();
@@ -248,4 +268,5 @@ public class DevController : Actor
 
         _controller.Move(movement);
     }
+
 }

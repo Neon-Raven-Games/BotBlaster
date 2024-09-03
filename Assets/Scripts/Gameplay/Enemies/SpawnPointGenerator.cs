@@ -19,7 +19,7 @@ public static class SpawnPointGenerator
             var z = Mathf.Cos(angle * Mathf.Deg2Rad) * spawnRadius;
 
             var isFlying = IsFlyingUnit(enemyTypes[i]);
-            var y = isFlying ? Random.Range(7f, 15f) : 0.55f;
+            var y = isFlying ? Random.Range(6.5f, 8.5f) : 0.55f;
 
             spawnPoints[i] = centralPoint.position + new Vector3(x, y, z);
         }

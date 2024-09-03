@@ -51,11 +51,13 @@ public class HandCannon : MonoBehaviour
         if (soloCannon) return;
         blasterRenderer.material = _elementMaterials[blasterElement];
     }
+    private HandSide _handSide;
 
     private void PopulateInput()
     {
         var hand = GetComponentInParent<VRHand>();
         if (!hand || soloCannon) return;
+        _handSide = hand.handSide;
         var side =hand.handSide;
         var handSideString = "Right";
         if (side == HandSide.LEFT) handSideString = "Left";
@@ -102,6 +104,9 @@ public class HandCannon : MonoBehaviour
 
     public void Shoot()
     {
+        
+        if (!soloCannon && _handSide == HandSide.LEFT) actor.PlayLeftFeedback();
+        else if (!soloCannon && _handSide == HandSide.RIGHT) actor.PlayRightFeedback();
         ChangeState(CannonState.Shooting);
     }
 

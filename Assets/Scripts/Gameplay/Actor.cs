@@ -62,8 +62,6 @@ public class Actor : MonoBehaviour
 
     public int ApplyDamage(int damage, ElementFlag hitElement, Vector3 position, int elementLevel = 1)
     {
-        // our character has element, and this is passing in the hit element.
-        // we want to check if our element is strong or weak against the hit element
         damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Rock);
         damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Water);
         damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Fire);
@@ -75,17 +73,16 @@ public class Actor : MonoBehaviour
         weakness &= hitElement;
         strength &= hitElement;
         
+        if (showDamageNumbers) ShowDamageNumber(damage, hitElement, weakness != 0, strength != 0, position);
+        
         // remove elements without status effects
         hitElement &= ~ElementFlag.Rock;
         hitElement &= ~ElementFlag.Wind;
 
-        // Apply other debuff stacks (Fire, Wind, Electric)
-        ApplyDebuff(hitElement);
-        
-        if (showDamageNumbers) ShowDamageNumber(damage, hitElement, weakness != 0, strength != 0, position);
-        if (this is DevController)
+        if (this is DevController dev)
         {
             currentHealth -= damage;
+            dev.HapticFeedback();
             if (currentHealth <= 0)
             {
                 if (weakness != 0) Die(StatusEffectiveness.Weak);
@@ -94,6 +91,7 @@ public class Actor : MonoBehaviour
             }
         }
 
+        ApplyDebuff(hitElement);
         return damage;
     }
 

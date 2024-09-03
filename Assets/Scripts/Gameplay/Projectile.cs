@@ -29,7 +29,7 @@ namespace Gameplay
 
         private void OnDisable()
         {
-            muzzleFlash.SetActive(false);
+            if (muzzleFlash) muzzleFlash.SetActive(false);
         }
 
         private void Update()
@@ -46,6 +46,7 @@ namespace Gameplay
             }
             else if (collision.gameObject.CompareTag("Player"))
             {
+                Debug.Log("APlying player damage from collision");
                 collision.gameObject.GetComponent<Actor>().ApplyDamage(damage, elementFlag, collision.GetContact(0).point );
             }
             

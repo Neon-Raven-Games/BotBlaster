@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -71,6 +72,7 @@ namespace Gameplay.Enemies.EnemyTypes
                 swarmUnit.Initialize(playerComponent, currentDamage, currentHealth / count, element);
                 swarmUnit.gameObject.SetActive(true);
             }
+            MoveSwarmAsync().Forget();
         }
 
         public void InitializeSwarm(int count)
@@ -90,55 +92,80 @@ namespace Gameplay.Enemies.EnemyTypes
                 swarmUnit.gameObject.SetActive(false);
             }
         }
-
-        private void MoveSwarm()
+        private async UniTaskVoid MoveSwarmAsync()
         {
-            foreach (var swarmUnit in _swarmUnits)
+            while (gameObject.activeInHierarchy)
             {
-                var separation = Vector3.zero;
-                var alignment = Vector3.zero;
-                var cohesion = transform.position - swarmUnit.transform.position;
-
-                foreach (var otherUnit in _swarmUnits)
+                var separationTasks = new List<UniTask>();
+                foreach (var swarmUnit in _swarmUnits)
                 {
-                    if (otherUnit == swarmUnit) continue;
-
-                    var distance = Vector3.Distance(swarmUnit.transform.position, otherUnit.transform.position);
-                    if (distance < 5f)
-                    {
-                        separation += (swarmUnit.transform.position - otherUnit.transform.position) / distance;
-                    }
-
-                    alignment += otherUnit.transform.forward;
+                    if (swarmUnit.isDiveBombing) continue;
+                    separationTasks.Add(CalculateFlockingAsync(swarmUnit));
                 }
 
-                alignment /= _swarmUnits.Count;
-                alignment = alignment.normalized * alignmentFactor;
+                await UniTask.WhenAll(separationTasks);
 
-                separation = separation.normalized * separationFactor;
-                cohesion = cohesion.normalized * cohesionFactor;
-
-                var randomMovement = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)) * randomFactor;
-                var sway = Mathf.Sin(Time.time * swayFrequency + swarmUnit.transform.position.x) * swayAmplitude;
-
-                var noiseX = Mathf.PerlinNoise(Time.time * noiseScale, swarmUnit.transform.position.y) * 2f - 1f;
-                var noiseZ = Mathf.PerlinNoise(swarmUnit.transform.position.x, Time.time * noiseScale) * 2f - 1f;
-
-                var swayMotion = new Vector3(noiseX, sway, noiseZ);
-                var flockingDirection = (separation + alignment + cohesion + randomMovement + swayMotion).normalized;
-
-                // Smooth out movement by blending with previous direction
-                flockingDirection = Vector3.Lerp(swarmUnit.transform.forward, flockingDirection, 0.1f);
-
-                // Apply the final movement
-                swarmUnit.transform.position += flockingDirection * (swarmUnit.speed * Time.deltaTime);
-
-                if (flockingDirection != Vector3.zero)
+                foreach (var swarmUnit in _swarmUnits)
                 {
-                    Quaternion targetRotation = Quaternion.LookRotation(flockingDirection);
-                    swarmUnit.transform.rotation = Quaternion.Slerp(swarmUnit.transform.rotation, targetRotation,
-                        Time.deltaTime * rotationSpeed);
+                    if (swarmUnit.isDiveBombing) continue;
+                    ApplyMovement(swarmUnit);
                 }
+
+                await UniTask.Yield();
+            }
+        }
+        private async UniTask CalculateFlockingAsync(SwarmUnit swarmUnit)
+        {
+            var separation = Vector3.zero;
+            var alignment = Vector3.zero;
+            var cohesion = transform.position - swarmUnit.transform.position;
+
+            foreach (var otherUnit in _swarmUnits)
+            {
+                if (otherUnit == swarmUnit) continue;
+
+                var distance = Vector3.Distance(swarmUnit.transform.position, otherUnit.transform.position);
+                if (distance < 5f)
+                {
+                    separation += (swarmUnit.transform.position - otherUnit.transform.position) / distance;
+                }
+
+                alignment += otherUnit.transform.forward;
+            }
+
+            await UniTask.Yield();
+
+            alignment /= _swarmUnits.Count;
+            alignment = alignment.normalized * alignmentFactor;
+
+            separation = separation.normalized * separationFactor;
+            cohesion = cohesion.normalized * cohesionFactor;
+
+            var randomMovement = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)) * randomFactor;
+            var sway = Mathf.Sin(Time.time * swayFrequency + swarmUnit.transform.position.x) * swayAmplitude;
+
+            var noiseX = Mathf.PerlinNoise(Time.time * noiseScale, swarmUnit.transform.position.y) * 2f - 1f;
+            var noiseZ = Mathf.PerlinNoise(swarmUnit.transform.position.x, Time.time * noiseScale) * 2f - 1f;
+
+            var swayMotion = new Vector3(noiseX, sway, noiseZ);
+            var flockingDirection = (separation + alignment + cohesion + randomMovement + swayMotion).normalized;
+
+            // Smooth out movement by blending with previous direction
+            flockingDirection = Vector3.Lerp(swarmUnit.transform.forward, flockingDirection, 0.1f);
+
+            // Store the flocking direction to apply it later on the main thread
+            swarmUnit.flockingDirection = flockingDirection;
+        }
+        private void ApplyMovement(SwarmUnit swarmUnit)
+        {
+            // Apply the final movement
+            swarmUnit.transform.position += swarmUnit.flockingDirection * (swarmUnit.speed * Time.deltaTime);
+
+            if (swarmUnit.flockingDirection != Vector3.zero)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(swarmUnit.flockingDirection);
+                swarmUnit.transform.rotation = Quaternion.Slerp(swarmUnit.transform.rotation, targetRotation,
+                    Time.deltaTime * rotationSpeed);
             }
         }
 
@@ -146,22 +173,22 @@ namespace Gameplay.Enemies.EnemyTypes
         {
         }
 
-        // how come this is not working in my pool. The _swarm units is the pool of units. This ability is being triggered,
-        // but after the first time they do nothing?
         private void TriggerDiveBomb()
         {
             _lastDiveBombTime = Time.time;
             int diveBombCount = Mathf.CeilToInt(currentSwarmUnitCount * diveBombPercentage);
 
-            var activeUnits = _swarmUnits.Where(x => x.gameObject.activeInHierarchy);
-            if (activeUnits == null || activeUnits.Count() == 0)
+            var activeUnits = _swarmUnits.Where(x => x.gameObject.activeInHierarchy).ToList();
+            if (activeUnits == null || activeUnits.Count == 0)
             {
                 Die(StatusEffectiveness.Strong);
                 return;
             }
-            for (var i = 0; i < diveBombCount; i++)
+
+            for (var i = 0; i < diveBombCount && i < activeUnits.Count; i++)
             {
-                if (activeUnits.ElementAt(i)) activeUnits.ElementAt(i).DiveBomb(player.position);
+                activeUnits[i].isDiveBombing = true;
+                activeUnits[i].DiveBomb(player.position);
             }
         }
 
@@ -187,7 +214,6 @@ namespace Gameplay.Enemies.EnemyTypes
             transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * currentSpeed);
             if (circleRadius <= circleRadiusMinDist && Time.time - _lastDiveBombTime >= diveBombCooldown)
                 TriggerDiveBomb();
-            else MoveSwarm();
         }
         private int currentSwarmUnitCount;
 

@@ -14,6 +14,8 @@ namespace Gameplay.Enemies.EnemyTypes
         private int _currentDamage;
         private int _currentHealth;
         private Swarm _swarmComponent;
+        public Vector3 flockingDirection { get; set; }
+        public bool isDiveBombing { get; set; }
 
         public void Initialize(Actor playerComponent, int currentDamage, int currentHealth, ElementFlag elementFlag)
         {

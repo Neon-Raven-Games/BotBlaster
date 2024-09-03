@@ -10058,7 +10058,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73e8c5a68e12402abcf7c8ca5f562aa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  elementFlag: 4
+  elementFlag: 16
   speed: 10
   damage: 1
   muzzleFlash: {fileID: 2145394909602406033}
