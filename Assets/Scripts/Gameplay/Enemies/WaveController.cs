@@ -1,4 +1,3 @@
-using System.Collections;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -9,9 +8,10 @@ public class WaveController : MonoBehaviour
     public float timeBetweenWaves = 6f;
     private bool _waveSpawning;
     private static WaveController _instance;
-    public static bool paused = false;
+    public static bool paused;
     private void Awake()
     {
+        Application.targetFrameRate = -1;
         if (_instance != null)
         {
             Destroy(this);
@@ -23,14 +23,15 @@ public class WaveController : MonoBehaviour
 
     public void StartWaves()
     {
+        paused = false;
         _waveSpawning = true;
         WaveRoutine().Forget();
     }
     
     public void StopWaves()
     {
+        paused = true;
         _waveSpawning = false;
-        EnemyPool.SleepAll();
         // cleanup here
     }
 
@@ -39,6 +40,7 @@ public class WaveController : MonoBehaviour
     private async UniTaskVoid WaveRoutine()
     {
         enemySpawner.StartNextWave();
+        
         while (_waveSpawning)
         {
             if (!paused && enemySpawner.WaveCompleted())
@@ -48,6 +50,8 @@ public class WaveController : MonoBehaviour
             }
             await UniTask.Yield();
         }
+        
+        EnemyPool.SleepAll();
     }
 
     public static void EndGame()

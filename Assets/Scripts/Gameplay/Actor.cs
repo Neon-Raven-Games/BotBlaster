@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Gameplay.Enemies;
+using Gameplay.Enemies.EnemyTypes;
 using Gameplay.Util;
 using UnityEngine;
 
@@ -50,7 +51,8 @@ public class Actor : MonoBehaviour
         currentAttackCoolDown = actorData.baseAttackCooldown;
     }
 
-    private static void ShowDamageNumber(int damage, ElementFlag damageElementType, bool isWeak, bool isStrong, Vector3 position)
+    private static void ShowDamageNumber(int damage, ElementFlag damageElementType, bool isWeak, bool isStrong,
+        Vector3 position)
     {
         var status = StatusEffectiveness.Normal;
         if (isWeak) status = StatusEffectiveness.Weak;
@@ -62,11 +64,16 @@ public class Actor : MonoBehaviour
     {
         // our character has element, and this is passing in the hit element.
         // we want to check if our element is strong or weak against the hit element
-        damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Rock, position);
-        damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Water, position);
-        damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Fire, position);
-        damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Wind, position);
-        damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Electricity, position);
+        damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Rock);
+        damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Water);
+        damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Fire);
+        damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Wind);
+        damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Electricity);
+
+        var weakness = WeaknessesFor(element);
+        var strength = StrengthsFor(element);
+        weakness &= hitElement;
+        strength &= hitElement;
         
         // remove elements without status effects
         hitElement &= ~ElementFlag.Rock;
@@ -74,52 +81,38 @@ public class Actor : MonoBehaviour
 
         // Apply other debuff stacks (Fire, Wind, Electric)
         ApplyDebuff(hitElement);
-
+        
+        if (showDamageNumbers) ShowDamageNumber(damage, hitElement, weakness != 0, strength != 0, position);
         if (this is DevController)
         {
             currentHealth -= damage;
             if (currentHealth <= 0)
             {
-                var weak = WeaknessesFor(ElementFlag.Fire);
-                var strong = StrengthsFor(ElementFlag.Fire);
-                if ((weak & element) != 0) Die(StatusEffectiveness.Weak);
-                else if ((strong & element) != 0) Die(StatusEffectiveness.Strong);
+                if (weakness != 0) Die(StatusEffectiveness.Weak);
+                else if (strength != 0) Die(StatusEffectiveness.Strong);
                 else Die(StatusEffectiveness.Normal);
             }
         }
+
         return damage;
     }
 
     private int ApplyElementalDamage(int damage, ElementFlag characterElement, ElementFlag hitElement, int elementLevel,
-        ElementFlag targetElement, Vector3 position)
+        ElementFlag targetElement)
     {
         if (characterElement == ElementFlag.None || (characterElement & targetElement) == 0)
         {
-            if (showDamageNumbers)
-                ShowDamageNumber(damage, targetElement, false, false, position);
             return damage;
         }
 
         var multiplier = ElementDecorator.BASE_MULTIPLIER * elementLevel;
-        var isWeak = false;
-        var isStrong = false;
-
-        // Check if the hit element is strong or weak against the target element
         if ((hitElement & WeaknessesFor(targetElement)) != 0)
-        {
             multiplier *= ElementDecorator.WEAKNESS_MULTIPLIER;
-            isWeak = true;
-        }
 
         if ((hitElement & StrengthsFor(targetElement)) != 0)
-        {
             multiplier *= ElementDecorator.STRENGTH_MULTIPLIER;
-            isStrong = true;
-        }
 
         var finalDamage = damage + (int) (damage * multiplier * GetStackMultiplier(targetElement));
-        if (showDamageNumbers)
-            ShowDamageNumber(finalDamage, targetElement, isWeak, isStrong, position);
 
         return finalDamage;
     }
@@ -166,19 +159,18 @@ public class Actor : MonoBehaviour
         return currentSpeed;
     }
 
+    // todo, we need to make dev controller adhere the same as enemies or vice versa
+    // the swarm needs to account for the fire debuff on each unit
     protected virtual void Update()
     {
-        if (WaveController.paused)
-        {
-            return;
-        }
+        if (WaveController.paused) return;
         if (_lastTick < Time.time && stacks[ElementFlag.Fire] > 0)
         {
+            if (this is Swarm) return;
             _lastTick = Time.time + ElementDecorator.DEBUFF_TICK;
-            var fireDamage = ApplyElementalDamage(baseDamage, element, ElementFlag.Fire, stacks[ElementFlag.Fire],
-                ElementFlag.Fire, transform.position);
-            currentHealth -= fireDamage;
+            var fireDamage = ApplyDamage(baseDamage, ElementFlag.Fire, transform.position, stacks[ElementFlag.Fire]);
             
+            if (this is not DevController) currentHealth -= fireDamage;
             if (currentHealth <= 0)
             {
                 var weak = WeaknessesFor(ElementFlag.Fire);
@@ -205,8 +197,7 @@ public class Actor : MonoBehaviour
             }
         }
     }
-    
-    
+
 
     private void ApplyDebuff(ElementFlag element)
     {

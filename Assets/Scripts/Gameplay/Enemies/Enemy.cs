@@ -79,6 +79,7 @@ public class Enemy : Actor
     protected override void Update()
     {
         base.Update();
+        if (WaveController.paused) return;
         var playerDistance = Vector3.Distance(transform.position, player.position);
         if (playerDistance <= currentAttackRange && CanAttack())
         {
@@ -146,11 +147,8 @@ public class Enemy : Actor
 
     private void KnockBack(Vector3 hitDirection)
     {
-        rigidbody.velocity = Vector3.zero;
-        rigidbody.angularVelocity = Vector3.zero;
-        hitDirection.y = 1;
-        rigidbody.AddForce(hitDirection.normalized * knockBackForce, ForceMode.Impulse);
-        StartCoroutine(KnockBackTimer());
+        // todo, update knock back update edition
+        // StartCoroutine(KnockBackTimer());
     }
 
     protected override void Die(StatusEffectiveness status)

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using Gameplay.Enemies;
 using Gameplay.Util;
 using UnityEngine;
@@ -18,7 +19,7 @@ public class EnemySpawner : MonoBehaviour
     public void StartNextWave()
     {
         currentWaveData = GameBalancer.GenerateWave(currentWave + 1, spawnRadius, Enum.GetValues(typeof(EnemyType)).Cast<EnemyType>().ToArray(), centralPoint);
-        SpawnWave(currentWaveData);
+        SpawnWave(currentWaveData).Forget();
         currentWave++;
     }
     
@@ -27,7 +28,7 @@ public class EnemySpawner : MonoBehaviour
 
     // todo, create a way to cache this and prevent closure/allocation
     // this needs to be managed much better!
-    private void SpawnWave(Wave wave)
+    private async UniTaskVoid SpawnWave(Wave wave)
     {
         for (var i = 0; i < wave.numberOfEnemies; i++)
         {
@@ -38,6 +39,7 @@ public class EnemySpawner : MonoBehaviour
             {
                 SpawnEnemy(enemyType, spawnPosition);
             });
+            await UniTask.Yield();
         }
     }
 

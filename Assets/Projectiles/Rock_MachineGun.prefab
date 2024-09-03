@@ -14875,6 +14875,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CFX4 Black Monster Explosion (Big)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: e716f20fa2e331744a256ca65b770354, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 400004, guid: e716f20fa2e331744a256ca65b770354, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5

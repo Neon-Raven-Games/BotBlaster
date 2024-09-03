@@ -161,9 +161,15 @@ namespace Gameplay.Enemies.EnemyTypes
             }
             for (var i = 0; i < diveBombCount; i++)
             {
-                if (activeUnits.ElementAt(i))
-                    activeUnits.ElementAt(i).DiveBomb(player.position);
+                if (activeUnits.ElementAt(i)) activeUnits.ElementAt(i).DiveBomb(player.position);
             }
+        }
+
+        protected override void Die(StatusEffectiveness status)
+        {
+            if (currentSwarmUnitCount > 0) return;
+            base.Die(status);
+            
         }
 
         protected override void Move()
@@ -171,6 +177,7 @@ namespace Gameplay.Enemies.EnemyTypes
             _orbitAngle += orbitSpeed * Time.deltaTime;
             var offset = new Vector3(Mathf.Sin(_orbitAngle), 0, Mathf.Cos(_orbitAngle)) * circleRadius;
             var targetPosition = player.position + offset;
+            targetPosition.y = transform.position.y;
 
             if (circleRadius > circleRadiusMinDist)
                 circleRadius =

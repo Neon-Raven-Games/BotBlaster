@@ -156,8 +156,8 @@ public class DevController : Actor
 
     protected override void Die(StatusEffectiveness statusEffectiveness)
     {
+        if (currentHealth > 0) return;
         base.Die(statusEffectiveness);
-        Debug.Log("Player dead :(");
         WaveController.EndGame();
         StartCoroutine(HealthUpRoutine(baseHealth));
     }
@@ -169,6 +169,9 @@ public class DevController : Actor
         {
             t += Time.deltaTime;
             currentHealth = (int) Mathf.Lerp(currentHealth, targetHp, t / 3f);
+            var healthPercentage = currentHealth / (float)baseHealth;
+            healthBarSlider.value = healthPercentage;
+            bigCannonHealthBarSlider.value = healthPercentage;
             yield return null;
         }
         currentHealth = baseHealth;

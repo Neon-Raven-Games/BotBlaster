@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 4691266694475113247}
   - component: {fileID: 3917665329599384422}
   - component: {fileID: -8076874885166197028}
-  - component: {fileID: 7094092892176714101}
   m_Layer: 8
   m_Name: Tank
   m_TagString: Enemy
@@ -128,8 +127,8 @@ MonoBehaviour:
   debuffs: 0
   showDamageNumbers: 1
   enemyType: 3
-  knockBackForce: {x: 0.5, y: 1}
-  knockBackTime: 0.5
+  knockBackForce: {x: 0, y: 0}
+  knockBackTime: 0
   minWaveSpawn: 0
   dashingChance: 0.003
   dashSpeed: 20
@@ -137,30 +136,3 @@ MonoBehaviour:
   chargeDuration: 1
   dashDuration: 2
   rotationSpeed: 16
---- !u!54 &7094092892176714101
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5801088316695447527}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 1
-  m_Constraints: 80
-  m_CollisionDetection: 0
