@@ -28,6 +28,7 @@ public class DevController : Actor
 {
     [Header("Health Settings")]
     [SerializeField] private Slider healthBarSlider;  
+    [SerializeField] private Slider bigCannonHealthBarSlider;  
     
     [Header("Input Settings")] [SerializeField]
     private InputActionAsset actionAsset;
@@ -82,13 +83,10 @@ public class DevController : Actor
         
         _vignetteController = GetComponentInChildren<VignetteController>();
         _controller = GetComponent<CharacterController>();
-        ConfigurationManager.throwConfigIndex =
-            SceneManager.GetActiveScene().buildIndex != 0 ? 1 : 0;
         LocomotionVignette = initialLocomotionVignette;
         RotationVignette = initialRotationVignette;
     }
 
-    // todo, validate this does not headlock in headset
     private void OnApplicationFocusChanged(bool hasFocus)
     {
         if (hasFocus)
@@ -97,11 +95,11 @@ public class DevController : Actor
             handPos.x = 0;
             handPos.z = 0;
             handsAnchor.localPosition = handPos;
-            Time.timeScale = 1;
+            WaveController.paused = false;
         }
         else
         {
-            Time.timeScale = 0;
+            WaveController.paused = true;
         }
     }
 
@@ -150,9 +148,10 @@ public class DevController : Actor
     }
     private void UpdateHealthBar()
     {
-        if (currentHealth <= 0 || !healthBarSlider) return;
+        if (currentHealth <= 0 || !healthBarSlider || !bigCannonHealthBarSlider) return;
         var healthPercentage = currentHealth / (float)baseHealth;
         healthBarSlider.value = healthPercentage;
+        bigCannonHealthBarSlider.value = healthPercentage;
     }
 
     protected override void Die(StatusEffectiveness statusEffectiveness)

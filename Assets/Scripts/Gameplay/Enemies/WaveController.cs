@@ -9,6 +9,7 @@ public class WaveController : MonoBehaviour
     public float timeBetweenWaves = 6f;
     private bool _waveSpawning;
     private static WaveController _instance;
+    public static bool paused = false;
     private void Awake()
     {
         if (_instance != null)
@@ -40,7 +41,7 @@ public class WaveController : MonoBehaviour
         enemySpawner.StartNextWave();
         while (_waveSpawning)
         {
-            if (enemySpawner.WaveCompleted())
+            if (!paused && enemySpawner.WaveCompleted())
             {
                 enemySpawner.StartNextWave();
                 await UniTask.WaitForSeconds(timeBetweenWaves);

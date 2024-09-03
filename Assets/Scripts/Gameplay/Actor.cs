@@ -168,6 +168,10 @@ public class Actor : MonoBehaviour
 
     protected virtual void Update()
     {
+        if (WaveController.paused)
+        {
+            return;
+        }
         if (_lastTick < Time.time && stacks[ElementFlag.Fire] > 0)
         {
             _lastTick = Time.time + ElementDecorator.DEBUFF_TICK;
