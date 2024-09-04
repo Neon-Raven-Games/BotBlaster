@@ -23,31 +23,40 @@ public class EnemySpawner : MonoBehaviour
         currentWave++;
     }
     
+    // AI Animations:
+    // Expression based on wave level (number animations? wave based division)
+    // Hurt/Hit
+    // Death
+    // Falling (right before death on flying enemies0
+    // Shooting/Divebombing - Attack (Divebomb for swarm units, powerup/shoot for glass cannon, melee for tank/grunt)
+    // Lerp animation in (lerp color? High white intensity, then fade to normal color)
+
     public bool WaveCompleted() =>
         currentWaveData.numberOfEnemies <= 0;
 
     // todo, create a way to cache this and prevent closure/allocation
-    // this needs to be managed much better!
-    private async UniTaskVoid SpawnWave(Wave wave)
+    private static async UniTaskVoid SpawnWave(Wave wave)
     {
-        for (var i = 0; i < wave.numberOfEnemies; i++)
+        // this should fix the spawn issues
+        var enemies = wave.numberOfEnemies;
+        for (var i = 0; i < enemies; i++)
         {
-            var i1 = i;
-            var enemyType = wave.enemyTypes[i1 % wave.enemyTypes.Length];
-            var spawnPosition = wave.spawnPositions[i1 % wave.spawnPositions.Length];
+            var enemyType = wave.enemyTypes[i % wave.enemyTypes.Length];
+            var spawnPosition = wave.spawnPositions[i % wave.spawnPositions.Length];
             TimerManager.AddTimer(wave.spawnInterval * i, () =>
             {
-                SpawnEnemy(enemyType, spawnPosition);
+                SpawnEnemy(enemyType, spawnPosition, wave.waveNumber);
             });
             await UniTask.Yield();
         }
     }
 
-    private static void SpawnEnemy(EnemyType type, Vector3 position)
+    private static void SpawnEnemy(EnemyType type, Vector3 position, int waveNumber)
     {
         var enemy = EnemyPool.GetEnemy(type);
         enemy.element = ElementFlag.Water;
         enemy.transform.position = position;
+        enemy.ApplyBalance(waveNumber);
         enemy.gameObject.SetActive(true);
     }
 }

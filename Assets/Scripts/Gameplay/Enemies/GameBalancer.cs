@@ -23,7 +23,7 @@ public static class GameBalancer
 
         var spawnPoints = SpawnPointGenerator.GenerateSpawnPoints(numberOfEnemies, spawnRadius, centralPoint, selectedEnemyTypes);
         var spawnInterval = Mathf.Max(1.5f - waveNumber * 0.01f, 0.3f);
-        return new Wave(numberOfEnemies, selectedEnemyTypes, spawnInterval, spawnPoints);
+        return new Wave(numberOfEnemies, selectedEnemyTypes, spawnInterval, spawnPoints, waveNumber);
     }
 
     public static EnemySpawner spawner { get; set; }

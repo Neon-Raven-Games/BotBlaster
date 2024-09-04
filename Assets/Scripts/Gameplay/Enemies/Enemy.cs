@@ -15,7 +15,7 @@ public class Enemy : Actor
     protected Transform player;
     protected Actor playerComponent;
 
-    protected virtual void ApplyBalance(int waveNumber)
+    public virtual void ApplyBalance(int waveNumber)
     {
             
     }
