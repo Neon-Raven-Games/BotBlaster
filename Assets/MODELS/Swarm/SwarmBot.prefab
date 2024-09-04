@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8355994534552358422}
   - component: {fileID: 7280460983718219768}
   - component: {fileID: 3390575784387620031}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Fire_Swarm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4897,9 +4897,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4963275126176742223}
-  m_Layer: 0
+  - component: {fileID: 4781123601611901144}
+  - component: {fileID: 7421092160863170080}
+  m_Layer: 8
   m_Name: SwarmBot
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4922,6 +4924,41 @@ Transform:
   - {fileID: 3702411555248768943}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4781123601611901144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5811023757391740831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66e79bcffd2e440a9d6c3d7bd77fa4c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 5
+  element: 0
+--- !u!65 &7421092160863170080
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5811023757391740831}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3, y: 3, z: 3}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &3864653869926780756
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4982,6 +5019,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Swarm_Bot
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 624a14fcc74ece94faab4db580ba6a03, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5024,6 +5065,14 @@ PrefabInstance:
       propertyPath: InitialModule.startSizeZ.minScalar
       value: 0.1
       objectReference: {fileID: 0}
+    - target: {fileID: 1930074229545760708, guid: 05068d4ff5d98b74ea95d95ee5eb08f5, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2329588922380151915, guid: 05068d4ff5d98b74ea95d95ee5eb08f5, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 2329588922380151915, guid: 05068d4ff5d98b74ea95d95ee5eb08f5, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -5031,6 +5080,10 @@ PrefabInstance:
     - target: {fileID: 8637024446530902449, guid: 05068d4ff5d98b74ea95d95ee5eb08f5, type: 3}
       propertyPath: m_Name
       value: FX_PF_Fire_BurnAura
+      objectReference: {fileID: 0}
+    - target: {fileID: 8637024446530902449, guid: 05068d4ff5d98b74ea95d95ee5eb08f5, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8637024446530902460, guid: 05068d4ff5d98b74ea95d95ee5eb08f5, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5072,6 +5125,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8637024446556236880, guid: 05068d4ff5d98b74ea95d95ee5eb08f5, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 8637024446556236894, guid: 05068d4ff5d98b74ea95d95ee5eb08f5, type: 3}
       propertyPath: ShapeModule.m_Scale.z
       value: 1
@@ -5085,6 +5142,10 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8637024446635694882, guid: 05068d4ff5d98b74ea95d95ee5eb08f5, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8637024446635694882, guid: 05068d4ff5d98b74ea95d95ee5eb08f5, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -5092,13 +5153,25 @@ PrefabInstance:
       propertyPath: ShapeModule.m_Scale.z
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8637024447119032116, guid: 05068d4ff5d98b74ea95d95ee5eb08f5, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 8637024447513478866, guid: 05068d4ff5d98b74ea95d95ee5eb08f5, type: 3}
       propertyPath: ShapeModule.m_Scale.z
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8637024447513478868, guid: 05068d4ff5d98b74ea95d95ee5eb08f5, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 8637024447901785251, guid: 05068d4ff5d98b74ea95d95ee5eb08f5, type: 3}
       propertyPath: ShapeModule.m_Scale.z
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8637024447901785253, guid: 05068d4ff5d98b74ea95d95ee5eb08f5, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
