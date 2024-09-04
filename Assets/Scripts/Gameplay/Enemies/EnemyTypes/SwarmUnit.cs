@@ -1,10 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Gameplay.Enemies.EnemyTypes
 {
+    [Serializable]
+    public class ElementMaterialCollection
+    {
+        public ElementFlag elementFlag;
+        public Material characterMaterial;
+    }
+
     public class SwarmUnit : MonoBehaviour
     {
+        [SerializeField] private Animator animator;
+        [SerializeField] private TextureAnimator textureAnimator;
+        [SerializeField] private List<ElementMaterialCollection> elementMaterials;
+        private Dictionary<ElementFlag, ElementMaterialCollection> _elementMaterials;
         public float speed;
         public ElementFlag element;
         private Transform _swarmCenter;
@@ -18,12 +30,24 @@ namespace Gameplay.Enemies.EnemyTypes
         public Vector3 flockingDirection { get; set; }
         public bool isDiveBombing { get; set; }
         private MeshFilter _meshFilter;
+        private static readonly int _SHit = Animator.StringToHash("Hit");
+        private static readonly int _SAttack = Animator.StringToHash("Attack");
+
+        private void Awake()
+        {
+            _elementMaterials = new();
+            foreach (var mat in elementMaterials)
+                _elementMaterials.Add(mat.elementFlag, mat);
+        }
+
         public void Initialize(Actor playerComponent, int currentDamage, int currentHealth, ElementFlag elementFlag)
         {
             _playerComponent = playerComponent;
             _currentDamage = currentDamage;
             _currentHealth = currentHealth;
             element = elementFlag;
+            if (element == ElementFlag.None) return;
+            textureAnimator.SwitchElement(elementFlag, _elementMaterials[elementFlag].characterMaterial);
         }
 
         private void Update()
@@ -39,8 +63,15 @@ namespace Gameplay.Enemies.EnemyTypes
 
         public void DiveBomb(Vector3 playerPosition)
         {
+            animator.SetTrigger(_SAttack);
             _isDiveBombing = true;
             _diveBombTarget = playerPosition;
+        }
+
+        private void SetHitAnimation()
+        {
+            var hitAnimation = UnityEngine.Random.Range(0, 3);
+            animator.SetTrigger(_SHit);
         }
 
         private void OnCollisionEnter(Collision collision)
@@ -58,6 +89,7 @@ namespace Gameplay.Enemies.EnemyTypes
                     _swarmComponent.SwarmUnitDead();
                     gameObject.SetActive(false);
                 }
+                else SetHitAnimation();
             }
         }
 
@@ -69,6 +101,7 @@ namespace Gameplay.Enemies.EnemyTypes
                 _swarmComponent.SwarmUnitDead();
                 gameObject.SetActive(false);
             }
+            else SetHitAnimation();
         }
 
         private void PerformDiveBomb()

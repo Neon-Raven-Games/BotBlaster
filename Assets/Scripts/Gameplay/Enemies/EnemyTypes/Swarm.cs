@@ -86,8 +86,6 @@ namespace Gameplay.Enemies.EnemyTypes
                 var swarmUnit = Instantiate(swarmUnitPrefab, position, Quaternion.identity).GetComponent<SwarmUnit>();
                 swarmUnit.speed = currentSpeed;
                 swarmUnit.SetSwarmCenter(transform);
-                swarmUnit.Initialize(playerComponent, currentDamage, currentHealth / count, element);
-
                 _swarmUnits.Add(swarmUnit);
                 swarmUnit.gameObject.SetActive(false);
             }
