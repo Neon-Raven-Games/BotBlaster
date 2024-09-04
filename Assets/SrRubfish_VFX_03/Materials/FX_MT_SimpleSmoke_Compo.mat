@@ -27,6 +27,7 @@ Material:
   - TransparentDepthPrepass
   - TransparentDepthPostpass
   - TransparentBackface
+  - SHADOWCASTER
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
@@ -95,7 +96,7 @@ Material:
     - _CameraFadingEnabled: 0
     - _CameraFarFadeDistance: 2
     - _CameraNearFadeDistance: 1
-    - _CastShadows: 1
+    - _CastShadows: 0
     - _ColorMode: 0
     - _ConservativeDepthOffsetEnable: 0
     - _ConvetToNormalStrenght: 1

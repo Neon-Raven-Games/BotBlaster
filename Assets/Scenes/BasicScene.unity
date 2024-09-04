@@ -754,7 +754,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!108 &299639868
 Light:
   m_ObjectHideFlags: 0
@@ -762,7 +762,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 299639867}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
@@ -1902,6 +1902,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   centralPoint: {fileID: 755571180}
   spawnRadius: 15
+  currentWave: 0
 --- !u!4 &755571180
 Transform:
   m_ObjectHideFlags: 0

@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    public Transform centralPoint; // Center point for 360 spawning
+    public Transform centralPoint; 
     [SerializeField] private float spawnRadius = 15f;
     public int currentWave = 0;
     internal Wave currentWaveData;
@@ -22,6 +22,9 @@ public class EnemySpawner : MonoBehaviour
         SpawnWave(currentWaveData).Forget();
         currentWave++;
     }
+    
+    // Muzzle parenting
+    // UI Select not generated at runtime, fixed
     
     // AI Animations:
     // Expression based on wave level (number animations? wave based division)
