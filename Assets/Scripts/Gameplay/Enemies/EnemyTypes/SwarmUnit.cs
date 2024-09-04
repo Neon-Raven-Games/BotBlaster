@@ -61,6 +61,16 @@ namespace Gameplay.Enemies.EnemyTypes
             }
         }
 
+        public void ApplySwarmDamage(int damage, ElementFlag flag)
+        {
+            _swarmComponent.ApplyDamage(damage, flag, transform.position);
+            if (_currentHealth <= 0)
+            {
+                _swarmComponent.SwarmUnitDead();
+                gameObject.SetActive(false);
+            }
+        }
+
         private void PerformDiveBomb()
         {
             var direction = (_diveBombTarget - transform.position).normalized;
