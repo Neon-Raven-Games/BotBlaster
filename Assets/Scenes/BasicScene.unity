@@ -754,7 +754,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!108 &299639868
 Light:
   m_ObjectHideFlags: 0
@@ -762,7 +762,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 299639867}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
@@ -1902,6 +1902,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   centralPoint: {fileID: 755571180}
   spawnRadius: 15
+  currentWave: 0
 --- !u!4 &755571180
 Transform:
   m_ObjectHideFlags: 0
@@ -5789,6 +5790,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 5778915352945549854, guid: 64cf5ca11e3bab44486abdbbc32bd73e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5805546766555830651, guid: 64cf5ca11e3bab44486abdbbc32bd73e, type: 3}
       propertyPath: m_Layer
       value: 7
@@ -5840,6 +5845,14 @@ PrefabInstance:
     - target: {fileID: 7469219245558351772, guid: 64cf5ca11e3bab44486abdbbc32bd73e, type: 3}
       propertyPath: m_Layer
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7571579769961218109, guid: 64cf5ca11e3bab44486abdbbc32bd73e, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7571579769961218109, guid: 64cf5ca11e3bab44486abdbbc32bd73e, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7618962869411377751, guid: 64cf5ca11e3bab44486abdbbc32bd73e, type: 3}
       propertyPath: m_Layer

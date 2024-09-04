@@ -42,6 +42,7 @@ public class ShootingState : BaseHandCanonState
                 handCannon.blasterElement != ElementFlag.Wind && handCannon.blasterElement != ElementFlag.Rock)
             {
                 beamObject = ElementPool.GetElement(handCannon.blasterElement, handCannon.barrelTransform.position);
+                if (!beamObject) return;
                 beam = true;
                 launchRequested = false;
                 beamObject.SetActive(true);
@@ -64,9 +65,11 @@ public class ShootingState : BaseHandCanonState
     public override void Update()
     {
         base.Update();
-        if (!beam) return;
+        if (!beam || !beamObject) return;
         beamObject.transform.position = handCannon.barrelTransform.position;
         beamObject.transform.rotation = handCannon.barrelTransform.rotation;
+        beamObject.transform.position +=controller.velocity.normalized * Time.deltaTime;
+        Debug.DrawRay(handCannon.barrelTransform.position, Vector3.up * 4, Color.red);
     }
 
     public override void FireReleaseAction()
@@ -91,7 +94,6 @@ public class ShootingState : BaseHandCanonState
 
         dodgeball.transform.position = handCannon.barrelTransform.position;
         dodgeball.transform.rotation = handCannon.barrelTransform.rotation;
-        dodgeball.transform.position += handCannon.barrelTransform.forward * 0.5f;
         dodgeball.SetActive(true);
 
         var launchVelocity = handCannon.barrelTransform.forward * handCannon.launchForce;

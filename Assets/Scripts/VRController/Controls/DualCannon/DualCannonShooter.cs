@@ -63,7 +63,6 @@ public class DualCannonShooter : MonoBehaviour
             SetCannonsActive(false);
             
             bigCannon.blasterElement = leftCannon.blasterElement | rightCannon.blasterElement;
-            
             _rightTrigger.Enable();
             _leftTrigger.Enable();
             _rightTrigger.performed += bigCannon.TriggerPerformedAction;

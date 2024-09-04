@@ -58922,6 +58922,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1b742a3eae243debdc05291f366697b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damage: 1
+  element: 20
   zAxisParticles:
   - {fileID: 1023320097133855045}
   - {fileID: 1023320095958518851}
@@ -58930,6 +58932,7 @@ MonoBehaviour:
   projectileImpact: {fileID: 5398824451142410171}
   endDistance: 10
   jetSpeed: 8
+  fireRate: 0.25
 --- !u!1 &1275014266758394401
 GameObject:
   m_ObjectHideFlags: 0
