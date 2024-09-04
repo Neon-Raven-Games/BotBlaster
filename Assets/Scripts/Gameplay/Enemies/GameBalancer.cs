@@ -9,6 +9,7 @@ public static class GameBalancer
         spawner.currentWaveData.numberOfEnemies--;
         ScoreManager.AddScore(statusEffectiveness);
     }
+    
     // we can use RNG needs to create more fun probability based waves when introducing elements
     public static Wave GenerateWave(int waveNumber, float spawnRadius, EnemyType[] availableEnemyTypes, Transform centralPoint)
     {

@@ -15,6 +15,10 @@ public class Enemy : Actor
     protected Transform player;
     protected Actor playerComponent;
 
+    protected virtual void ApplyBalance(int waveNumber)
+    {
+            
+    }
     protected override void Awake()
     {
         base.Awake();

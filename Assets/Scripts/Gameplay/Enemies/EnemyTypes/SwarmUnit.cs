@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Gameplay.Enemies.EnemyTypes
 {
@@ -16,7 +17,7 @@ namespace Gameplay.Enemies.EnemyTypes
         private Swarm _swarmComponent;
         public Vector3 flockingDirection { get; set; }
         public bool isDiveBombing { get; set; }
-
+        private MeshFilter _meshFilter;
         public void Initialize(Actor playerComponent, int currentDamage, int currentHealth, ElementFlag elementFlag)
         {
             _playerComponent = playerComponent;

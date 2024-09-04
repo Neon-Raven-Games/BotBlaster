@@ -23,6 +23,7 @@ public class WaveController : MonoBehaviour
 
     public void StartWaves()
     {
+        enemySpawner.currentWave = 0;
         paused = false;
         _waveSpawning = true;
         WaveRoutine().Forget();
@@ -32,11 +33,11 @@ public class WaveController : MonoBehaviour
     {
         paused = true;
         _waveSpawning = false;
-        // cleanup here
+        enemySpawner.currentWave = 0;
     }
 
-    // async wave routine for background task processing
-    // offload the wave generation async to avoid blocking the main thread
+    // todo, sometimes the wave count gets off, seems to be in the midst of wave spawning. 
+    // waited the full 6 seconds and still no spawn
     private async UniTaskVoid WaveRoutine()
     {
         enemySpawner.StartNextWave();

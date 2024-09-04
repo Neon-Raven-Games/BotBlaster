@@ -9,7 +9,7 @@ public class EnemySpawner : MonoBehaviour
 {
     public Transform centralPoint; // Center point for 360 spawning
     [SerializeField] private float spawnRadius = 15f;
-    private int currentWave = 0;
+    public int currentWave = 0;
     internal Wave currentWaveData;
 
     public void Awake()
