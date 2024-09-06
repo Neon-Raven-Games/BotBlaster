@@ -29,7 +29,7 @@ public class ScoreManager : MonoBehaviour
     private static float GetMultiplier(StatusEffectiveness statusEffectiveness)
     {
         if (statusEffectiveness == StatusEffectiveness.Normal) return 1.5f;
-        if (statusEffectiveness == StatusEffectiveness.Strong) return 2f;
+        if (statusEffectiveness == StatusEffectiveness.Weak) return 2f;
         return 1;
     }
 

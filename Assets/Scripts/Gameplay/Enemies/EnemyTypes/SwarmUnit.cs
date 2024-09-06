@@ -13,6 +13,7 @@ namespace Gameplay.Enemies.EnemyTypes
 
     public class SwarmUnit : MonoBehaviour
     {
+        [SerializeField] private GameObject deathParticles;
         [SerializeField] private Animator animator;
         [SerializeField] private TextureAnimator textureAnimator;
         [SerializeField] private List<ElementMaterialCollection> elementMaterials;
@@ -32,9 +33,11 @@ namespace Gameplay.Enemies.EnemyTypes
         private MeshFilter _meshFilter;
         private static readonly int _SHit = Animator.StringToHash("Hit");
         private static readonly int _SAttack = Animator.StringToHash("Attack");
+        private static readonly int _SHitNum = Animator.StringToHash("HitNum");
 
         private void Awake()
         {
+            deathParticles.transform.parent = null;
             _elementMaterials = new();
             foreach (var mat in elementMaterials)
                 _elementMaterials.Add(mat.elementFlag, mat);
@@ -42,6 +45,7 @@ namespace Gameplay.Enemies.EnemyTypes
 
         public void Initialize(Actor playerComponent, int currentDamage, int currentHealth, ElementFlag elementFlag)
         {
+            deathParticles.SetActive(false);
             _playerComponent = playerComponent;
             _currentDamage = currentDamage;
             _currentHealth = currentHealth;
@@ -71,6 +75,7 @@ namespace Gameplay.Enemies.EnemyTypes
         private void SetHitAnimation()
         {
             var hitAnimation = UnityEngine.Random.Range(0, 3);
+            animator.SetInteger(_SHitNum, hitAnimation);
             animator.SetTrigger(_SHit);
         }
 

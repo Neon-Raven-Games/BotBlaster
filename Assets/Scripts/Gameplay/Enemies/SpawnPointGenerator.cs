@@ -1,11 +1,10 @@
-using System.Collections.Generic;
 using System.Linq;
 using Gameplay.Enemies;
 using UnityEngine;
 
 public static class SpawnPointGenerator
 {
-    private static readonly EnemyType[] _SFlyingUnitTypes = { EnemyType.Swarm };
+    private static readonly EnemyType[] _SFlyingUnitTypes = { EnemyType.Swarm, EnemyType.GlassCannon };
     
     public static Vector3[] GenerateSpawnPoints(int numberOfEnemies, float spawnRadius, Transform centralPoint, EnemyType[] enemyTypes)
     {

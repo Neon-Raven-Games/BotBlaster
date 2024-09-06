@@ -10,18 +10,55 @@ public class Enemy : Actor
     [SerializeField] private float knockBackTime = 0.5f;
     private bool _knockingBack;
     public int minWaveSpawn;
+    private EnemyElementConverter _elementConverter;
 
     protected Rigidbody rigidbody;
     protected Transform player;
     protected Actor playerComponent;
 
+    protected virtual void OnEnable()
+    {
+        _knockingBack = false;
+        currentHealth = baseHealth;
+        currentDamage = baseDamage;
+        currentSpeed = baseSpeed;
+        currentAttackRange = baseAttackRange;
+        currentAttackCoolDown = baseAttackCoolDown;
+        if (_elementConverter) _elementConverter.SwitchElement(element);
+        _dead = false;
+        if (deathParticleSystem)
+        {
+            deathParticleSystem.SetActive(false);
+            deathParticleSystem.transform.parent = transform;
+        }
+    }
+
     public virtual void ApplyBalance(int waveNumber)
     {
-            
+        var multipliers = GameBalancer.GetBalanceMultipliers(waveNumber);
+/*
+ *     if (this is BossEnemy) 
+    {
+        // Apply special boss scaling, extract to boss class
+        multipliers.HealthMultiplier *= 2f; 
+        multipliers.DamageMultiplier *= 1.5f; 
+ */
+        // Apply the multipliers to the current stats
+        currentHealth = Mathf.CeilToInt(baseHealth * multipliers.HealthMultiplier);
+        currentDamage = Mathf.CeilToInt(baseDamage * multipliers.DamageMultiplier);
+        currentSpeed = baseSpeed * multipliers.SpeedMultiplier;
+        currentAttackRange = baseAttackRange * multipliers.AttackRangeMultiplier;
+        currentAttackCoolDown = baseAttackCoolDown * multipliers.AttackCooldownMultiplier;
+
+        // Debug.Log(
+        // $"Balanced enemy for wave {waveNumber}: Health={currentHealth}, Damage={currentDamage}, Speed={currentSpeed}, AttackRange={currentAttackRange}, AttackCooldown={currentAttackCoolDown}");
     }
+
     protected override void Awake()
     {
         base.Awake();
+        _elementConverter = GetComponent<EnemyElementConverter>();
+        if (_elementConverter) _elementConverter.Initialize();
         rigidbody = GetComponent<Rigidbody>();
         player = Camera.main.transform;
         playerComponent = FindObjectOfType<DevController>();
@@ -41,20 +78,11 @@ public class Enemy : Actor
         var playerDirection = player.position - transform.position;
         playerDirection.y = 0;
         if (playerDirection == Vector3.zero) return;
-        
+
         var targetRotation = Quaternion.LookRotation(playerDirection.normalized);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
     }
 
-    protected virtual void OnEnable()
-    {
-        _knockingBack = false;
-        currentHealth = baseHealth;
-        currentDamage = baseDamage;
-        currentSpeed = baseSpeed;
-        currentAttackRange = baseAttackRange;
-        currentAttackCoolDown = baseAttackCoolDown;
-    }
 
     public void Initialize(EnemyData enemyData)
     {
@@ -117,8 +145,8 @@ public class Enemy : Actor
         if (currentHealth - damage <= 0)
         {
             _knockingBack = true;
-            var weak = WeaknessesFor(ElementFlag.Fire);
-            var strong = StrengthsFor(ElementFlag.Fire);
+            var weak = WeaknessesFor(elementFlag);
+            var strong = StrengthsFor(elementFlag);
 
             if ((weak & element) != 0) Die(StatusEffectiveness.Weak);
             else if ((strong & element) != 0) Die(StatusEffectiveness.Strong);
@@ -155,9 +183,19 @@ public class Enemy : Actor
         // StartCoroutine(KnockBackTimer());
     }
 
+    private bool _dead;
+    [SerializeField] private GameObject deathParticleSystem;
+
     protected override void Die(StatusEffectiveness status)
     {
-        gameObject.SetActive(false);
-        GameBalancer.KillEnemy(status);
+        if (_dead) return;
+        _dead = true;
+        if (deathParticleSystem)
+        {
+            deathParticleSystem.transform.parent = null;
+            deathParticleSystem.SetActive(true);
+        }
+
+        GameBalancer.KillEnemy(status, this);
     }
 }

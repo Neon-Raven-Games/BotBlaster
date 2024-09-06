@@ -57,7 +57,6 @@ public class VRHand : MonoBehaviour
     {
         _handCannon.InitializeElementChange();
         uiLaserSetup.gameObject.SetActive(true);
-        selectUI.SetElements(_handCannon.blasterElement | ElementFlag.None);
         selectUI.transform.position = transform.position + transform.forward * uiSpawnDistance;
         selectUI.transform.rotation = Quaternion.Euler(0, selectUI.transform.rotation.eulerAngles.y, 0);
         selectUI.gameObject.SetActive(true);

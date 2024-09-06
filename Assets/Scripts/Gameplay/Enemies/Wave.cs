@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using Gameplay.Enemies;
 using UnityEngine;
 
@@ -13,13 +11,16 @@ public class Wave
     public float spawnInterval;
     public Vector3[] spawnPositions;
 
-    public Wave(int numberOfEnemies, EnemyType[] enemyTypes, float spawnInterval, Vector3[] spawnPositions, int waveNumber)
+    public ElementFlag[] elementFlags;
+    public Wave(int numberOfEnemies, EnemyType[] enemyTypes, float spawnInterval, Vector3[] spawnPositions,
+        int waveNumber, ElementFlag[] elementFlags)
     {
         this.numberOfEnemies = numberOfEnemies;
         this.enemyTypes = enemyTypes;
         this.spawnInterval = spawnInterval;
         this.spawnPositions = spawnPositions;
         this.waveNumber = waveNumber;
+        this.elementFlags = elementFlags;
     }
 }
 
