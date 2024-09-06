@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Gameplay.Elements;
 using Gameplay.Enemies;
 using Gameplay.Enemies.EnemyTypes;
 using UnityEngine;
@@ -7,8 +8,8 @@ using UnityEngine;
 public class EnemyElementConverter : MonoBehaviour
 {
     [SerializeField] private MeshRenderer meshRenderer;
-    [SerializeField] private List<ElementMaterialCollection> elementMaterials;
-    private readonly Dictionary<ElementFlag, ElementMaterialCollection> _elementMaterials = new();
+    [SerializeField] private List<ElementMaterial> elementMaterials;
+    private readonly Dictionary<ElementFlag, ElementMaterial> _elementMaterials = new();
     
     public void SwitchElement(ElementFlag elementFlag)
     {

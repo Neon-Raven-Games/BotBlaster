@@ -3380,6 +3380,87 @@ MonoBehaviour:
   - element: 32
     elementHoverUI: {fileID: 1317505650}
   player: {fileID: 717252644}
+--- !u!1 &1470670781
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1470670782}
+  - component: {fileID: 1470670783}
+  m_Layer: 0
+  m_Name: MaterialHandler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1470670782
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1470670781}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1659957879}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1470670783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1470670781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c136ad4ee9834fe1916a261b1f5cf137, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyElementTextures:
+  - enemyType: 0
+    elementMaterials:
+    - elementFlag: 32
+      elementTexture: {fileID: 2800000, guid: 053883fb67361f3408c3b47b5a12e586, type: 3}
+    - elementFlag: 2
+      elementTexture: {fileID: 2800000, guid: 6a198fbea159ea1489f3fad198640b55, type: 3}
+    - elementFlag: 8
+      elementTexture: {fileID: 2800000, guid: 166555035697a3a45a1d9206d138abc6, type: 3}
+    - elementFlag: 4
+      elementTexture: {fileID: 2800000, guid: a0aa19bd0cd0bd046b0585745f678863, type: 3}
+    - elementFlag: 16
+      elementTexture: {fileID: 2800000, guid: 5f9384e2a3e11c140b29cebd0a739ffa, type: 3}
+  - enemyType: 2
+    elementMaterials:
+    - elementFlag: 32
+      elementTexture: {fileID: 2800000, guid: 053883fb67361f3408c3b47b5a12e586, type: 3}
+    - elementFlag: 2
+      elementTexture: {fileID: 2800000, guid: 6a198fbea159ea1489f3fad198640b55, type: 3}
+    - elementFlag: 8
+      elementTexture: {fileID: 2800000, guid: 166555035697a3a45a1d9206d138abc6, type: 3}
+    - elementFlag: 4
+      elementTexture: {fileID: 2800000, guid: a0aa19bd0cd0bd046b0585745f678863, type: 3}
+    - elementFlag: 16
+      elementTexture: {fileID: 2800000, guid: 5f9384e2a3e11c140b29cebd0a739ffa, type: 3}
+  - enemyType: 3
+    elementMaterials:
+    - elementFlag: 32
+      elementTexture: {fileID: 2800000, guid: 053883fb67361f3408c3b47b5a12e586, type: 3}
+    - elementFlag: 2
+      elementTexture: {fileID: 2800000, guid: 6a198fbea159ea1489f3fad198640b55, type: 3}
+    - elementFlag: 8
+      elementTexture: {fileID: 2800000, guid: 166555035697a3a45a1d9206d138abc6, type: 3}
+    - elementFlag: 4
+      elementTexture: {fileID: 2800000, guid: a0aa19bd0cd0bd046b0585745f678863, type: 3}
+    - elementFlag: 16
+      elementTexture: {fileID: 2800000, guid: 5f9384e2a3e11c140b29cebd0a739ffa, type: 3}
 --- !u!1 &1602400457
 GameObject:
   m_ObjectHideFlags: 0
@@ -3530,6 +3611,7 @@ Transform:
   - {fileID: 755571180}
   - {fileID: 2114823447}
   - {fileID: 1379675108}
+  - {fileID: 1470670782}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1795240343
@@ -3893,7 +3975,7 @@ MonoBehaviour:
     baseAttackCooldown: 1
     enemyType: 0
     elementFlag: 0
-    enemyPrefab: {fileID: 6414696547239353875, guid: 543d783bdefc9f9408b9c21b3679f751, type: 3}
+    enemyPrefab: {fileID: 337543082012030173, guid: 70399d4dafb0703419e64617f154d6a1, type: 3}
     poolSize: 10
     minWaveSpawn: 0
   - baseHealth: 4

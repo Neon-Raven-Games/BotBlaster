@@ -1,23 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using Gameplay.Elements;
 using UnityEngine;
 
 namespace Gameplay.Enemies.EnemyTypes
 {
-    [Serializable]
-    public class ElementMaterialCollection
-    {
-        public ElementFlag elementFlag;
-        public Material characterMaterial;
-    }
+
 
     public class SwarmUnit : MonoBehaviour
     {
         [SerializeField] private GameObject deathParticles;
         [SerializeField] private Animator animator;
         [SerializeField] private TextureAnimator textureAnimator;
-        [SerializeField] private List<ElementMaterialCollection> elementMaterials;
-        private Dictionary<ElementFlag, ElementMaterialCollection> _elementMaterials;
+        [SerializeField] private List<ElementMaterial> elementMaterials;
+        private Dictionary<ElementFlag, ElementMaterial> _elementMaterials;
         public float speed;
         public ElementFlag element;
         private Transform _swarmCenter;

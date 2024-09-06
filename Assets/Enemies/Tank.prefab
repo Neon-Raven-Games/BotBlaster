@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 4691266694475113247}
   - component: {fileID: 3917665329599384422}
   - component: {fileID: -8076874885166197028}
-  - component: {fileID: 5988729154854555755}
   m_Layer: 8
   m_Name: Tank
   m_TagString: Enemy
@@ -65,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2581fe86fba4fd349861d397ba2e6bcf, type: 2}
+  - {fileID: 2100000, guid: 06e67207b6ce2dd4c9f9104830bb2d3c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -132,7 +131,6 @@ MonoBehaviour:
   enemyType: 3
   knockBackForce: {x: 0, y: 0}
   knockBackTime: 0
-  minWaveSpawn: 0
   deathParticleSystem: {fileID: 1876355520819786475}
   dashingChance: 0.003
   dashSpeed: 20
@@ -140,30 +138,6 @@ MonoBehaviour:
   chargeDuration: 0.5
   dashDuration: 2
   rotationSpeed: 16
---- !u!114 &5988729154854555755
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5801088316695447527}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5cc966b78d2be2947ac3179fd11fa903, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  meshRenderer: {fileID: 4691266694475113247}
-  elementMaterials:
-  - elementFlag: 2
-    characterMaterial: {fileID: 2100000, guid: 2581fe86fba4fd349861d397ba2e6bcf, type: 2}
-  - elementFlag: 4
-    characterMaterial: {fileID: 2100000, guid: 06e67207b6ce2dd4c9f9104830bb2d3c, type: 2}
-  - elementFlag: 8
-    characterMaterial: {fileID: 2100000, guid: 27b89cfcf8727934ab947a665c2b5ead, type: 2}
-  - elementFlag: 16
-    characterMaterial: {fileID: 2100000, guid: 669cad3e27fae604d9daee3793893a76, type: 2}
-  - elementFlag: 32
-    characterMaterial: {fileID: 2100000, guid: 73991ece0f3f40b4a99a196e98742b3e, type: 2}
 --- !u!1001 &1143396302527402397
 PrefabInstance:
   m_ObjectHideFlags: 0

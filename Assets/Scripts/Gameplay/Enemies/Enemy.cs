@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Gameplay.Elements;
 using Gameplay.Enemies;
 using UnityEngine;
 
@@ -9,9 +10,8 @@ public class Enemy : Actor
     public Vector2 knockBackForce;
     [SerializeField] private float knockBackTime = 0.5f;
     private bool _knockingBack;
-    public int minWaveSpawn;
-    private EnemyElementConverter _elementConverter;
-
+    protected float lastAttackTime;
+    
     protected Rigidbody rigidbody;
     protected Transform player;
     protected Actor playerComponent;
@@ -24,7 +24,6 @@ public class Enemy : Actor
         currentSpeed = baseSpeed;
         currentAttackRange = baseAttackRange;
         currentAttackCoolDown = baseAttackCoolDown;
-        if (_elementConverter) _elementConverter.SwitchElement(element);
         _dead = false;
         if (deathParticleSystem)
         {
@@ -57,8 +56,6 @@ public class Enemy : Actor
     protected override void Awake()
     {
         base.Awake();
-        _elementConverter = GetComponent<EnemyElementConverter>();
-        if (_elementConverter) _elementConverter.Initialize();
         rigidbody = GetComponent<Rigidbody>();
         player = Camera.main.transform;
         playerComponent = FindObjectOfType<DevController>();
@@ -88,11 +85,9 @@ public class Enemy : Actor
     {
         base.Initialize(enemyData);
         element = enemyData.elementFlag;
-        minWaveSpawn = enemyData.minWaveSpawn;
         enemyType = enemyData.enemyType;
+        this.ApplyElement(element);
     }
-
-    protected float lastAttackTime;
 
     private bool CanAttack()
     {

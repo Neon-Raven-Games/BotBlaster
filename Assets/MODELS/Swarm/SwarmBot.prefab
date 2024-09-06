@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66e79bcffd2e440a9d6c3d7bd77fa4c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deathParticles: {fileID: 4675578288651895485}
   animator: {fileID: 6222911211813506289}
   textureAnimator: {fileID: 8833438105358455557}
   elementMaterials:
@@ -476,5 +477,10 @@ PrefabInstance:
 --- !u!4 &3814955256449901312 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7045744998599279307, guid: 8d41cd5eaaa0d564581fe8515976b4a6, type: 3}
+  m_PrefabInstance: {fileID: 6140361399165673931}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4675578288651895485 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1572899241069273974, guid: 8d41cd5eaaa0d564581fe8515976b4a6, type: 3}
   m_PrefabInstance: {fileID: 6140361399165673931}
   m_PrefabAsset: {fileID: 0}
