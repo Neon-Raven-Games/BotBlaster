@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Gameplay.Enemies;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 using Object = UnityEngine.Object;
 
 [Serializable]
@@ -71,6 +70,7 @@ public class EnemyCollection
 
 public class EnemyPool : MonoBehaviour
 {
+    public static int CurrentEnemyCount { get; private set; } = 0; 
     public List<EnemyData> enemyData;
     private static EnemyPool _instance;
     [SerializeField] private WaveController waveController;
@@ -98,12 +98,21 @@ public class EnemyPool : MonoBehaviour
         var enemyCollection = _SEnemyPool.TryGetValue(enemyType, out var collection)
             ? collection
             : null;
-        if (enemyCollection != null) return enemyCollection.GetEnemy();
+        if (enemyCollection != null)
+        {
+            CurrentEnemyCount++;
+            return enemyCollection.GetEnemy();
+        }
 
-        Debug.LogError($"Enemy not found in pool. {enemyType.ToString()}");
         return null;
     }
-
+    
+    public static void HandleEnemyDeactivation(Enemy enemy)
+    {
+        enemy.gameObject.SetActive(false);
+        CurrentEnemyCount--;
+    }
+    
     private async UniTaskVoid Initialize()
     {
         foreach (var data in enemyData)
@@ -129,8 +138,15 @@ public class EnemyPool : MonoBehaviour
         foreach (var enemyCollection in _SEnemyPool.Values)
         {
             foreach (var enemy in enemyCollection.enemies)
-                enemy.gameObject.SetActive(false);
+            {
+                if (enemy.gameObject.activeInHierarchy)
+                {
+                    enemy.gameObject.SetActive(false);
+                }
+            }
         }
+
+        CurrentEnemyCount = 0; 
         _instance.waveController.Ready();
     }
 }

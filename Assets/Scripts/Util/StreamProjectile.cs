@@ -38,17 +38,17 @@ namespace Util
         {
             while (true)
             {
+                yield return null; 
+                
                 var startPosition = transform.position;
                 var direction = transform.forward;
 
-                // can we only register collisions that are not on the player layer?
                 var playerLayer = LayerMask.NameToLayer("Player");
                 var playerLayerMask = 1 << playerLayer;
                 var layerMask = ~playerLayerMask;
                 
                 var hitDetected = Physics.RaycastNonAlloc(startPosition, direction, _hitInfo, endDistance, layerMask) > 0;
                 var targetDistance = hitDetected ? _hitInfo[0].distance : endDistance;
-
                 _currentDistance = Mathf.MoveTowards(_currentDistance, targetDistance, jetSpeed * Time.deltaTime);
                 SetParticleSize(_currentDistance);
 
@@ -60,8 +60,6 @@ namespace Util
                 {
                     projectileImpact.SetActive(false);
                 }
-
-                yield return null; 
             }
         }
 
@@ -83,6 +81,7 @@ namespace Util
                 projectileImpact.SetActive(true);
                 if (hitPoint.collider.CompareTag("Enemy") && Time.time > _currentHitTime + fireRate)
                 {
+                    _currentHitTime = Time.time;
                     var swarmUnit = hitPoint.collider.GetComponent<SwarmUnit>();
                     if (swarmUnit)
                     {
@@ -92,7 +91,6 @@ namespace Util
                     {
                         hitPoint.collider.GetComponent<Enemy>().TakeDamage(damage, Vector3.zero, element);
                     }
-                    _currentHitTime = Time.time;
                 }
             }
         }

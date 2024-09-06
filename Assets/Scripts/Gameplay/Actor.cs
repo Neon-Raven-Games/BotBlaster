@@ -15,7 +15,7 @@ public class Actor : MonoBehaviour
     public float baseAttackRange;
     public float baseAttackCoolDown;
 
-    protected int currentHealth;
+    public int currentHealth;
     protected int currentDamage;
     protected float currentSpeed;
     protected float currentAttackRange;
@@ -60,18 +60,23 @@ public class Actor : MonoBehaviour
         DamageNumberPool.SetElementDamageNumber(damageElementType, position, status, damage);
     }
 
-    public int ApplyDamage(int damage, ElementFlag hitElement, Vector3 position, int elementLevel = 1)
+    
+    public bool IsWeakAgainst(ElementFlag hitElement)
     {
+        return (WeaknessesFor(element) & hitElement) != 0;
+    }
+    
+    public int ApplyDamage(int damage, ElementFlag hitElement, Vector3 position, int elementLevel = 1, int stackLevel = 1)
+    {
+        stackEffectivenessLevel = stackLevel;
         damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Rock);
         damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Water);
         damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Fire);
         damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Wind);
         damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Electricity);
 
-        var weakness = WeaknessesFor(element);
-        var strength = StrengthsFor(element);
-        weakness &= hitElement;
-        strength &= hitElement;
+        var weakness = WeaknessesFor(hitElement) & element;
+        var strength = StrengthsFor(hitElement) & element;
         
         if (showDamageNumbers) ShowDamageNumber(damage, hitElement, weakness != 0, strength != 0, position);
         
@@ -95,68 +100,70 @@ public class Actor : MonoBehaviour
         return damage;
     }
 
-    private int ApplyElementalDamage(int damage, ElementFlag characterElement, ElementFlag hitElement, int elementLevel,
-        ElementFlag targetElement)
+    private int ApplyElementalDamage(int damage, ElementFlag attackerElement, ElementFlag defenderElement, int elementLevel, ElementFlag targetElement)
     {
-        if (characterElement == ElementFlag.None || (characterElement & targetElement) == 0)
+        if (attackerElement == ElementFlag.None || (attackerElement & targetElement) == 0)
         {
             return damage;
         }
 
         var multiplier = ElementDecorator.BASE_MULTIPLIER * elementLevel;
-        if ((hitElement & WeaknessesFor(targetElement)) != 0)
-            multiplier *= ElementDecorator.WEAKNESS_MULTIPLIER;
 
-        if ((hitElement & StrengthsFor(targetElement)) != 0)
+        if ((defenderElement & WeaknessesFor(attackerElement)) != 0)
+            multiplier *= ElementDecorator.WEAKNESS_MULTIPLIER;
+        else if ((defenderElement & StrengthsFor(attackerElement)) != 0)
             multiplier *= ElementDecorator.STRENGTH_MULTIPLIER;
 
-        var finalDamage = damage + (int) (damage * multiplier * GetStackMultiplier(targetElement));
+        var finalDamage = damage + (int)(damage * multiplier * GetStackMultiplier(ElementFlag.Water));
 
         return finalDamage;
     }
 
     private float GetStackMultiplier(ElementFlag debuffElement)
     {
-        return stacks.ContainsKey(debuffElement) ? stacks[debuffElement] : 1f;
+        return stacks.ContainsKey(debuffElement) ? stacks[debuffElement] + stackEffectivenessLevel * ElementDecorator.BASE_MULTIPLIER: 1f;
     }
 
-    protected ElementFlag WeaknessesFor(ElementFlag current)
+    // target element is weak against
+    protected ElementFlag WeaknessesFor(ElementFlag targetElement)
     {
-        return current switch
+        switch (targetElement)
         {
-            ElementFlag.Rock => (ElementFlag) Weakness.Rock,
-            ElementFlag.Water => (ElementFlag) Weakness.Water,
-            ElementFlag.Fire => (ElementFlag) Weakness.Fire,
-            ElementFlag.Wind => (ElementFlag) Weakness.Wind,
-            ElementFlag.Electricity => (ElementFlag) Weakness.Electricity,
-            _ => ElementFlag.None
-        };
+            case ElementFlag.Fire: return ElementFlag.Water | ElementFlag.Rock;
+            case ElementFlag.Water: return ElementFlag.Electricity;
+            case ElementFlag.Rock: return ElementFlag.Water;
+            case ElementFlag.Wind: return ElementFlag.Electricity;
+            case ElementFlag.Electricity: return ElementFlag.Rock;
+            default: return ElementFlag.None;
+        }
     }
-
-    protected ElementFlag StrengthsFor(ElementFlag current)
+    
+    // target element is strong against
+    protected ElementFlag StrengthsFor(ElementFlag targetElement)
     {
-        return current switch
+        switch (targetElement)
         {
-            ElementFlag.Rock => (ElementFlag) Strength.Rock,
-            ElementFlag.Water => (ElementFlag) Strength.Water,
-            ElementFlag.Fire => (ElementFlag) Strength.Fire,
-            ElementFlag.Wind => (ElementFlag) Strength.Wind,
-            ElementFlag.Electricity => (ElementFlag) Strength.Electricity,
-            _ => ElementFlag.None
-        };
+            case ElementFlag.Fire: return ElementFlag.Electricity;
+            case ElementFlag.Water: return ElementFlag.Fire | ElementFlag.Rock;
+            case ElementFlag.Rock: return ElementFlag.Wind | ElementFlag.Fire;
+            case ElementFlag.Wind: return ElementFlag.Fire;
+            case ElementFlag.Electricity: return ElementFlag.Water;
+            default: return ElementFlag.None;
+        }
     }
 
     protected float GetMovementCurrentSpeed()
     {
         if ((debuffs & ElementFlag.Electricity) != 0)
         {
-            float debuffFactor = 1.0f - 0.1f * stacks[ElementFlag.Electricity];
+            float debuffFactor = (1.0f - 0.1f * stacks[ElementFlag.Electricity]) - (stackEffectivenessLevel * ElementDecorator.BASE_MULTIPLIER);
             return currentSpeed * Mathf.Max(debuffFactor, 0f);
         }
 
         return currentSpeed;
     }
 
+    private int stackEffectivenessLevel;
     // todo, we need to make dev controller adhere the same as enemies or vice versa
     // the swarm needs to account for the fire debuff on each unit
     protected virtual void Update()
@@ -166,7 +173,7 @@ public class Actor : MonoBehaviour
         {
             if (this is Swarm) return;
             _lastTick = Time.time + ElementDecorator.DEBUFF_TICK;
-            var fireDamage = ApplyDamage(baseDamage, ElementFlag.Fire, transform.position, stacks[ElementFlag.Fire]);
+            var fireDamage = ApplyDamage(baseDamage + (int) (stackEffectivenessLevel * ElementDecorator.BASE_MULTIPLIER), ElementFlag.Fire, transform.position, stacks[ElementFlag.Fire]);
             
             if (this is not DevController) currentHealth -= fireDamage;
             if (currentHealth <= 0)
@@ -196,15 +203,12 @@ public class Actor : MonoBehaviour
         }
     }
 
-
     private void ApplyDebuff(ElementFlag element)
     {
         foreach (ElementFlag flag in Enum.GetValues(typeof(ElementFlag)))
         {
-            // Skip the None flag
             if (flag == ElementFlag.None) continue;
 
-            // Check if the current element has the flag and if it's a valid debuff
             if ((element & flag) != 0 && stacks.ContainsKey(flag))
             {
                 if (stacks[flag] < ElementDecorator.MAX_STACKS)

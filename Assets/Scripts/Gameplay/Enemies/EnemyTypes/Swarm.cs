@@ -53,7 +53,10 @@ namespace Gameplay.Enemies.EnemyTypes
         private void SleepSwarm()
         {
             foreach (var swarmUnit in _swarmUnits)
+            {
+                if (!swarmUnit) return;
                 swarmUnit.gameObject.SetActive(false);
+            }
         }
 
         private void SetSwarmActive(int count)
@@ -92,7 +95,7 @@ namespace Gameplay.Enemies.EnemyTypes
         }
         private async UniTaskVoid MoveSwarmAsync()
         {
-            while (gameObject.activeInHierarchy)
+            while (gameObject && gameObject.activeInHierarchy)
             {
                 var separationTasks = new List<UniTask>();
                 foreach (var swarmUnit in _swarmUnits)

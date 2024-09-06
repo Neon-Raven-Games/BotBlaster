@@ -1,25 +1,18 @@
 using System;
 using System.Collections.Generic;
 using Gameplay.Enemies;
-using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 [Serializable]
 public class BlasterUIElement
 {
+    public ElementFlag element;
     public ElementHoverUI elementHoverUI;
-    public TextMeshProUGUI text;
-
-    public void SetElement(ElementFlag element)
-    {
-        elementHoverUI.elementFlag = element;
-        text.text = element.ToString();
-    }
 }
 public class BlasterSelectUI : MonoBehaviour
 {
     [SerializeField] private List<BlasterUIElement> elements;
-
     [SerializeField] private GameObject player;
     private void Update()
     {
@@ -27,21 +20,21 @@ public class BlasterSelectUI : MonoBehaviour
         transform.rotation = Quaternion.LookRotation(-forward, Vector3.up);
     }
 
-    public void SetElements(ElementFlag mask)
+    private void OnEnable()
     {
-        var i = 0;
-        foreach (var flag in Enum.GetValues(typeof(ElementFlag)))
+        foreach (var elements in elements)
         {
-            var element = (ElementFlag) flag;
-            if (mask.HasFlag(element)) continue;
-            if (i >= elements.Count)
+            var color = elements.elementHoverUI.GetComponent<Image>().color;
+            if (elements.elementHoverUI.handCannon.blasterElement != elements.element)
             {
-                Debug.LogError("Flags exceed element texts.");
-                break;
+                color.a = 1f;
+                elements.elementHoverUI.GetComponent<Image>().color = color;
             }
-            
-            var elementText = elements[i++];
-            elementText.SetElement(element);
-        }
+            else
+            {
+                color.a = 0.5f;
+                elements.elementHoverUI.GetComponent<Image>().color = color;
+            }
+        }   
     }
 }

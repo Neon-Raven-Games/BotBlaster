@@ -1,3 +1,4 @@
+using Gameplay;
 using Gameplay.Enemies;
 using UnityEngine;
 using Util;
@@ -5,7 +6,11 @@ using Util;
 public class ShootingState : BaseHandCanonState
 {
     private CharacterController _controller;
-
+    private bool beam;
+    private GameObject beamObject;
+    private CharacterController controller;
+    private bool launchRequested;
+    
     public ShootingState(HandCannon handCannon) : base(handCannon)
     {
         controller = handCannon.actor.GetComponent<CharacterController>();
@@ -30,8 +35,6 @@ public class ShootingState : BaseHandCanonState
     {
         launchRequested = true;
     }
-
-    private bool launchRequested;
 
     public override void FixedUpdate()
     {
@@ -58,9 +61,6 @@ public class ShootingState : BaseHandCanonState
         }
     }
 
-    private bool beam;
-    private GameObject beamObject;
-    private CharacterController controller;
 
     public override void Update()
     {
@@ -87,13 +87,18 @@ public class ShootingState : BaseHandCanonState
 
     private void LaunchDodgeball(GameObject dodgeball)
     {
-        Rigidbody rb = dodgeball.GetComponent<Rigidbody>();
+        var rb = dodgeball.GetComponent<Rigidbody>();
         rb.isKinematic = false;
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
 
         dodgeball.transform.position = handCannon.barrelTransform.position;
         dodgeball.transform.rotation = handCannon.barrelTransform.rotation;
+        
+        var projectile = dodgeball.GetComponent<Projectile>();
+        projectile.isPlayerProjectile = true;
+        projectile.damage = handCannon.actor.FetchDamage();
+        projectile.effectiveDamage = handCannon.actor.FetchEffectiveElementalDamage(handCannon.blasterElement);
         dodgeball.SetActive(true);
 
         var launchVelocity = handCannon.barrelTransform.forward * handCannon.launchForce;

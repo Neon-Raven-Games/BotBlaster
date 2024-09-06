@@ -78,11 +78,11 @@ public class TextureAnimator : MonoBehaviour
         _playing = false;
         textures = _elementAnimatedTextures[element];
        
-        _renderer.GetPropertyBlock(_propertyBlock, 0);  // Assuming the second material
+        _renderer.GetPropertyBlock(_propertyBlock, 0); 
         _propertyBlock.SetTexture(_SMainTex, characterMaterial.mainTexture);
-        _renderer.SetPropertyBlock(_propertyBlock, 1);
+        _renderer.SetPropertyBlock(_propertyBlock, 0);
         
-        _renderer.GetPropertyBlock(_propertyBlock, 1);  // Assuming the second material
+        _renderer.GetPropertyBlock(_propertyBlock, 1); 
         _propertyBlock.SetTexture(_SMainTex, textures[_currentFrame]);
         _renderer.SetPropertyBlock(_propertyBlock, 1);
         _currentFrame = 0;

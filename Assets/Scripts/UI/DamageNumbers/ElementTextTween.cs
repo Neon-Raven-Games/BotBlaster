@@ -97,6 +97,18 @@ namespace UI.DamageNumbers
                 }
             },
             {
+                ElementFlag.Wind | ElementFlag.Water, new DamageMaterialProperties
+                {
+                    fromFaceColor = new Color(1f, 1f, 1, 1f),
+                    toFaceColor = new Color(0.35f, 0.94f, 1, 1),
+                    glowColor = new Color(.36f, 0.96f, .9f, 0.5019608f),
+                    glowOffset = 0.6f,
+                    glowInner = 0.66f,
+                    glowOuter = 0.263f,
+                    glowPower = 0.588f
+                }
+            },
+            {
                 ElementFlag.Electricity, new DamageMaterialProperties
                 {
                     fromFaceColor = new Color(1f, 1f, .38f, 1f),
@@ -154,7 +166,8 @@ namespace UI.DamageNumbers
                     scaleMultiplier = 1.1f; // Slightly larger scale, but less than Strong
                     break;
             }
-            
+
+            if (!_SElementMaterialProperties.ContainsKey(element)) return;
             var materialProperties = _SElementMaterialProperties[element];
             if (statusEffectiveness == StatusEffectiveness.Strong)
             {

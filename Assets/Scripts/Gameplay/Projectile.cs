@@ -1,17 +1,17 @@
-﻿using System;
-using Gameplay.Enemies;
+﻿using Gameplay.Enemies;
 using UnityEngine;
 
 namespace Gameplay
 {
     public class Projectile : MonoBehaviour
     {
+        [SerializeField] private GameObject muzzleFlash;
+        public bool isPlayerProjectile;
         public ElementFlag elementFlag;
         public float speed;
         public int damage;
-        [SerializeField] private GameObject muzzleFlash;
-
         public GameObject impact;
+        public int effectiveDamage;
 
         private void Awake()
         {
@@ -29,6 +29,8 @@ namespace Gameplay
 
         private void OnDisable()
         {
+            isPlayerProjectile = false;
+            effectiveDamage = 0;
             if (muzzleFlash) muzzleFlash.SetActive(false);
         }
 
@@ -42,13 +44,17 @@ namespace Gameplay
             if (collision.gameObject.CompareTag("Enemy"))
             {
                 var enemy = collision.gameObject.GetComponent<Enemy>();
-                if (enemy) enemy.TakeDamage(damage, transform.forward, elementFlag);
+                if (enemy)
+                {
+                    if (enemy.IsWeakAgainst(elementFlag)) damage = effectiveDamage;
+                    enemy.TakeDamage(damage, transform.forward, elementFlag);
+                }
             }
-            else if (collision.gameObject.CompareTag("Player"))
+            else if (collision.gameObject.CompareTag("Player") && !isPlayerProjectile)
             {
-                Debug.Log("APlying player damage from collision");
-                collision.gameObject.GetComponent<Actor>().ApplyDamage(damage, elementFlag, collision.GetContact(0).point );
+                collision.gameObject.GetComponent<Actor>().ApplyDamage(damage, elementFlag, collision.GetContact(0).point);
             }
+            else if (collision.gameObject.CompareTag("Player") && isPlayerProjectile) return;
             
             impact.transform.position = collision.GetContact(0).point;
             impact.SetActive(true);

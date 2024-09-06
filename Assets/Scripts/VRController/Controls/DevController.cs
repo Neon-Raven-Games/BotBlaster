@@ -1,8 +1,8 @@
-using System;
 using System.Collections;
+using System.Collections.Generic;
+using Gameplay.Enemies;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public enum RotationMode
@@ -26,16 +26,17 @@ public enum HandSide
 [RequireComponent(typeof(CharacterController))]
 public class DevController : Actor
 {
-    [Header("Health Settings")]
-    [SerializeField] private Slider healthBarSlider;  
-    [SerializeField] private Slider bigCannonHealthBarSlider;  
-    
+    [Header("Health Settings")] [SerializeField]
+    private Slider healthBarSlider;
+
+    [SerializeField] private Slider bigCannonHealthBarSlider;
+
     [Header("Input Settings")] [SerializeField]
     private InputActionAsset actionAsset;
 
     [SerializeField] private VRHand leftHand;
     [SerializeField] private VRHand rightHand;
-    
+
     [SerializeField] private float analogThreshold = 0.2f;
     [SerializeField] private Transform hmd;
     [SerializeField] private Transform handsAnchor;
@@ -83,7 +84,7 @@ public class DevController : Actor
     private void Start()
     {
         currentHealth = baseHealth;
-        
+
         _vignetteController = GetComponentInChildren<VignetteController>();
         _controller = GetComponent<CharacterController>();
         LocomotionVignette = initialLocomotionVignette;
@@ -100,12 +101,12 @@ public class DevController : Actor
     {
         leftHand.PlayHapticImpulse(0.75f, 0.2f);
     }
-    
+
     public void PlayRightFeedback()
     {
         rightHand.PlayHapticImpulse(0.75f, 0.2f);
     }
-    
+
     private void OnApplicationFocusChanged(bool hasFocus)
     {
         if (hasFocus)
@@ -137,15 +138,21 @@ public class DevController : Actor
         _moveForwardAction.canceled += _ => _moveInput = Vector2.zero;
         _lookAction.canceled += _ => _lookInput = Vector2.zero;
 
-        if (Application.platform != RuntimePlatform.WindowsEditor) Application.focusChanged += OnApplicationFocusChanged;
+        if (Application.platform != RuntimePlatform.WindowsEditor)
+            Application.focusChanged += OnApplicationFocusChanged;
+        currentDamage = baseDamage;
+        currentHealth = baseHealth;
+        currentSpeed = baseSpeed;
+        currentAttackRange = baseAttackRange;
     }
 
     private void OnDestroy()
     {
-        if (Application.platform != RuntimePlatform.WindowsEditor) Application.focusChanged -= OnApplicationFocusChanged;
+        if (Application.platform != RuntimePlatform.WindowsEditor)
+            Application.focusChanged -= OnApplicationFocusChanged;
     }
 
-    
+
     private void OnEnable()
     {
         if (_moveForwardAction != null) _moveForwardAction.Enable();
@@ -157,7 +164,7 @@ public class DevController : Actor
         _moveForwardAction.Disable();
         _lookAction.Disable();
     }
-    
+
     protected override void Update()
     {
         UpdateHealthBar();
@@ -166,10 +173,11 @@ public class DevController : Actor
         HandleMovement();
         _vignetteController.StopVignette();
     }
+
     private void UpdateHealthBar()
     {
         if (currentHealth <= 0 || !healthBarSlider || !bigCannonHealthBarSlider) return;
-        var healthPercentage = currentHealth / (float)baseHealth;
+        var healthPercentage = currentHealth / (float) baseHealth;
         healthBarSlider.value = healthPercentage;
         bigCannonHealthBarSlider.value = healthPercentage;
     }
@@ -189,11 +197,12 @@ public class DevController : Actor
         {
             t += Time.deltaTime;
             currentHealth = (int) Mathf.Lerp(currentHealth, targetHp, t / 3f);
-            var healthPercentage = currentHealth / (float)baseHealth;
+            var healthPercentage = currentHealth / (float) baseHealth;
             healthBarSlider.value = healthPercentage;
             bigCannonHealthBarSlider.value = healthPercentage;
             yield return null;
         }
+
         currentHealth = baseHealth;
     }
 
@@ -269,4 +278,74 @@ public class DevController : Actor
         _controller.Move(movement);
     }
 
+    public const float healthUpgrade = 1.1f;
+    public const float damageUpgrade = 1.1f;
+    public const float elementStatusIncrement = 0.1f;
+    public const float elementEffectivenessIncrement = 0.1f;
+    
+    public Dictionary<ElementFlag, float> elementStatusUpgrades = new Dictionary<ElementFlag, float>
+    {
+        {ElementFlag.Fire, 1f},
+        {ElementFlag.Water, 1f},
+        {ElementFlag.Rock, 1f},
+        {ElementFlag.Wind, 1f},
+        {ElementFlag.Electricity, 1f}
+    };
+    
+    public Dictionary<ElementFlag, int> elementEffectivenessUpgrades = new Dictionary<ElementFlag, int>
+    {
+        {ElementFlag.Fire, 1},
+        {ElementFlag.Water, 1},
+        {ElementFlag.Rock, 1},
+        {ElementFlag.Wind, 1},
+        {ElementFlag.Electricity, 1}
+    };
+
+    public int FetchEffectiveElementalDamage(ElementFlag elementFlag)
+    {
+        return Mathf.CeilToInt(currentDamage * elementEffectivenessUpgrades[elementFlag]);
+    }
+
+    public int FetchDamage()
+    {
+        return currentDamage;
+    }
+
+    public void UpgradeSelected(UpgradeType type, ElementFlag elementFlag)
+    {
+        if (type == UpgradeType.Damage)
+            elementEffectivenessUpgrades[elementFlag]++;
+        else if (type == UpgradeType.StatusEffect)
+            elementStatusUpgrades[elementFlag] += elementStatusIncrement;
+    }
+
+    public void UpgradeSelected(UtilityUpgrade utilityUpgrade)
+    {
+        if (utilityUpgrade == UtilityUpgrade.Health)
+        {
+            var curHealth = baseHealth;
+            baseHealth = (int) (curHealth * healthUpgrade);
+            if (baseHealth == curHealth) baseHealth++;
+        }
+        else if (utilityUpgrade == UtilityUpgrade.Damage)
+        {
+            var curDamage = baseDamage;
+            baseDamage = (int) (curDamage * damageUpgrade);
+            if (baseDamage == curDamage) baseDamage++;
+        }
+        else if (utilityUpgrade == UtilityUpgrade.HealthRegen)
+        {
+            if (currentHealth < baseHealth) StartCoroutine(HealthUpRoutine(baseHealth));
+            else
+            {
+                Debug.LogWarning("Current health is already at max?");
+                currentHealth = baseHealth;
+            }
+        }
+    }
+
+    public void Test_SetCurrentHealth(int health)
+    {
+        currentHealth = health;
+    }
 }
