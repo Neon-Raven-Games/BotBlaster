@@ -186,7 +186,7 @@ PrefabInstance:
     - target: {fileID: 704553162739010597, guid: be6b7cf8c93497142a2724384f223e32, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 07f7e72405b297e46838080e20eadae6, type: 2}
+      objectReference: {fileID: 2100000, guid: 2b19420f4c6f0ee418387a8bbd057c28, type: 2}
     - target: {fileID: 919132149155446097, guid: be6b7cf8c93497142a2724384f223e32, type: 3}
       propertyPath: m_Name
       value: Grunt_Bot
