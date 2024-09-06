@@ -60,11 +60,13 @@ namespace Gameplay.Elements
         
         public static Texture GetEnemyMaterial(EnemyType enemyType, ElementFlag elementFlag)
         {
+            Debug.Log(enemyType + "changing element: " + elementFlag);
             return _instance._enemyMaterials[enemyType][elementFlag];
         }
         
         public static bool ContainsTexture(EnemyType enemyType, ElementFlag elementFlag)
         {
+            Debug.Log(enemyType + "Requesting element: " + elementFlag);
             if (_instance == null) return false;
             return _instance._enemyMaterials.ContainsKey(enemyType) && 
                    _instance._enemyMaterials[enemyType].ContainsKey(elementFlag);
@@ -78,13 +80,13 @@ namespace Gameplay.Elements
         {
             if (!EnemyMaterialHandler.ContainsTexture(enemy.enemyType, elementFlag)) return;
             // todo, this is temp, waiting for art
-            var rend = enemy.GetComponent<MeshRenderer>();
-            if (!rend) rend = enemy.GetComponentInChildren<MeshRenderer>();
+            var rend = enemy.GetComponent<Renderer>();
+            if (!rend) rend = enemy.GetComponentInChildren<Renderer>();
             rend.material.mainTexture = 
                 EnemyMaterialHandler.GetEnemyMaterial(enemy.enemyType, elementFlag);
         }
         
-        public static Texture GetElementTexture(this ElementFlag elementFlag)
+        public static Texture GetSwarmElementTexture(this ElementFlag elementFlag)
         {
             return EnemyMaterialHandler.GetEnemyMaterial(EnemyType.Swarm, elementFlag);
         }

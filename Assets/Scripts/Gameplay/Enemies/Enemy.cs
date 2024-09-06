@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using Gameplay.Elements;
 using Gameplay.Enemies;
@@ -30,6 +29,7 @@ public class Enemy : Actor
             deathParticleSystem.SetActive(false);
             deathParticleSystem.transform.parent = transform;
         }
+        this.ApplyElement(element);
     }
 
     public virtual void ApplyBalance(int waveNumber)
@@ -86,7 +86,6 @@ public class Enemy : Actor
         base.Initialize(enemyData);
         element = enemyData.elementFlag;
         enemyType = enemyData.enemyType;
-        this.ApplyElement(element);
     }
 
     private bool CanAttack()
