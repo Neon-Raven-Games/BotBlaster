@@ -60,13 +60,11 @@ namespace Gameplay.Elements
         
         public static Texture GetEnemyMaterial(EnemyType enemyType, ElementFlag elementFlag)
         {
-            Debug.Log(enemyType + "changing element: " + elementFlag);
             return _instance._enemyMaterials[enemyType][elementFlag];
         }
         
         public static bool ContainsTexture(EnemyType enemyType, ElementFlag elementFlag)
         {
-            Debug.Log(enemyType + "Requesting element: " + elementFlag);
             if (_instance == null) return false;
             return _instance._enemyMaterials.ContainsKey(enemyType) && 
                    _instance._enemyMaterials[enemyType].ContainsKey(elementFlag);
@@ -75,17 +73,27 @@ namespace Gameplay.Elements
     
     public static class ElementExtensions
     {
-        
+        private static readonly int _SMainTex = Shader.PropertyToID("_MainTex");
+
         public static void ApplyElement(this Enemy enemy, ElementFlag elementFlag)
         {
+            // Check if the texture exists for this enemy type and element flag
             if (!EnemyMaterialHandler.ContainsTexture(enemy.enemyType, elementFlag)) return;
-            // todo, this is temp, waiting for art
-            var rend = enemy.GetComponent<Renderer>();
-            if (!rend) rend = enemy.GetComponentInChildren<Renderer>();
-            rend.material.mainTexture = 
-                EnemyMaterialHandler.GetEnemyMaterial(enemy.enemyType, elementFlag);
+
+            // Get the corresponding texture for this element
+            var texture = EnemyMaterialHandler.GetEnemyMaterial(enemy.enemyType, elementFlag);
+            var renderer = enemy.GetComponent<Renderer>() ?? enemy.GetComponentInChildren<Renderer>();
+
+            if (renderer != null)
+            {
+                var propertyBlock = new MaterialPropertyBlock();
+                renderer.GetPropertyBlock(propertyBlock);  
+
+                propertyBlock.SetTexture(_SMainTex, texture);  
+                renderer.SetPropertyBlock(propertyBlock);  
+
+            }
         }
-        
         public static Texture GetSwarmElementTexture(this ElementFlag elementFlag)
         {
             return EnemyMaterialHandler.GetEnemyMaterial(EnemyType.Swarm, elementFlag);

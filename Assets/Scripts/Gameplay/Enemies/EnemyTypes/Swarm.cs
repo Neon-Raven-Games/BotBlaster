@@ -59,6 +59,12 @@ namespace Gameplay.Enemies.EnemyTypes
             }
         }
 
+        protected override void Update()
+        {
+            base.Update();
+            if (currentSwarmUnitCount <= 0) base.Die(StatusEffectiveness.Normal);
+        }
+
         private void SetSwarmActive(int count)
         {
             currentSwarmUnitCount = count;
@@ -177,12 +183,12 @@ namespace Gameplay.Enemies.EnemyTypes
         private void TriggerDiveBomb()
         {
             _lastDiveBombTime = Time.time;
-            int diveBombCount = Mathf.CeilToInt(currentSwarmUnitCount * diveBombPercentage);
-
+            var diveBombCount = Mathf.CeilToInt(currentSwarmUnitCount * diveBombPercentage);
             var activeUnits = _swarmUnits.Where(x => x.gameObject.activeInHierarchy).ToList();
+            
             if (activeUnits == null || activeUnits.Count == 0)
             {
-                Die(StatusEffectiveness.Strong);
+                base.Die(StatusEffectiveness.Strong);
                 return;
             }
 
@@ -193,6 +199,7 @@ namespace Gameplay.Enemies.EnemyTypes
             }
         }
 
+        // todo, this is not killing enemies. Added one in the update loop
         protected override void Die(StatusEffectiveness status)
         {
             if (currentSwarmUnitCount > 0) return;
@@ -218,10 +225,12 @@ namespace Gameplay.Enemies.EnemyTypes
         }
         private int currentSwarmUnitCount;
 
+        // todo, we called the base to avoid the race condition on another thread maybe?
         public void SwarmUnitDead()
         {
             currentSwarmUnitCount--;
-            if (currentSwarmUnitCount <= 0) Die(StatusEffectiveness.Strong);
+            if (currentSwarmUnitCount <= 0) 
+                base.Die(StatusEffectiveness.Strong);
         }
     }
 }

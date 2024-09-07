@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Gameplay.Enemies.EnemyTypes
 {
@@ -12,6 +14,12 @@ namespace Gameplay.Enemies.EnemyTypes
         [SerializeField] private float rotationSpeed = 16f;
         private bool _attacking;
         private bool _dashing;
+
+        private void OnDisable()
+        {
+            _dashing = false;
+            _attacking = false;
+        }
 
         protected override void Attack()
         {

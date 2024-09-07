@@ -30,7 +30,6 @@ public class UpgradeHoverUI : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Projectile"))
         {
-            Debug.Log("Upgrading utility");
             if (upgradeType == UpgradeType.StatusEffect || upgradeType == UpgradeType.Damage)
                 _upgradeSelectionManager.UpgradeSelected(upgradeType, elementFlag);
             else _upgradeSelectionManager.UpgradeSelected(utilityUpgrade);

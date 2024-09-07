@@ -6,7 +6,6 @@ using UnityEngine;
 public class Enemy : Actor
 {
     public EnemyType enemyType;
-    public Vector2 knockBackForce;
     [SerializeField] private float knockBackTime = 0.5f;
     private bool _knockingBack;
     protected float lastAttackTime;
@@ -124,9 +123,7 @@ public class Enemy : Actor
 
     protected virtual void Move()
     {
-        if (_knockingBack) return;
         var directionToPlayer = player.position - transform.position;
-
         if (enemyType == EnemyType.Grunt || enemyType == EnemyType.Tank) directionToPlayer.y = 0;
 
         if (directionToPlayer != Vector3.zero) transform.rotation = Quaternion.LookRotation(directionToPlayer);
@@ -187,6 +184,7 @@ public class Enemy : Actor
         if (deathParticleSystem)
         {
             deathParticleSystem.transform.parent = null;
+            deathParticleSystem.transform.position = transform.position;
             deathParticleSystem.SetActive(true);
         }
 

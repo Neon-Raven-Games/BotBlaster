@@ -66,6 +66,7 @@ public class EnemySpawner : MonoBehaviour
         {
             while (EnemyPool.CurrentEnemyCount >= MAX_ENEMY_COUNT)
             {
+                Debug.Log("Max enemies, waiting");
                 await UniTask.Yield();
             }
 

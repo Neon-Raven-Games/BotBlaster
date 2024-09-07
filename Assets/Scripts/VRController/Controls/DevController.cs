@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Gameplay.Enemies;
+using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -168,42 +170,22 @@ public class DevController : Actor
     protected override void Update()
     {
         UpdateHealthBar();
-        SynchBaseObjectWithCamera();
         HandleRotation();
         HandleMovement();
+        SynchBaseObjectWithCamera();
         _vignetteController.StopVignette();
     }
 
-    private void UpdateHealthBar()
-    {
-        if (currentHealth <= 0 || !healthBarSlider || !bigCannonHealthBarSlider) return;
-        var healthPercentage = currentHealth / (float) baseHealth;
-        healthBarSlider.value = healthPercentage;
-        bigCannonHealthBarSlider.value = healthPercentage;
-    }
 
-    protected override void Die(StatusEffectiveness statusEffectiveness)
-    {
-        if (currentHealth > 0) return;
-        base.Die(statusEffectiveness);
-        WaveController.EndGame();
-        StartCoroutine(HealthUpRoutine(baseHealth));
-    }
 
-    private IEnumerator HealthUpRoutine(int targetHp)
-    {
-        var t = 0f;
-        while (t < 2f)
-        {
-            t += Time.deltaTime;
-            currentHealth = (int) Mathf.Lerp(currentHealth, targetHp, t / 3f);
-            var healthPercentage = currentHealth / (float) baseHealth;
-            healthBarSlider.value = healthPercentage;
-            bigCannonHealthBarSlider.value = healthPercentage;
-            yield return null;
-        }
 
-        currentHealth = baseHealth;
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.blue;
+        
+        // Gizmos.DrawSphere(_controller.transform.position, 0.2f);
+        Gizmos.color = Color.red;
+        // Gizmos.DrawSphere(hmd.transform.position, 0.2f);
     }
 
     private void SynchBaseObjectWithCamera()
@@ -211,11 +193,23 @@ public class DevController : Actor
         var hmdPos = hmd.position;
         var targetPosition = new Vector3(hmdPos.x, transform.position.y, hmdPos.z);
         var movementOffset = targetPosition - transform.position;
-        _controller.Move(movementOffset);
+        
+        transform.position += movementOffset;
         hmd.position = hmdPos;
         handsAnchor.localPosition = new Vector3(hmd.localPosition.x, handsAnchor.localPosition.y, hmd.localPosition.z);
         ResizeControllerHeightToHmd();
     }
+
+    // private void OnControllerColliderHit(ControllerColliderHit hit)
+    // {
+    //     Debug.Log("Hit Normal: " + hit.normal);
+    //     if (hit.normal.y < 0.5f || hit.normal.y > 0.5f)
+    //     {
+    //         Debug.Log("Not wall hit");
+    //         return;
+    //     }
+    //     transform.position = hit.point + hit.normal * _controller.radius;
+    // }
 
     private void ResizeControllerHeightToHmd()
     {
@@ -274,7 +268,6 @@ public class DevController : Actor
         var movement = new Vector3(_moveInput.x, 0, _moveInput.y).normalized;
         movement = hmd.transform.TransformDirection(movement) * (speed * Time.deltaTime);
         movement.y = Physics.gravity.y * Time.deltaTime;
-
         _controller.Move(movement);
     }
 
@@ -282,7 +275,7 @@ public class DevController : Actor
     public const float damageUpgrade = 1.1f;
     public const float elementStatusIncrement = 0.1f;
     public const float elementEffectivenessIncrement = 0.1f;
-    
+
     public Dictionary<ElementFlag, float> elementStatusUpgrades = new Dictionary<ElementFlag, float>
     {
         {ElementFlag.Fire, 1f},
@@ -291,7 +284,7 @@ public class DevController : Actor
         {ElementFlag.Wind, 1f},
         {ElementFlag.Electricity, 1f}
     };
-    
+
     public Dictionary<ElementFlag, int> elementEffectivenessUpgrades = new Dictionary<ElementFlag, int>
     {
         {ElementFlag.Fire, 1},
@@ -301,6 +294,22 @@ public class DevController : Actor
         {ElementFlag.Electricity, 1}
     };
 
+    private IEnumerator HealthUpRoutine(int targetHp)
+    {
+        var t = 0f;
+        while (t < 2f)
+        {
+            t += Time.deltaTime;
+            currentHealth = (int) Mathf.Lerp(currentHealth, targetHp, t / 3f);
+            var healthPercentage = currentHealth / (float) baseHealth;
+            healthBarSlider.value = healthPercentage;
+            bigCannonHealthBarSlider.value = healthPercentage;
+            yield return null;
+        }
+
+        currentHealth = baseHealth;
+    }
+
     public int FetchEffectiveElementalDamage(ElementFlag elementFlag)
     {
         return Mathf.CeilToInt(currentDamage * elementEffectivenessUpgrades[elementFlag]);
@@ -309,6 +318,23 @@ public class DevController : Actor
     public int FetchDamage()
     {
         return currentDamage;
+    }
+
+
+    private void UpdateHealthBar()
+    {
+        if (currentHealth <= 0 || !healthBarSlider || !bigCannonHealthBarSlider) return;
+        var healthPercentage = currentHealth / (float) baseHealth;
+        healthBarSlider.value = healthPercentage;
+        bigCannonHealthBarSlider.value = healthPercentage;
+    }
+
+    protected override void Die(StatusEffectiveness statusEffectiveness)
+    {
+        if (currentHealth > 0) return;
+        base.Die(statusEffectiveness);
+        WaveController.EndGame();
+        StartCoroutine(HealthUpRoutine(baseHealth));
     }
 
     public void UpgradeSelected(UpgradeType type, ElementFlag elementFlag)

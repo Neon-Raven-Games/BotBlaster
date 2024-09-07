@@ -13,7 +13,11 @@ namespace UI
         [SerializeField] private float rotationSpeed = 8f;
         public async UniTask ShowUpgradeSelection()
         {
-            await UniTask.WaitUntil(() => !gameObject.activeInHierarchy);
+            await UniTask.WaitUntil(() =>
+            {
+                    Debug.Log("Waiting for UI");
+                return !gameObject.activeInHierarchy;
+            });
         }
         
         private void OnEnable()

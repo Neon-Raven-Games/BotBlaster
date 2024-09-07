@@ -188,7 +188,6 @@ public static class GameBalancer
         for (var i = 0; i < numberOfEnemies; i++)
         {
             selectedEnemyTypes[i] = _SEnemyProbability.PickValue();
-            Debug.Log(selectedEnemyTypes[i].ToString());
             elementFlags[i] = _SElementProbabilityList.PickValue(); // Get elements based on probability list
         }
 

@@ -1,8 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using Gameplay.Elements;
 using Gameplay.Enemies;
-using Gameplay.Enemies.EnemyTypes;
 using UnityEngine;
 
 public class EnemyElementConverter : MonoBehaviour

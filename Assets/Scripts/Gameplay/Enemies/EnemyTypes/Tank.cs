@@ -66,6 +66,12 @@ namespace Gameplay.Enemies.EnemyTypes
             _dashing = false;
         }
 
+        private void OnDisable()
+        {
+            _dashing = false;
+            _attacking = false;
+        }
+        
         protected override void Move()
         {
             if (_attacking || _dashing) return;

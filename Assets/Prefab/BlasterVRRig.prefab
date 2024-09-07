@@ -1587,11 +1587,14 @@ MonoBehaviour:
   baseSpeed: 5
   baseAttackRange: 10
   baseAttackCoolDown: 0.5
+  currentHealth: 0
   debuffs: 0
   showDamageNumbers: 1
   healthBarSlider: {fileID: 8262480881363940994}
   bigCannonHealthBarSlider: {fileID: 1727943399765280799}
   actionAsset: {fileID: -944628639613478452, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  leftHand: {fileID: 0}
+  rightHand: {fileID: 0}
   analogThreshold: 0.2
   hmd: {fileID: 1494238556636612590}
   handsAnchor: {fileID: 2928578627118034917}
@@ -2069,7 +2072,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_TrackingType: 0
   m_UpdateType: 0
-  m_IgnoreTrackingState: 1
+  m_IgnoreTrackingState: 0
   m_PositionInput:
     m_UseReference: 1
     m_Action:

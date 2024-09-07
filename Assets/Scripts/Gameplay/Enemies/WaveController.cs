@@ -1,7 +1,9 @@
 using Cysharp.Threading.Tasks;
 using Gameplay.Util;
 using UI;
+using Unity.XR.Oculus;
 using UnityEngine;
+using UnityEngine.XR.OpenXR.Features.Extensions.PerformanceSettings;
 
 public class WaveController : MonoBehaviour
 {
@@ -17,7 +19,13 @@ public class WaveController : MonoBehaviour
 
     private void Awake()
     {
-        Application.targetFrameRate = -1;
+        Performance.TryGetAvailableDisplayRefreshRates(out var rates);
+        Performance.TryGetDisplayRefreshRate(out var refreshRate);
+        Debug.Log(refreshRate);
+        foreach (var rate in rates)
+        {
+            Debug.Log(rate);
+        }
         if (_instance != null)
         {
             Destroy(this);
@@ -32,6 +40,7 @@ public class WaveController : MonoBehaviour
 #if UNITY_EDITOR
         GameAnalyticsHelper.InitializeAnalytics();
 #endif
+        XrPerformanceSettingsFeature.SetPerformanceLevelHint(PerformanceDomain.Cpu, PerformanceLevelHint.Boost);
         enemySpawner.currentWave = 1;
         paused = false;
         enemySpawner.paused = false;
@@ -56,6 +65,7 @@ public class WaveController : MonoBehaviour
         enemySpawner.StartNextWave();
         _waveSpawning = true;
 
+        XrPerformanceSettingsFeature.SetPerformanceLevelHint(PerformanceDomain.Cpu, PerformanceLevelHint.SustainedHigh);
         while (_waveSpawning)
         {
             if (!paused && enemySpawner.WaveCompleted())
@@ -65,7 +75,12 @@ public class WaveController : MonoBehaviour
                     GameBalancer.GetCurrentSpawnRadius(enemySpawner.currentWave),
                     enemySpawner.currentWaveData.numberOfEnemies, enemySpawner.currentWaveData.elementFlags);
 #endif
+                
                 await UniTask.Yield();
+                await UniTask.WaitUntil(() => waveEnemies <= 0 || paused);
+                
+                if (paused) break;
+                
                 await PauseForPlayerUpgrades();
                 enemySpawner.StartNextWave();
 
@@ -96,6 +111,8 @@ public class WaveController : MonoBehaviour
 
     public void Ready()
     {
+        XrPerformanceSettingsFeature.SetPerformanceLevelHint(PerformanceDomain.Cpu, PerformanceLevelHint.SustainedHigh);
+        XrPerformanceSettingsFeature.SetPerformanceLevelHint(PerformanceDomain.Gpu, PerformanceLevelHint.SustainedHigh);
         ui.SetActive(true);
     }
 }

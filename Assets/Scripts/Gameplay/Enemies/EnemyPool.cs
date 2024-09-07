@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Gameplay.Enemies;
 using UnityEngine;
+using UnityEngine.XR.OpenXR.Features.Extensions.PerformanceSettings;
 using Object = UnityEngine.Object;
 
 [Serializable]
@@ -84,12 +85,12 @@ public class EnemyPool : MonoBehaviour
             return;
         }
 
+        XrPerformanceSettingsFeature.SetPerformanceLevelHint(PerformanceDomain.Cpu, PerformanceLevelHint.Boost);
+        XrPerformanceSettingsFeature.SetPerformanceLevelHint(PerformanceDomain.Gpu, PerformanceLevelHint.Boost);
         _instance = this;
         foreach (var data in enemyData)
-        {
-            _SEnemyPool.TryAdd(data.enemyType, new EnemyCollection(data.enemyType, new List<Enemy>(data.poolSize + 1)));
-        }
-
+            _SEnemyPool.TryAdd(data.enemyType, new EnemyCollection(data.enemyType, 
+                new List<Enemy>(data.poolSize + 1)));
         Initialize().Forget();
     }
 
@@ -141,7 +142,7 @@ public class EnemyPool : MonoBehaviour
             {
                 if (enemy.gameObject.activeInHierarchy)
                 {
-                    enemy.gameObject.SetActive(false);
+                    HandleEnemyDeactivation(enemy);
                 }
             }
         }
