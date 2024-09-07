@@ -214,7 +214,7 @@ Material:
     - _UseSoftParticles: 0
     - _UseVertexForAlpha: 0
     - _UserLerp: 1
-    - _ZTest: 8
+    - _ZTest: 4
     - _ZTestDepthEqualForOpaque: 3
     - _ZTestGBuffer: 4
     - _ZTestTransparent: 4

@@ -4980,25 +4980,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45e6bb48dbabb2f4eb015f9f9307a5d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  blasterElement: 0
+  blasterElementMaterials: []
+  blasterRenderer: {fileID: 0}
   audioSource: {fileID: 3714642629481509678}
   actionAsset: {fileID: -944628639613478452, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   barrelTransform: {fileID: 6357633715678360110}
-  cooldownIndicator: {fileID: 5836302523517403699}
-  normalizedCooldownTime: 0
   animator: {fileID: 9086013444521815220}
-  trajectoryAssist: 0
-  cooldownTimer: {fileID: 0}
   muzzleFlash: {fileID: 5836302523517403699}
-  trajectoryLineRenderer: {fileID: 2726318805301416009}
   launchForce: 35
-  trajectoryPoints: 8
-  suctionForce: 10
-  swirlRadius: 1
-  swirlSpeed: 2
-  suctionCooldown: 1
-  suctionDuration: 2
-  ballEndScale: 0.4
-  liveBallRange: 1
+  actor: {fileID: 0}
+  soloCannon: 0
 --- !u!120 &2726318805301416009
 LineRenderer:
   serializedVersion: 2
