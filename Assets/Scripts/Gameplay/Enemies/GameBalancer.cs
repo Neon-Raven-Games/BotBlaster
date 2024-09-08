@@ -200,7 +200,6 @@ public static class GameBalancer
 
     public static EnemySpawner spawner { get; set; }
 }
-
 public struct BalanceMultipliers
 {
     public float HealthMultiplier;

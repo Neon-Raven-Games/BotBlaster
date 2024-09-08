@@ -30,15 +30,13 @@ public class EnemySpawner : MonoBehaviour
     public void Awake()
     {
         GameBalancer.spawner = this;
-        GameBalancer.InitializeElementProbability(0);
     }
 
     public void StartNextWave()
     {
         GameBalancer.InitializeElementProbability(currentWave);
-
-        Debug.Log("Current wave: " + currentWave);
-        currentWaveData = currentWave % bossWaveInterval != 0
+        
+        currentWaveData = currentWave % bossWaveInterval != 0 && currentWave != 0
             ? GameBalancer.GenerateWave(currentWave, GameBalancer.GetCurrentSpawnRadius(currentWave), centralPoint)
             : GameBalancer.GenerateBossWave(currentWave / bossWaveInterval, centralPoint);
 

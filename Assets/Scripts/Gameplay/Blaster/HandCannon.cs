@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Gameplay.Enemies;
+using NRTools.AtlasHelper;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Util;
@@ -16,16 +17,16 @@ public class HandCannon : MonoBehaviour
     public Transform barrelTransform;
     public Animator animator;
 
-    [Header("Shooting Settings")] 
-    public GameObject muzzleFlash;
+    [Header("Shooting Settings")] public GameObject muzzleFlash;
     public float launchForce = 20f;
-    
+
     private Dictionary<CannonState, BaseHandCanonState> _states;
     private BaseHandCanonState _currentState;
     private InputAction _triggerAction;
     public DevController actor;
 
     [SerializeField] internal bool soloCannon;
+
     private void Start()
     {
         _states = new Dictionary<CannonState, BaseHandCanonState>
@@ -33,11 +34,11 @@ public class HandCannon : MonoBehaviour
             {CannonState.Shooting, new ShootingState(this)},
             {CannonState.Idle, new IdleState(this)}
         };
-        
+
         _elementMaterials = new Dictionary<ElementFlag, Material>();
         foreach (var elementMaterial in blasterElementMaterials)
             _elementMaterials.Add(elementMaterial.elementFlag, elementMaterial.material);
-        
+
         SetBlasterMaterial();
         _currentState = _states[CannonState.Idle];
         _currentState.EnterState();
@@ -46,8 +47,16 @@ public class HandCannon : MonoBehaviour
     private void SetBlasterMaterial()
     {
         if (soloCannon) return;
-        blasterRenderer.material = _elementMaterials[blasterElement];
+        var index = GetComponent<AtlasIndex>();
+        var atlasData = index.AtlasData.Find(data => data.elementFlag == blasterElement);
+        if (atlasData != null)
+        {
+            var uvRect = atlasData.UVRect;
+            NRAtlasManager.SetUVAndAtlasPage(uvRect, 0, blasterRenderer);
+        }
+        // blasterRenderer.material = _elementMaterials[blasterElement];
     }
+
     private HandSide _handSide;
 
     private void PopulateInput()
@@ -55,7 +64,7 @@ public class HandCannon : MonoBehaviour
         var hand = GetComponentInParent<VRHand>();
         if (!hand || soloCannon) return;
         _handSide = hand.handSide;
-        var side =hand.handSide;
+        var side = hand.handSide;
         var handSideString = "Right";
         if (side == HandSide.LEFT) handSideString = "Left";
         _triggerAction = actionAsset.FindAction($"XRI {handSideString} Interaction/UI Press");
@@ -101,7 +110,6 @@ public class HandCannon : MonoBehaviour
 
     public void Shoot()
     {
-        
         if (!soloCannon && _handSide == HandSide.LEFT) actor.PlayLeftFeedback();
         else if (!soloCannon && _handSide == HandSide.RIGHT) actor.PlayRightFeedback();
         ChangeState(CannonState.Shooting);
@@ -139,6 +147,5 @@ public class HandCannon : MonoBehaviour
     public void InitializeElementChange()
     {
         _previousElement = blasterElement;
-
     }
 }

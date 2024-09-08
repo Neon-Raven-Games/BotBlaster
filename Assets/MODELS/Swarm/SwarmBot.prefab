@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4963275126176742223}
   - component: {fileID: 4781123601611901144}
   - component: {fileID: 7421092160863170080}
+  - component: {fileID: 7872133368176377043}
   m_Layer: 8
   m_Name: SwarmBot
   m_TagString: Enemy
@@ -84,6 +85,74 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3, y: 3, z: 3}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &7872133368176377043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5811023757391740831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9968aa4bb17c434cb4e583bb5c3c8450, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AtlasData:
+  - textureType: 2
+    enemyType: 1
+    elementFlag: 32
+    sceneName: 
+    UVRect:
+      serializedVersion: 2
+      x: 0.28173828
+      y: 0.8461914
+      width: 0.140625
+      height: 0.140625
+    AtlasPage: 0
+  - textureType: 2
+    enemyType: 1
+    elementFlag: 2
+    sceneName: 
+    UVRect:
+      serializedVersion: 2
+      x: 0.42285156
+      y: 0.42285156
+      width: 0.140625
+      height: 0.140625
+    AtlasPage: 0
+  - textureType: 2
+    enemyType: 1
+    elementFlag: 8
+    sceneName: 
+    UVRect:
+      serializedVersion: 2
+      x: 0.56396484
+      y: 0.42285156
+      width: 0.140625
+      height: 0.140625
+    AtlasPage: 0
+  - textureType: 2
+    enemyType: 1
+    elementFlag: 4
+    sceneName: 
+    UVRect:
+      serializedVersion: 2
+      x: 0.7050781
+      y: 0.42285156
+      width: 0.140625
+      height: 0.140625
+    AtlasPage: 0
+  - textureType: 2
+    enemyType: 1
+    elementFlag: 16
+    sceneName: 
+    UVRect:
+      serializedVersion: 2
+      x: 0.8461914
+      y: 0.42285156
+      width: 0.140625
+      height: 0.140625
+    AtlasPage: 0
 --- !u!1001 &3864653869926780756
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -139,7 +208,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: 624a14fcc74ece94faab4db580ba6a03, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: ae983ab1175a470498b1f163b2cfffcd, type: 2}
+      objectReference: {fileID: 2100000, guid: 9d334a500909f87468631d49be3f2609, type: 2}
     - target: {fileID: -7511558181221131132, guid: 624a14fcc74ece94faab4db580ba6a03, type: 3}
       propertyPath: m_Materials.Array.data[1]
       value: 

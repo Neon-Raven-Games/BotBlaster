@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4691266694475113247}
   - component: {fileID: 3917665329599384422}
   - component: {fileID: -8076874885166197028}
+  - component: {fileID: -6151839960709358009}
   m_Layer: 8
   m_Name: Tank
   m_TagString: Enemy
@@ -64,7 +65,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 06e67207b6ce2dd4c9f9104830bb2d3c, type: 2}
+  - {fileID: 2100000, guid: 9d334a500909f87468631d49be3f2609, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -129,7 +130,6 @@ MonoBehaviour:
   debuffs: 0
   showDamageNumbers: 1
   enemyType: 3
-  knockBackForce: {x: 0, y: 0}
   knockBackTime: 0
   deathParticleSystem: {fileID: 1876355520819786475}
   dashingChance: 0.003
@@ -138,6 +138,74 @@ MonoBehaviour:
   chargeDuration: 0.5
   dashDuration: 2
   rotationSpeed: 16
+--- !u!114 &-6151839960709358009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5801088316695447527}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9968aa4bb17c434cb4e583bb5c3c8450, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AtlasData:
+  - textureType: 2
+    enemyType: 3
+    elementFlag: 32
+    sceneName: 
+    UVRect:
+      serializedVersion: 2
+      x: 0.42285156
+      y: 0.56396484
+      width: 0.140625
+      height: 0.140625
+    AtlasPage: 0
+  - textureType: 2
+    enemyType: 3
+    elementFlag: 2
+    sceneName: 
+    UVRect:
+      serializedVersion: 2
+      x: 0.42285156
+      y: 0.7050781
+      width: 0.140625
+      height: 0.140625
+    AtlasPage: 0
+  - textureType: 2
+    enemyType: 3
+    elementFlag: 8
+    sceneName: 
+    UVRect:
+      serializedVersion: 2
+      x: 0.42285156
+      y: 0.8461914
+      width: 0.140625
+      height: 0.140625
+    AtlasPage: 0
+  - textureType: 2
+    enemyType: 3
+    elementFlag: 4
+    sceneName: 
+    UVRect:
+      serializedVersion: 2
+      x: 0.56396484
+      y: 0.56396484
+      width: 0.140625
+      height: 0.140625
+    AtlasPage: 0
+  - textureType: 2
+    enemyType: 3
+    elementFlag: 16
+    sceneName: 
+    UVRect:
+      serializedVersion: 2
+      x: 0.7050781
+      y: 0.56396484
+      width: 0.140625
+      height: 0.140625
+    AtlasPage: 0
 --- !u!1001 &1143396302527402397
 PrefabInstance:
   m_ObjectHideFlags: 0

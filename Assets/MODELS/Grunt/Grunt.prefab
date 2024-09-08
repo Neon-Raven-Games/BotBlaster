@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4408182552298479202}
   - component: {fileID: 4734419453985197378}
   - component: {fileID: 8505621878895323371}
+  - component: {fileID: -6035644267232789329}
   m_Layer: 8
   m_Name: Grunt
   m_TagString: Enemy
@@ -57,7 +58,6 @@ MonoBehaviour:
   debuffs: 0
   showDamageNumbers: 1
   enemyType: 0
-  knockBackForce: {x: 0, y: 0}
   knockBackTime: 0.5
   deathParticleSystem: {fileID: 4007890294480360152}
   dashingChance: 0.003
@@ -86,6 +86,74 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 4.72, y: 6.86, z: 3.23}
   m_Center: {x: 0, y: 0.52, z: 0}
+--- !u!114 &-6035644267232789329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 337543082012030173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9968aa4bb17c434cb4e583bb5c3c8450, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AtlasData:
+  - textureType: 2
+    enemyType: 0
+    elementFlag: 32
+    sceneName: 
+    UVRect:
+      serializedVersion: 2
+      x: 0.7050781
+      y: 0.28173828
+      width: 0.140625
+      height: 0.140625
+    AtlasPage: 0
+  - textureType: 2
+    enemyType: 0
+    elementFlag: 2
+    sceneName: 
+    UVRect:
+      serializedVersion: 2
+      x: 0.8461914
+      y: 0.28173828
+      width: 0.140625
+      height: 0.140625
+    AtlasPage: 0
+  - textureType: 2
+    enemyType: 0
+    elementFlag: 8
+    sceneName: 
+    UVRect:
+      serializedVersion: 2
+      x: 0.28173828
+      y: 0.42285156
+      width: 0.140625
+      height: 0.140625
+    AtlasPage: 0
+  - textureType: 2
+    enemyType: 0
+    elementFlag: 4
+    sceneName: 
+    UVRect:
+      serializedVersion: 2
+      x: 0.28173828
+      y: 0.56396484
+      width: 0.140625
+      height: 0.140625
+    AtlasPage: 0
+  - textureType: 2
+    enemyType: 0
+    elementFlag: 16
+    sceneName: 
+    UVRect:
+      serializedVersion: 2
+      x: 0.28173828
+      y: 0.7050781
+      width: 0.140625
+      height: 0.140625
+    AtlasPage: 0
 --- !u!1001 &255713437343754228
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -201,7 +269,7 @@ PrefabInstance:
     - target: {fileID: 704553162739010597, guid: be6b7cf8c93497142a2724384f223e32, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 2b19420f4c6f0ee418387a8bbd057c28, type: 2}
+      objectReference: {fileID: 2100000, guid: 9d334a500909f87468631d49be3f2609, type: 2}
     - target: {fileID: 901897122485332503, guid: be6b7cf8c93497142a2724384f223e32, type: 3}
       propertyPath: m_Layer
       value: 8

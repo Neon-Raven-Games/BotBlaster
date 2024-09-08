@@ -1,6 +1,7 @@
 using System.Collections;
 using Gameplay.Elements;
 using Gameplay.Enemies;
+using NRTools.AtlasHelper;
 using UnityEngine;
 
 public class Enemy : Actor
@@ -13,6 +14,7 @@ public class Enemy : Actor
     protected Rigidbody rigidbody;
     protected Transform player;
     protected Actor playerComponent;
+    private AtlasIndex _atlasIndex;
 
     protected virtual void OnEnable()
     {
@@ -28,28 +30,24 @@ public class Enemy : Actor
             deathParticleSystem.SetActive(false);
             deathParticleSystem.transform.parent = transform;
         }
+
+        var rend = GetComponent<Renderer>();
+        if (!rend) GetComponentInChildren<Renderer>();
+        if (!rend) return;
+        var rect = _atlasIndex.GetRect(element, out var page);
+        NRAtlasManager.SetUVAndAtlasPage(rect, page, rend);
         this.ApplyElement(element);
     }
 
     public virtual void ApplyBalance(int waveNumber)
     {
         var multipliers = GameBalancer.GetBalanceMultipliers(waveNumber);
-/*
- *     if (this is BossEnemy) 
-    {
-        // Apply special boss scaling, extract to boss class
-        multipliers.HealthMultiplier *= 2f; 
-        multipliers.DamageMultiplier *= 1.5f; 
- */
-        // Apply the multipliers to the current stats
+
         currentHealth = Mathf.CeilToInt(baseHealth * multipliers.HealthMultiplier);
         currentDamage = Mathf.CeilToInt(baseDamage * multipliers.DamageMultiplier);
         currentSpeed = baseSpeed * multipliers.SpeedMultiplier;
         currentAttackRange = baseAttackRange * multipliers.AttackRangeMultiplier;
         currentAttackCoolDown = baseAttackCoolDown * multipliers.AttackCooldownMultiplier;
-
-        // Debug.Log(
-        // $"Balanced enemy for wave {waveNumber}: Health={currentHealth}, Damage={currentDamage}, Speed={currentSpeed}, AttackRange={currentAttackRange}, AttackCooldown={currentAttackCoolDown}");
     }
 
     protected override void Awake()
@@ -187,7 +185,6 @@ public class Enemy : Actor
             deathParticleSystem.transform.position = transform.position;
             deathParticleSystem.SetActive(true);
         }
-
         GameBalancer.KillEnemy(status, this);
     }
 }

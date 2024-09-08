@@ -1,7 +1,6 @@
 using Cysharp.Threading.Tasks;
 using Gameplay.Util;
 using UI;
-using Unity.XR.Oculus;
 using UnityEngine;
 using UnityEngine.XR.OpenXR.Features.Extensions.PerformanceSettings;
 
@@ -19,13 +18,6 @@ public class WaveController : MonoBehaviour
 
     private void Awake()
     {
-        Performance.TryGetAvailableDisplayRefreshRates(out var rates);
-        Performance.TryGetDisplayRefreshRate(out var refreshRate);
-        Debug.Log(refreshRate);
-        foreach (var rate in rates)
-        {
-            Debug.Log(rate);
-        }
         if (_instance != null)
         {
             Destroy(this);
@@ -46,6 +38,7 @@ public class WaveController : MonoBehaviour
         enemySpawner.paused = false;
         waveEnemies = 0;
         WaveRoutine().Forget();
+        XrPerformanceSettingsFeature.SetPerformanceLevelHint(PerformanceDomain.Cpu, PerformanceLevelHint.SustainedHigh);
     }
 
     public void StopWaves()
@@ -65,7 +58,6 @@ public class WaveController : MonoBehaviour
         enemySpawner.StartNextWave();
         _waveSpawning = true;
 
-        XrPerformanceSettingsFeature.SetPerformanceLevelHint(PerformanceDomain.Cpu, PerformanceLevelHint.SustainedHigh);
         while (_waveSpawning)
         {
             if (!paused && enemySpawner.WaveCompleted())
@@ -75,16 +67,10 @@ public class WaveController : MonoBehaviour
                     GameBalancer.GetCurrentSpawnRadius(enemySpawner.currentWave),
                     enemySpawner.currentWaveData.numberOfEnemies, enemySpawner.currentWaveData.elementFlags);
 #endif
-                
-                await UniTask.Yield();
-                await UniTask.WaitUntil(() => waveEnemies <= 0 || paused);
-                
-                if (paused) break;
-                
+                waveEnemies = 0;
                 await PauseForPlayerUpgrades();
+                
                 enemySpawner.StartNextWave();
-
-                await UniTask.Yield();
             }
 
             await UniTask.Yield();
