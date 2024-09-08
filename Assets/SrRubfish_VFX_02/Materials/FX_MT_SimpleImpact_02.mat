@@ -159,7 +159,7 @@ Material:
     - _EmissionSaturation: 2
     - _EnableBlendModePreserveSpecularLighting: 1
     - _EnableFogOnTransparent: 1
-    - _FlatDissolve: 1
+    - _FlatDissolve: 0.66
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -214,7 +214,7 @@ Material:
     - _UseSoftParticles: 0
     - _UseVertexForAlpha: 0
     - _UserLerp: 1
-    - _ZTest: 8
+    - _ZTest: 4
     - _ZTestDepthEqualForOpaque: 3
     - _ZTestGBuffer: 4
     - _ZTestTransparent: 4

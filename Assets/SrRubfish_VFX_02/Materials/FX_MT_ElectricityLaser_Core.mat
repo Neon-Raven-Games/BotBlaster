@@ -155,8 +155,8 @@ Material:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _FresnelHigh: {r: 0.5801887, g: 0.8512088, b: 1, a: 0}
-    - _FresnelLow: {r: 0.3254717, g: 0.9041863, b: 1, a: 0}
+    - _FresnelHigh: {r: 1, g: 1, b: 1, a: 0}
+    - _FresnelLow: {r: 1, g: 0.9966348, b: 0.32549024, a: 0}
     - _HighColor: {r: 0.5238074, g: 0.6980566, b: 0.745283, a: 0}
     - _MainColor: {r: 1, g: 1, b: 1, a: 0}
     - _MinMaxSmoothStepDissolve: {r: 0, g: 0.2, b: 0, a: 0}

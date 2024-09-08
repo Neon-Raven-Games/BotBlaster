@@ -168,10 +168,10 @@ Material:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _HighColor: {r: 0.6462264, g: 0.7133733, b: 1, a: 0}
-    - _MainColor: {r: 0, g: 0.03083512, b: 0.18867922, a: 0}
-    - _NoiseHighColor: {r: 0.5137255, g: 0.7766962, b: 1, a: 1}
-    - _NoiseLowColor: {r: 0.36779103, g: 0.6125592, b: 0.8207547, a: 0}
+    - _HighColor: {r: 1, g: 0.9855982, b: 0.64705884, a: 0}
+    - _MainColor: {r: 0.1882353, g: 0.17478627, b: 0, a: 0}
+    - _NoiseHighColor: {r: 0.8962264, g: 0.8863989, b: 0.07186722, a: 1}
+    - _NoiseLowColor: {r: 1, g: 0.9904301, b: 0.8254717, a: 0}
     - _NoisePanning: {r: 0, g: 0, b: 0, a: 0}
     - _NoiseTiling: {r: 1, g: 1, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
