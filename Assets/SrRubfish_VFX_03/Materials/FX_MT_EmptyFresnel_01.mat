@@ -184,7 +184,7 @@ Material:
     - _Mode: 0
     - _NoiseEmissive: 0
     - _NoiseOpacity: 0
-    - _OpacitySaturation: 0.43
+    - _OpacitySaturation: 1.54
     - _OpaqueCullMode: 2
     - _PreLerp: 1
     - _PreNoiseLerp: 0
