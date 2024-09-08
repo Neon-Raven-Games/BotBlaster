@@ -151734,6 +151734,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Ball Launcher
       objectReference: {fileID: 0}
+    - target: {fileID: 989855718986624371, guid: 1a30fdf8ffa5c124fa4f734ef3eeada8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2800531614649441011, guid: 1a30fdf8ffa5c124fa4f734ef3eeada8, type: 3}
       propertyPath: m_LocalScale.x
       value: 4
