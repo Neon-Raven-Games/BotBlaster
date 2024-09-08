@@ -149,7 +149,7 @@ Material:
     - _DoubleSidedGIMode: 0
     - _DoubleSidedNormalMode: 2
     - _DstBlend: 1
-    - _EmissionSaturation: 1
+    - _EmissionSaturation: 4.86
     - _EnableBlendModePreserveSpecularLighting: 1
     - _EnableFogOnTransparent: 1
     - _GlossMapScale: 1
@@ -200,7 +200,7 @@ Material:
     - _UVSec: 0
     - _UseShadowThreshold: 0
     - _UseSoftParticles: 0
-    - _ZTest: 8
+    - _ZTest: 4
     - _ZTestDepthEqualForOpaque: 3
     - _ZTestGBuffer: 4
     - _ZTestTransparent: 4
