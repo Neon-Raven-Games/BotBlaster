@@ -275,7 +275,7 @@ public class UIDevelopment : MonoBehaviour
             if (_precomputedChildAngles[i] < 0) _precomputedChildAngles[i] += 360f;
             if (handSide == HandSide.RIGHT)
             {
-                child.transform.position = newPos;
+                child.transform.localPosition = newPos;
             }
             else
             {
@@ -300,7 +300,7 @@ public class UIDevelopment : MonoBehaviour
 
             if (handSide == HandSide.RIGHT)
             {
-                child.transform.position = newPos;
+                child.transform.localPosition = newPos;
             }
             else
             {
