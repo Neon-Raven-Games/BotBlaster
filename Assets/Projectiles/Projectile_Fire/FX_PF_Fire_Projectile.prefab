@@ -39006,7 +39006,7 @@ MonoBehaviour:
   elementFlag: 2
   speed: 10
   damage: 1
-  impact: {fileID: 0}
+  impact: {fileID: 4446077458286486138}
   effectiveDamage: 0
 --- !u!135 &8545288564693121504
 SphereCollider:
@@ -82976,6 +82976,11 @@ PrefabInstance:
 --- !u!4 &4446077458286486137 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7673062611469260750, guid: aaa82e4fe272f3e4dbdace95dc603176, type: 3}
+  m_PrefabInstance: {fileID: 6327436731083486647}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4446077458286486138 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7673062611469260749, guid: aaa82e4fe272f3e4dbdace95dc603176, type: 3}
   m_PrefabInstance: {fileID: 6327436731083486647}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8912226692233416699

@@ -59,6 +59,7 @@ MonoBehaviour:
   showDamageNumbers: 1
   enemyType: 0
   knockBackTime: 0.5
+  renderer: {fileID: 741802400700230609}
   deathParticleSystem: {fileID: 4007890294480360152}
   dashingChance: 0.003
   dashSpeed: 32
@@ -376,6 +377,11 @@ PrefabInstance:
 --- !u!4 &290134151738572831 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: be6b7cf8c93497142a2724384f223e32, type: 3}
+  m_PrefabInstance: {fileID: 255713437343754228}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &741802400700230609 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 704553162739010597, guid: be6b7cf8c93497142a2724384f223e32, type: 3}
   m_PrefabInstance: {fileID: 255713437343754228}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1102559292833536677 stripped

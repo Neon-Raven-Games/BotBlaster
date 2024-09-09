@@ -10,7 +10,7 @@ public class ShootingState : BaseHandCanonState
     private GameObject beamObject;
     private CharacterController controller;
     private bool launchRequested;
-    
+
     public ShootingState(HandCannon handCannon) : base(handCannon)
     {
         controller = handCannon.actor.GetComponent<CharacterController>();
@@ -19,6 +19,8 @@ public class ShootingState : BaseHandCanonState
     public override void EnterState()
     {
         if (beam || beamObject) return;
+        handCannon.animator.Play("Fire");
+        // todo, handle muzzle flash
         handCannon.muzzleFlash.SetActive(false);
         base.EnterState();
         RequestLaunch();
@@ -55,21 +57,34 @@ public class ShootingState : BaseHandCanonState
             var ball = ElementPool.GetElement(handCannon.blasterElement, handCannon.barrelTransform.position);
             LaunchDodgeball(ball);
             handCannon.muzzleFlash.SetActive(true);
-            handCannon.audioSource.PlayOneShot(ConfigurationManager.GetBlasterSound());
+            // handCannon.audioSource.PlayOneShot(ConfigurationManager.GetBlasterSound());
             launchRequested = false;
-            ChangeState(CannonState.Idle);
         }
     }
 
+    private float fireRate = 0.5f;
+    private float fireTime;
 
     public override void Update()
     {
         base.Update();
-        if (!beam || !beamObject) return;
+        if (!beam || !beamObject)
+        {
+            if (fireTime > 0)
+            {
+                fireTime -= Time.deltaTime;
+            }
+            else
+            {
+                RequestLaunch();
+                fireTime = fireRate;
+            }
+            return;
+        }
+
         beamObject.transform.position = handCannon.barrelTransform.position;
         beamObject.transform.rotation = handCannon.barrelTransform.rotation;
-        beamObject.transform.position +=controller.velocity.normalized * Time.deltaTime;
-        Debug.DrawRay(handCannon.barrelTransform.position, Vector3.up * 4, Color.red);
+        beamObject.transform.position += controller.velocity.normalized * Time.deltaTime;
     }
 
     public override void FireReleaseAction()
@@ -94,7 +109,7 @@ public class ShootingState : BaseHandCanonState
 
         dodgeball.transform.position = handCannon.barrelTransform.position;
         dodgeball.transform.rotation = handCannon.barrelTransform.rotation;
-        
+
         var projectile = dodgeball.GetComponent<Projectile>();
         projectile.isPlayerProjectile = true;
         projectile.damage = handCannon.actor.FetchDamage();

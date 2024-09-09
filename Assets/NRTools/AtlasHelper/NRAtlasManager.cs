@@ -53,7 +53,6 @@ namespace NRTools.AtlasHelper
                 _materialPropertyBlock = new MaterialPropertyBlock();
 
             _materialPropertyBlock.Clear();
-            
             _materialPropertyBlock.SetVector(_SUVOffset, new Vector4(
                 uvRect.x , uvRect.y, uvRect.width, uvRect.height));
 

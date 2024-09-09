@@ -64,6 +64,7 @@ MonoBehaviour:
     characterMaterial: {fileID: 2100000, guid: 1b2c8d02c3f079b49a02b64408384e37, type: 2}
   speed: 5
   element: 2
+  renderer: {fileID: 2477990907034571728}
 --- !u!65 &7421092160863170080
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -235,6 +236,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 6222911211813506289}
   m_SourcePrefab: {fileID: 100100000, guid: 624a14fcc74ece94faab4db580ba6a03, type: 3}
+--- !u!23 &2477990907034571728 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 624a14fcc74ece94faab4db580ba6a03, type: 3}
+  m_PrefabInstance: {fileID: 3864653869926780756}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3614344607978907839 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 624a14fcc74ece94faab4db580ba6a03, type: 3}

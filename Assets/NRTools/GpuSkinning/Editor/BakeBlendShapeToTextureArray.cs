@@ -87,6 +87,7 @@ namespace NRTools.GpuSkinning
             // Pack vertex positions (XYZ) into Color[], applying an amplification factor
             for (int i = 0; i < vertexCount; i++)
             {
+                    Debug.Log(vertices[i].ToString());
                 int x = i % blendShapeTextureArray.width;
                 int y = i / blendShapeTextureArray.width;
 

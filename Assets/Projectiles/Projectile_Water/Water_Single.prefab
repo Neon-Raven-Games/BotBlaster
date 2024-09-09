@@ -4871,12 +4871,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73e8c5a68e12402abcf7c8ca5f562aa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  muzzleFlash: {fileID: 0}
+  muzzleFlash: {fileID: 7029369825106687259}
   isPlayerProjectile: 0
   elementFlag: 4
   speed: 10
   damage: 1
-  impact: {fileID: 0}
+  impact: {fileID: 8340634753205601938}
   effectiveDamage: 0
 --- !u!54 &3682897363722936654
 Rigidbody:
@@ -5074,6 +5074,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3484204191149664804, guid: c41c00b7ecaf2614c801dbe98a227339, type: 3}
   m_PrefabInstance: {fileID: 5897243658019823420}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &7029369825106687259 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3484204191149664807, guid: c41c00b7ecaf2614c801dbe98a227339, type: 3}
+  m_PrefabInstance: {fileID: 5897243658019823420}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7613968802226500719
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5088,7 +5093,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1341612922336438871, guid: 1a6b176e2745e71459037050d942b184, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3182115114336415676, guid: 1a6b176e2745e71459037050d942b184, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5216,5 +5221,10 @@ PrefabInstance:
 --- !u!4 &8340634753205601937 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 191408209344073857, guid: 0bcaa958f6e83d8498e258f31b94137c, type: 3}
+  m_PrefabInstance: {fileID: 8149236993685263888}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8340634753205601938 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 191408209344073858, guid: 0bcaa958f6e83d8498e258f31b94137c, type: 3}
   m_PrefabInstance: {fileID: 8149236993685263888}
   m_PrefabAsset: {fileID: 0}

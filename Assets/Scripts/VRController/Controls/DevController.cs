@@ -374,4 +374,28 @@ public class DevController : Actor
     {
         currentHealth = health;
     }
+
+    public void EnableThumbstick(HandSide handSide)
+    {
+        if (handSide == HandSide.LEFT)
+        {
+            _moveForwardAction.Enable();
+        }
+        else
+        {
+            _lookAction.Enable();
+        }
+    }
+
+    public void DisableThumbstick(HandSide handSide)
+    {
+        if (handSide == HandSide.LEFT)
+        {
+            _moveForwardAction.Disable();
+        }
+        else
+        {
+            _lookAction.Disable();
+        }
+    }
 }

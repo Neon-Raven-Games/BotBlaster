@@ -94,6 +94,8 @@ public class WaveController : MonoBehaviour
         _instance.StopWaves();
         ScoreManager.FinalizeScore();
     }
+    
+    public static bool IsWaveSpawning() => _instance._waveSpawning;
 
     public void Ready()
     {

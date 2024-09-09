@@ -214,6 +214,7 @@ public class Actor : MonoBehaviour
                 if (stacks[flag] < ElementDecorator.MAX_STACKS)
                 {
                     stacks[flag]++;
+                    // todo, refactor to actor level debuff
                     TimerManager.AddTimer(ElementDecorator.DEBUFF_DURATION, () => RemoveDebuff(flag));
                 }
             }

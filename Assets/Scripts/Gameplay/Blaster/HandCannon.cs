@@ -82,7 +82,7 @@ public class HandCannon : MonoBehaviour
 
     public void TriggerPerformedAction(InputAction.CallbackContext obj)
     {
-        animator.Play("Fire");
+        ChangeState(CannonState.Shooting);
     }
 
     internal void TriggerReleasedAction(InputAction.CallbackContext obj)

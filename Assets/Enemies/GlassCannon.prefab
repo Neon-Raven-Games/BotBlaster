@@ -163,6 +163,7 @@ MonoBehaviour:
   showDamageNumbers: 1
   enemyType: 2
   knockBackTime: 0
+  renderer: {fileID: 5305877061521776356}
   deathParticleSystem: {fileID: 835479419966428742}
   barrelTransform: {fileID: 3318481387949043830}
   chargeTime: 1.5

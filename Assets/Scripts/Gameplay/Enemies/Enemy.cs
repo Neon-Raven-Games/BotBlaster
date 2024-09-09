@@ -1,5 +1,4 @@
 using System.Collections;
-using Gameplay.Elements;
 using Gameplay.Enemies;
 using NRTools.AtlasHelper;
 using UnityEngine;
@@ -8,6 +7,7 @@ public class Enemy : Actor
 {
     public EnemyType enemyType;
     [SerializeField] private float knockBackTime = 0.5f;
+    [SerializeField] private Renderer renderer;
     private bool _knockingBack;
     protected float lastAttackTime;
     
@@ -31,12 +31,10 @@ public class Enemy : Actor
             deathParticleSystem.transform.parent = transform;
         }
 
-        var rend = GetComponent<Renderer>();
-        if (!rend) GetComponentInChildren<Renderer>();
-        if (!rend) return;
+        if(!_atlasIndex) _atlasIndex = GetComponent<AtlasIndex>();
+        if (!_atlasIndex || !renderer) return;
         var rect = _atlasIndex.GetRect(element, out var page);
-        NRAtlasManager.SetUVAndAtlasPage(rect, page, rend);
-        this.ApplyElement(element);
+        NRAtlasManager.SetUVAndAtlasPage(rect, page, renderer);
     }
 
     public virtual void ApplyBalance(int waveNumber)

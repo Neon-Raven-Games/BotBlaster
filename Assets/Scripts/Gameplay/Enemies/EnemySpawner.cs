@@ -58,7 +58,6 @@ public class EnemySpawner : MonoBehaviour
     {
         var wave = currentWaveData;
         var enemies = wave.numberOfEnemies;
-        if (paused) return;
 
         for (var i = 0; i < enemies; i++)
         {
@@ -70,7 +69,8 @@ public class EnemySpawner : MonoBehaviour
 
             await UniTask.Delay(TimeSpan.FromSeconds(wave.spawnInterval));
 
-            if (paused) return;
+            if (paused || !WaveController.IsWaveSpawning()) await UniTask.WaitUntil(() => !paused || !WaveController.IsWaveSpawning());
+            if (!WaveController.IsWaveSpawning()) return;
             var enemyType = wave.enemyTypes[i % wave.enemyTypes.Length];
             var spawnPosition = wave.spawnPositions[i % wave.spawnPositions.Length];
             var element = wave.elementFlags[i % wave.elementFlags.Length];

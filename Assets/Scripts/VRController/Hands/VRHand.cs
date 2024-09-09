@@ -23,13 +23,13 @@ public class VRHand : MonoBehaviour
             Application.focusChanged += OnApplicationFocusChanged;
         _impulsePlayer = GetComponent<HapticImpulsePlayer>();
         
-        var handString = handSide == HandSide.LEFT ? "Left" : "Right";
-        _blasterSelect = actionAsset.FindAction($"XRI {handString} Interaction/Select", true);
+        // var handString = handSide == HandSide.LEFT ? "Left" : "Right";
+        // _blasterSelect = actionAsset.FindAction($"XRI {handString} Interaction/Select", true);
         
-        _blasterSelect.Enable();
+        // _blasterSelect.Enable();
         
-        _blasterSelect.performed += _ => InitializeChangeBlaster();
-        _blasterSelect.canceled += _ => FinalizeChangeBlaster();
+        // _blasterSelect.performed += _ => InitializeChangeBlaster();
+        // _blasterSelect.canceled += _ => FinalizeChangeBlaster();
         
         _handCannon = GetComponentInChildren<HandCannon>();
     }

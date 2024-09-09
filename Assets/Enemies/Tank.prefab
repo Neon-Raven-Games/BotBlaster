@@ -131,6 +131,7 @@ MonoBehaviour:
   showDamageNumbers: 1
   enemyType: 3
   knockBackTime: 0
+  renderer: {fileID: 4691266694475113247}
   deathParticleSystem: {fileID: 1876355520819786475}
   dashingChance: 0.003
   dashSpeed: 20

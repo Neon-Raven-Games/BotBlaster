@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Gameplay.Elements;
+using NRTools.AtlasHelper;
 using UnityEngine;
 
 namespace Gameplay.Enemies.EnemyTypes
@@ -48,7 +49,13 @@ namespace Gameplay.Enemies.EnemyTypes
             element = elementFlag;
             if (element == ElementFlag.None) return;
             textureAnimator.SwitchElement(elementFlag, _elementMaterials[elementFlag].characterMaterial);
+            if (!_atlasIndex) _atlasIndex = GetComponent<AtlasIndex>();
+            if (!_atlasIndex) return;
+            var rect = _atlasIndex.GetRect(element, out var page);
+            NRAtlasManager.SetUVAndAtlasPage(rect, page, renderer);
         }
+        [SerializeField] private Renderer renderer;
+        private AtlasIndex _atlasIndex;
 
         private void Update()
         {

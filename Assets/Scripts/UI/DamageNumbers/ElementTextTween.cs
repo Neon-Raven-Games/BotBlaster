@@ -128,8 +128,11 @@ namespace UI.DamageNumbers
             {StatusEffectiveness.Normal, new Color(1, 1, 1, 1)}
         };
 
-        private static void SetFaceColor(Material mat, StatusEffectiveness status) =>
-            mat.SetColor(_SFaceColor, _SFaceColors[status]);
+        private static void SetFaceColor(MeshRenderer rend, StatusEffectiveness status, MaterialPropertyBlock mpb)
+        {
+            mpb.SetColor(_SFaceColor, _SFaceColors[status]);
+            rend.SetPropertyBlock(mpb); // Apply the property block to the renderer
+        }
 
         public static void TweenElementText(TextMeshPro text, ElementFlag element, StatusEffectiveness effectiveness,
             int number)
@@ -169,34 +172,59 @@ namespace UI.DamageNumbers
 
             if (!_SElementMaterialProperties.ContainsKey(element)) return;
             var materialProperties = _SElementMaterialProperties[element];
+
+            // Use a Material Property Block to avoid modifying the material directly
+            var mpb = new MaterialPropertyBlock();
+
+            // Set the face color
             if (statusEffectiveness == StatusEffectiveness.Strong)
             {
+                // Start with initial face color and animate to the target color
+                rend.GetPropertyBlock(mpb); // Load existing property block values
+                mpb.SetColor(_SFaceColor, materialProperties.fromFaceColor);
+                rend.SetPropertyBlock(mpb); // Set the updated property block
+
                 rend.material.DOColor(materialProperties.toFaceColor, _SFaceColor, pulsateDuration)
                     .SetEase(Ease.InOutSine)
-                    .SetLoops(-1, LoopType.Yoyo)
-                    .From(materialProperties.fromFaceColor);
+                    .SetLoops(-1, LoopType.Yoyo);
             }
             else
             {
-                SetFaceColor(rend.material, statusEffectiveness);
+                // Directly set face color based on status effectiveness
+                SetFaceColor(rend, statusEffectiveness, mpb);
             }
-            rend.material.SetColor(_SGlowColor, materialProperties.glowColor);
+
+            mpb.SetColor(_SGlowColor, materialProperties.glowColor);
+            rend.SetPropertyBlock(mpb);
+
+            // Now animate the glow-related properties using DOFloat for pulsating effects
             SetGlowProperty(glowMultiplier, rend, pulsateDuration, _SGlowPower, materialProperties.glowPower);
             SetGlowProperty(glowMultiplier, rend, pulsateDuration, _SGlowOffset, materialProperties.glowOffset);
             SetGlowProperty(glowMultiplier, rend, pulsateDuration, _SGlowInner, materialProperties.glowInner);
             SetGlowProperty(glowMultiplier, rend, pulsateDuration, _SGlowOuter, materialProperties.glowOuter);
 
+            // Animate scale and position
             rend.transform.DOScale(scaleMultiplier, pulsateDuration).SetEase(Ease.OutElastic).From(1f);
             rend.transform.DOMoveY(rend.transform.position.y + .4f, 2f).SetEase(Ease.OutCubic)
                 .OnComplete(() => rend.gameObject.SetActive(false));
-
         }
 
-        private static void SetGlowProperty(float glowMultiplier, Renderer rend, float pulsateDuration, int key,
+
+        private static void SetGlowProperty(float glowMultiplier, MeshRenderer rend, float pulsateDuration, int key,
             float value)
         {
+            var mpb = new MaterialPropertyBlock();
+
+            // Calculate initial and target values for the tween
             var initialValue = value * glowMultiplier;
             var targetValue = value * (glowMultiplier * 1.5f);
+
+            // Apply the initial value using Material Property Block
+            rend.GetPropertyBlock(mpb); // Retrieve the existing property block
+            mpb.SetFloat(key, initialValue);
+            rend.SetPropertyBlock(mpb); // Set the updated property block
+
+            // Use DOFloat directly on the material for pulsating (animation/tweening)
             rend.material.DOFloat(targetValue, key, pulsateDuration)
                 .SetEase(Ease.InOutSine)
                 .SetLoops(-1, LoopType.Yoyo)
