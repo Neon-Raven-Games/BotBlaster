@@ -47,6 +47,7 @@ namespace NRTools.GpuSkinning
             var vertIndices = new List<int>();
             var vertPositions = new List<Vector3>();
             skinnedMeshRenderer.BakeMesh(bakedMesh);
+            
             _originalVerts = new List<Vector3>();
             
             for (var i = 0; i < bakedMesh.vertices.Length; i++)
@@ -66,7 +67,7 @@ namespace NRTools.GpuSkinning
 
                 _deltas.Add(new FrameDelta(bakedMesh.vertexCount));
                 
-                animationClip.SampleAnimation(skinnedMeshRenderer.gameObject, time);
+                animationClip.SampleAnimation(skinnedMeshRenderer.transform.parent.gameObject, time);
                 skinnedMeshRenderer.BakeMesh(bakedMesh);
                 
                 AssignDeltas(frameIndex, bakedMesh);
@@ -114,7 +115,7 @@ namespace NRTools.GpuSkinning
                     keyframeTimes.Add(keyframe.time);
                 }
             }
-
+            Debug.Log(keyframeTimes.Count + " keyframes found");
             return keyframeTimes;
         }
     }

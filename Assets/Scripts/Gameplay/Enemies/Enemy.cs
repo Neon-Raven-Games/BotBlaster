@@ -25,6 +25,7 @@ public class Enemy : Actor
         currentAttackRange = baseAttackRange;
         currentAttackCoolDown = baseAttackCoolDown;
         _dead = false;
+        
         if (deathParticleSystem)
         {
             deathParticleSystem.SetActive(false);
@@ -33,6 +34,7 @@ public class Enemy : Actor
 
         if(!_atlasIndex) _atlasIndex = GetComponent<AtlasIndex>();
         if (!_atlasIndex || !renderer) return;
+        
         var rect = _atlasIndex.GetRect(element, out var page);
         NRAtlasManager.SetUVAndAtlasPage(rect, page, renderer);
     }

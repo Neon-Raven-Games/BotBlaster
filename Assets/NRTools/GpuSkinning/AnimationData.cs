@@ -1,8 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace NRTools.GpuSkinning
-{
+{    
+     public struct VertexSkinData
+     {
+         public int4 boneIndices; // Indices of bones affecting this vertex
+         public float4 boneWeights; // Weights for each bone
+         public float4x4 boneMatrices; // Bone matrices
+     }
+     
+     [Serializable]
+     public class VertexData
+     {
+         public Vector3 position;
+         public int index;
+         public VertexSkinData skinData;
+     }
+     
     public class AnimationData : ScriptableObject
     {
         public List<int> vertexIndices;        // List of vertex indices (keys of dictionary)
@@ -23,6 +40,7 @@ namespace NRTools.GpuSkinning
     [System.Serializable]
     public class FrameDelta
     {
+        public List<VertexSkinData> deltaSkinData;
         public List<Vector3> deltaVertices;  // This will be serialized properly by Unity
 
         public FrameDelta(int count)

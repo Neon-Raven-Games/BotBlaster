@@ -63,11 +63,7 @@
 
                 // Transform vertex to clip space (HCS = Homogeneous Clip Space)
                 OUT.positionHCS = TransformObjectToHClip(IN.positionOS);  // Using URP's transform macro
-
-                // Access UV offset from the instancing property buffer
                 float4 uvOffset = UNITY_ACCESS_INSTANCED_PROP(Props, _UVOffset);
-
-                // Apply UV offset and scale to the input UV coordinates
                 OUT.uv = IN.uv * uvOffset.zw + uvOffset.xy;
 
                 return OUT;
