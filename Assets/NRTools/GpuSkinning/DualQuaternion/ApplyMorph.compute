@@ -1,0 +1,39 @@
+﻿#pragma kernel cs_main
+
+struct vertex_info
+{
+    float4 position;
+    float4 normal;
+    float4 tangent;
+
+    int4 bone_indexes;
+    float4 bone_weights;
+
+    float compensation_coef;
+};
+
+struct morph_delta
+{
+    float4 position;
+    float4 normal;
+    float4 tangent;
+};
+
+RWStructuredBuffer<vertex_info> source;
+RWStructuredBuffer<vertex_info> target;
+RWStructuredBuffer<morph_delta> delta;
+
+float weight;
+int frame;
+
+// not sure how to set up the threads for custom mesh ver count?
+[numthreads(256, 1, 1)] 
+void cs_main(uint3 id : SV_DispatchThreadID)
+{
+    const vertex_info vert_info = source.Load(id.x);
+    const morph_delta morph_info = delta.Load(id.x);
+
+    target[id.x].position = lerp(vert_info.position, morph_info.position, weight);
+    target[id.x].normal = lerp(vert_info.normal, morph_info.normal, weight);
+    target[id.x].tangent = lerp(vert_info.tangent, morph_info.tangent, weight);
+}

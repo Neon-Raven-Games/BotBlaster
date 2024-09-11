@@ -1,0 +1,120 @@
+﻿#pragma kernel cs_main
+#pragma multi_compile_local __ TWIST_COMPENSATION_EXPERIMENTAL
+
+#include "DualQuat.cginc"
+
+struct bone_weight_info
+{
+	int4 bone_indexes;
+	float4 bone_weights;
+};
+
+struct vertex_info
+{
+	float4 position;
+	float4 normal;
+	float4 tangent;
+
+	int4 bone_indexes;
+	float4 bone_weights;
+
+	float compensation_coef;
+};
+int vertex_count;
+float compensation_coef;
+// output
+RWStructuredBuffer<vertex_info> skinned_vertex_infos;
+
+// input
+RWStructuredBuffer<dual_quaternion> skinned_dual_quaternions;
+RWStructuredBuffer<vertex_info> vertex_infos;
+RWStructuredBuffer<float4> bone_directions;
+
+vertex_info skin_vertex(vertex_info vert_info)
+{
+	const int4 bone_indexes	= vert_info.bone_indexes;
+	const float4 bone_weights	= vert_info.bone_weights;
+
+	const dual_quaternion dq0 = skinned_dual_quaternions.Load(bone_indexes[0]);
+	dual_quaternion dq1 = skinned_dual_quaternions.Load(bone_indexes[1]);
+	dual_quaternion dq2 = skinned_dual_quaternions.Load(bone_indexes[2]);
+	dual_quaternion dq3 = skinned_dual_quaternions.Load(bone_indexes[3]);
+
+	dq1 = dual_quaternion_shortest_path(dq1, dq0);
+	dq2 = dual_quaternion_shortest_path(dq2, dq0);
+	dq3 = dual_quaternion_shortest_path(dq3, dq0);
+
+	dual_quaternion skinned_dq;
+	skinned_dq.rotation_quaternion =	dq0.rotation_quaternion * bone_weights[0];
+	skinned_dq.rotation_quaternion +=	dq1.rotation_quaternion * bone_weights[1];
+	skinned_dq.rotation_quaternion +=	dq2.rotation_quaternion * bone_weights[2];
+	skinned_dq.rotation_quaternion +=	dq3.rotation_quaternion * bone_weights[3];
+
+	skinned_dq.translation_quaternion =		dq0.translation_quaternion * bone_weights[0];
+	skinned_dq.translation_quaternion +=	dq1.translation_quaternion * bone_weights[1];
+	skinned_dq.translation_quaternion +=	dq2.translation_quaternion * bone_weights[2];
+	skinned_dq.translation_quaternion +=	dq3.translation_quaternion * bone_weights[3];
+
+	const float epsilon = 1e-6;
+	const float mag = length(skinned_dq.rotation_quaternion);
+
+	if (mag > epsilon)
+	{
+		skinned_dq.rotation_quaternion /= mag;
+		skinned_dq.translation_quaternion /= mag;
+	}
+
+	vert_info.position	= quaternion_apply_rotation(vert_info.position,	skinned_dq.rotation_quaternion);
+	vert_info.normal		= quaternion_apply_rotation(vert_info.normal,		skinned_dq.rotation_quaternion);
+	vert_info.tangent	= quaternion_apply_rotation(vert_info.tangent,		skinned_dq.rotation_quaternion);
+
+	vert_info.position += quaternion_multiply(skinned_dq.translation_quaternion * 2, quaternion_invert(skinned_dq.rotation_quaternion));
+	vert_info.normal = normalize(vert_info.normal);
+	vert_info.tangent = normalize(vert_info.tangent);
+
+	// experimental, todo: Make test cases
+	float4 rq = quaternion_multiply(dq0.rotation_quaternion, quaternion_invert(dq1.rotation_quaternion));
+
+	// In theory: branching is removed by the compiler optimization, todo: Make test cases and validate this in practice
+	if(bone_weights[1] > epsilon && length(rq.xyz) > 0.001)
+	{
+		float4 bone_dir0 = bone_directions.Load(bone_indexes[0]);
+		float4 bone_dir1 = bone_directions.Load(bone_indexes[1]);
+
+		const float3 axis = normalize(rq.xyz);
+		float3 bisector = normalize(bone_dir0.xyz + bone_dir1.xyz);
+		bisector = bone_indexes[0] > bone_indexes[1] ? bisector : -bisector;
+
+		const float3 offset = bisector - axis * dot(axis, bisector);
+
+		float angleCoef = saturate(2.0*sqrt(1.0-rq.w));
+
+		float x = bone_weights[1] / (bone_weights[0] + bone_weights[1]);
+		float compensation = 2.2*x-9.6*x*x+10.4*x*x*x;
+
+		if (vert_info.compensation_coef > epsilon)
+			compensation *= vert_info.compensation_coef;
+		if (compensation_coef > epsilon)
+			compensation *= compensation_coef;
+
+		compensation *= angleCoef;
+		compensation *= 1.0 - bone_weights[2] / bone_weights[1];
+		compensation *= bone_weights[0] + bone_weights[1];
+
+		if (compensation > epsilon)
+		{
+			vert_info.position.xyz += offset * compensation;
+		}
+	}
+
+	return vert_info;
+}
+
+[numthreads(256,1,1)]
+void cs_main (uint3 id : SV_DispatchThreadID)
+{
+	if (id.x >= vertex_count)return;
+	vertex_info vert_info = vertex_infos.Load(id.x);
+	vert_info = skin_vertex(vert_info);
+	skinned_vertex_infos[id.x] = vert_info;
+}

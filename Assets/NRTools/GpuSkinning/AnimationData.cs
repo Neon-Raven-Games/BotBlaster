@@ -4,48 +4,80 @@ using Unity.Mathematics;
 using UnityEngine;
 
 namespace NRTools.GpuSkinning
-{    
-     public struct VertexSkinData
-     {
-         public int4 boneIndices; // Indices of bones affecting this vertex
-         public float4 boneWeights; // Weights for each bone
-         public float4x4 boneMatrices; // Bone matrices
-     }
-     
-     [Serializable]
-     public class VertexData
-     {
-         public Vector3 position;
-         public int index;
-         public VertexSkinData skinData;
-     }
-     
+{
+    [Serializable]
+    public class VertexSkinData
+    {
+        public int4 boneIndices; // Indices of bones affecting this vertex
+        public float4 boneWeights; // Weights for each bone
+    }
+
     public class AnimationData : ScriptableObject
     {
-        public List<int> vertexIndices;        // List of vertex indices (keys of dictionary)
-        public List<Vector3> vertexPositions;  // Corresponding vertex positions (values of dictionary)
+        public List<int> vertexIndices; // List of vertex indices (keys of dictionary)
         public List<FrameDelta> frameDeltas;
-
-        // Function to convert the serialized lists back to a dictionary for use
-        public Dictionary<int, Vector3> GetVertexLookup()
-        {
-            var dict = new Dictionary<int, Vector3>();
-            for (int i = 0; i < vertexIndices.Count; i++)
-            {
-                dict[vertexIndices[i]] = vertexPositions[i];
-            }
-            return dict;
-        }
+        public List<Matrix4x4> boneMatricesPerFrame;
     }
-    [System.Serializable]
+
+    [Serializable]
     public class FrameDelta
     {
         public List<VertexSkinData> deltaSkinData;
-        public List<Vector3> deltaVertices;  // This will be serialized properly by Unity
+        public List<Vector3> deltaVertices; // This will be serialized properly by Unity
 
         public FrameDelta(int count)
         {
             deltaVertices = new List<Vector3>(count);
+            deltaSkinData = new List<VertexSkinData>(count);
         }
+    }
+
+    // v4 over v3: float4 caveat in engine channel of discord
+    // https://developer.nvidia.com/content/understanding-structured-buffer-performance
+    // we need ot test the performance to the test with xyz, instead of v4
+    [Serializable]
+    public struct VertexInfo
+    {
+        public int vertexID;
+        public Vector4 position;
+        public Vector4 normal;
+        public Vector4 tangent;
+
+        public int boneIndex0;
+        public int boneIndex1;
+        public int boneIndex2;
+        public int boneIndex3;
+
+        public float weight0;
+        public float weight1;
+        public float weight2;
+        public float weight3;
+
+        public float compensation_coef;
+    }
+    [Serializable]
+    public struct MorphDelta
+    {
+        // float4 caveat in engine channel of discord
+        // https://developer.nvidia.com/content/understanding-structured-buffer-performance
+        public Vector4 position;
+        public Vector4 normal;
+        public Vector4 tangent;
+    }
+    [Serializable]
+    public struct DualQuaternion
+    {
+        public Quaternion rotationQuaternion;
+        public Vector4 position;
+    }
+    
+    [Serializable]
+    public class DualQuaternionAnimationData
+    {
+        public Vector4[] boneDirections;
+        public List<VertexInfo> verticesInfo;
+        public Dictionary<int, List<MorphDelta>> frameDeltas;
+        public Dictionary<int, List<float[]>> boneMatricesPerFrame;
+        public List<DualQuaternion> dualQuaternions;
     }
 }

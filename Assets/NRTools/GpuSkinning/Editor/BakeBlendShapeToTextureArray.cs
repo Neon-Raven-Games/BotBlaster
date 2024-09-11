@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 
@@ -45,33 +46,67 @@ namespace NRTools.GpuSkinning
             var bakedMesh = new Mesh();
 
             var vertIndices = new List<int>();
-            var vertPositions = new List<Vector3>();
             skinnedMeshRenderer.BakeMesh(bakedMesh);
-            
+
             _originalVerts = new List<Vector3>();
-            
+
             for (var i = 0; i < bakedMesh.vertices.Length; i++)
             {
                 vertIndices.Add(i);
-                vertPositions.Add(bakedMesh.vertices[i]);
                 _originalVerts.Add(bakedMesh.vertices[i]);
             }
+
             HashSet<float> keyframeTimes = GetKeyframeTimes(animationClip);
             _deltas.Clear();
-            
+
+            var boneMatricesPerFrame = new List<Matrix4x4>();
             var frameIndex = 0;
             foreach (var time in keyframeTimes)
             {
-                var progress = (float)frameIndex / keyframeTimes.Count;
-                EditorUtility.DisplayProgressBar("Baking Animation", $"Processing frame {frameIndex + 1} of {keyframeTimes.Count}", progress);
+                var progress = (float) frameIndex / keyframeTimes.Count;
+                EditorUtility.DisplayProgressBar("Baking Animation",
+                    $"Processing frame {frameIndex + 1} of {keyframeTimes.Count}", progress);
 
                 _deltas.Add(new FrameDelta(bakedMesh.vertexCount));
-                
+
                 animationClip.SampleAnimation(skinnedMeshRenderer.transform.parent.gameObject, time);
                 skinnedMeshRenderer.BakeMesh(bakedMesh);
-                
+
+                for (var boneIndex = 0; boneIndex < skinnedMeshRenderer.bones.Length; boneIndex++)
+                {
+                    boneMatricesPerFrame.Add(
+                        skinnedMeshRenderer.bones[boneIndex].localToWorldMatrix *
+                        skinnedMeshRenderer.sharedMesh.bindposes[boneIndex]);
+                }
+                Debug.Log($"Vertex count: {bakedMesh.vertexCount}, Bone weights length: {skinnedMeshRenderer.sharedMesh.boneWeights.Length}");
+
                 AssignDeltas(frameIndex, bakedMesh);
-                
+
+                for (var i = 0; i < bakedMesh.vertexCount; i++)
+                {
+                    if (i >= skinnedMeshRenderer.sharedMesh.boneWeights.Length)
+                    {
+                        Debug.LogError($"Bone weights array is smaller than the vertex count at vertex {i}");
+                        break;
+                    }
+                    var boneWeights = skinnedMeshRenderer.sharedMesh.boneWeights;
+                    var skinData = new VertexSkinData
+                    {
+                        boneIndices = new int4(
+                            boneWeights[i].boneIndex0,
+                            boneWeights[i].boneIndex1,
+                            boneWeights[i].boneIndex2,
+                            boneWeights[i].boneIndex3),
+                        boneWeights = new float4(
+                            boneWeights[i].weight0,
+                            boneWeights[i].weight1,
+                            boneWeights[i].weight2,
+                            boneWeights[i].weight3)
+                    };
+                    _deltas[frameIndex].deltaSkinData.Add(skinData);
+                }
+
+
                 frameIndex++;
             }
 
@@ -79,8 +114,9 @@ namespace NRTools.GpuSkinning
             var data = CreateInstance<AnimationData>();
             data.frameDeltas = _deltas;
             data.vertexIndices = vertIndices;
-            data.vertexPositions = vertPositions;
-            var path = EditorUtility.SaveFilePanelInProject("Save GPU Animation Data", "GPUAnimation", "asset", "Please enter a file name to save the GPU animation data.");
+            data.boneMatricesPerFrame = boneMatricesPerFrame;
+            var path = EditorUtility.SaveFilePanelInProject("Save GPU Animation Data", "GPUAnimation", "asset",
+                "Please enter a file name to save the GPU animation data.");
             if (!string.IsNullOrEmpty(path))
             {
                 AssetDatabase.CreateAsset(data, path);
@@ -90,18 +126,22 @@ namespace NRTools.GpuSkinning
         private void AssignDeltas(int frameIndex, Mesh bakedMesh)
         {
             var vertices = bakedMesh.vertices;
-            var vertexCount = vertices.Length;
-            
+            var vertexCount = bakedMesh.vertexCount;
+
             if (bakedMesh.vertexCount != _originalVerts.Count)
             {
-                Debug.LogError($"Vertex count mismatch at frame {frameIndex}. Original: {_originalVerts.Count}, Current: {bakedMesh.vertexCount}");
+                Debug.LogError(
+                    $"Vertex count mismatch at frame {frameIndex}. Original: {_originalVerts.Count}, Current: {bakedMesh.vertexCount}");
                 return;
             }
-            
+
+
             for (var i = 0; i < vertexCount; i++)
+            {
                 _deltas[frameIndex].deltaVertices.Add(vertices[i] - _originalVerts[i]);
+            }
         }
-        
+
         private HashSet<float> GetKeyframeTimes(AnimationClip clip)
         {
             var keyframeTimes = new HashSet<float>();
@@ -115,6 +155,7 @@ namespace NRTools.GpuSkinning
                     keyframeTimes.Add(keyframe.time);
                 }
             }
+
             Debug.Log(keyframeTimes.Count + " keyframes found");
             return keyframeTimes;
         }
