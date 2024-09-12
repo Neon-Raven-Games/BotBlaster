@@ -55,6 +55,7 @@ namespace NRTools.GpuSkinning
 
         public float compensation_coef;
     }
+    
     [Serializable]
     public struct MorphDelta
     {
@@ -76,7 +77,7 @@ namespace NRTools.GpuSkinning
     {
         public Vector4[] boneDirections;
         public List<VertexInfo> verticesInfo;
-        public Dictionary<int, List<MorphDelta>> frameDeltas;
+        public List<List<MorphDelta>> frameDeltas;
         public Dictionary<int, List<float[]>> boneMatricesPerFrame;
         public List<DualQuaternion> dualQuaternions;
     }

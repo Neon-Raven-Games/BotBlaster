@@ -58,7 +58,7 @@ namespace NRTools.GpuSkinning
             // vertices info
             var verticesInfoCollection = new List<VertexInfo>();
             // morph deltas
-            var deltas = new Dictionary<int, List<MorphDelta>>();
+            var deltas = new List<List<MorphDelta>>();
             // dual quaternion translations
             var dualQuaternions = ExtractBindPoseTranslations(skinnedMeshRenderer);
 
@@ -91,7 +91,10 @@ namespace NRTools.GpuSkinning
                 };
                 verticesInfoCollection.Add(vertInfo);
             }
-            var keyframeTimes = GetKeyframeTimes(animationClip);
+
+            var keyTime = GetKeyframeTimes(animationClip);
+            var keyframeTimes = keyTime.ToList();
+            keyframeTimes.Sort();
 
             var frameIndex = 0;
             foreach (var time in keyframeTimes)
@@ -99,40 +102,32 @@ namespace NRTools.GpuSkinning
                 var progress = (float) frameIndex / keyframeTimes.Count;
                 EditorUtility.DisplayProgressBar("Baking Animation",
                     $"Processing frame {frameIndex + 1} of {keyframeTimes.Count}", progress);
+                    deltas.Add(new List<MorphDelta>());
 
-                deltas.Add(frameIndex, new List<MorphDelta>());
+                    animationClip.SampleAnimation(animator.gameObject, time);
+                    skinnedMeshRenderer.BakeMesh(bakedMesh);
 
-                animationClip.SampleAnimation(animator.gameObject, time);
-                skinnedMeshRenderer.BakeMesh(bakedMesh);
-
-                boneMatricesPerFrame.Add(frameIndex, new List<float[]>());
-                for (var boneIndex = 0; boneIndex < skinnedMeshRenderer.bones.Length; boneIndex++)
-                {
-                    var matrix =
-                        skinnedMeshRenderer.bones[boneIndex].localToWorldMatrix *
-                        skinnedMeshRenderer.sharedMesh.bindposes[boneIndex];
-                    
-                    if (matrix.ValidTRS())
+                    boneMatricesPerFrame.Add(frameIndex, new List<float[]>());
+                    for (var boneIndex = 0; boneIndex < skinnedMeshRenderer.bones.Length; boneIndex++)
                     {
+                        var matrix =
+                            skinnedMeshRenderer.bones[boneIndex].localToWorldMatrix *
+                            skinnedMeshRenderer.sharedMesh.bindposes[boneIndex];
+
                         boneMatricesPerFrame[frameIndex].Add(matrix.ToFloatArray());
                     }
-                    else
+
+                    for (var i = 0; i < bakedMesh.vertexCount; i++)
                     {
-                        boneMatricesPerFrame[frameIndex].Add(Matrix4x4.identity.ToFloatArray());
+                        var morphD = new MorphDelta
+                        {
+                            position = bakedMesh.vertices[i],
+                            normal = bakedMesh.normals[i],
+                            tangent = bakedMesh.tangents[i],
+                        };
+
+                        deltas[frameIndex].Add(morphD);
                     }
-                }
-
-                for (var i = 0; i < bakedMesh.vertexCount; i++)
-                {
-                    var morphD = new MorphDelta
-                    {
-                        position = (Vector4) bakedMesh.vertices[i] - verticesInfoCollection[i].position,
-                        normal = (Vector4) bakedMesh.normals[i] - verticesInfoCollection[i].normal,
-                        tangent = bakedMesh.tangents[i] - verticesInfoCollection[i].tangent,
-                    };
-
-                    deltas[frameIndex].Add(morphD);
-                }
 
                 frameIndex++;
             }
@@ -147,11 +142,12 @@ namespace NRTools.GpuSkinning
                 var data = new DualQuaternionAnimationData
                 {
                     verticesInfo = verticesInfoCollection,
-                    frameDeltas = deltas,
                     boneMatricesPerFrame = boneMatricesPerFrame,
                     dualQuaternions = dualQuaternions,
                     boneDirections = InitializeBoneDirectionBuffer(skinnedMeshRenderer)
                 };
+
+                data.frameDeltas = deltas;
                 var settings = new JsonSerializerSettings
                 {
                     ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
@@ -163,6 +159,7 @@ namespace NRTools.GpuSkinning
                 Debug.Log("GPU Animation Data saved to " + path);
             }
         }
+
         private static Vector4[] InitializeBoneDirectionBuffer(SkinnedMeshRenderer skinnedMeshRenderer)
         {
             var boneCount = skinnedMeshRenderer.bones.Length;

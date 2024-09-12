@@ -4,6 +4,7 @@
     {
         _MainTex ("Texture", 2D) = "white" {} // Atlas texture
         _UVOffset ("UV Offset", Vector) = (0, 0, 1, 1) // UV Offset (x, y, width, height)
+        _FrameIndex ("Frame Index", Int) = 0
         _BaseColor ("Base Color", Color) = (1,1,1,1)
     }
     SubShader
@@ -44,25 +45,38 @@
                 UNITY_VERTEX_OUTPUT_STEREO
             };
 
-            StructuredBuffer<int> _VertexIDs;
-            StructuredBuffer<float3> _Deltas;
-
-            StructuredBuffer<float4x4> _BoneMatrices;
-            StructuredBuffer<dual_quaternion> _BoneDQ;
-            StructuredBuffer<int4> _BoneIndices;
-            StructuredBuffer<float4> _BoneWeights;
-
             UNITY_INSTANCING_BUFFER_START(Props)
             UNITY_DEFINE_INSTANCED_PROP(int, _FrameIndex)
             UNITY_DEFINE_INSTANCED_PROP(float, _InterpolationFactor)
             UNITY_DEFINE_INSTANCED_PROP(int, _VertexCount)
             UNITY_DEFINE_INSTANCED_PROP(int, _FrameCount)
-            UNITY_DEFINE_INSTANCED_PROP(int, _BoneCount)
             UNITY_DEFINE_INSTANCED_PROP(float4, _UVOffset)
             UNITY_INSTANCING_BUFFER_END(Props)
 
             TEXTURE2D(_MainTex);
             SAMPLER(sampler_MainTex);
+
+            struct vertex_info
+            {
+                float4 position;
+                float4 normal;
+                float4 tangent;
+
+                int4 bone_indexes;
+                float4 bone_weights;
+
+                float compensation_coef;
+            };
+
+            struct morph_delta
+            {
+                float4 position;
+                float4 normal;
+                float4 tangent;
+            };
+
+            StructuredBuffer<vertex_info> vertices;
+            StructuredBuffer<morph_delta> deltas;
 
             v2f vert(const appdata v, uint id : SV_VertexID)
             {
@@ -71,20 +85,23 @@
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
                 const int frame_index = UNITY_ACCESS_INSTANCED_PROP(Props, _FrameIndex);
-                const float interpolation = UNITY_ACCESS_INSTANCED_PROP(Props, _InterpolationFactor);
-                const int vertex_count = UNITY_ACCESS_INSTANCED_PROP(Props, _VertexCount);;
-                const int delta_index0 = frame_index * vertex_count + _VertexIDs[id];
-                const int delta_index1 = (frame_index + 1) * vertex_count + _VertexIDs[id];
-                const float3 interpolated_delta = lerp(_Deltas[delta_index0], _Deltas[delta_index1], interpolation);
-
-                float4 modified_vertex = v.vertex;
-                modified_vertex.xyz += interpolated_delta;
+                const float interpolation = clamp(UNITY_ACCESS_INSTANCED_PROP(Props, _InterpolationFactor), 0.0, 1.0);
+                const int vertex_count = UNITY_ACCESS_INSTANCED_PROP(Props, _VertexCount);
                 
-                const int4 bone_indices = _BoneIndices[id];
-                const float4 bone_weights = _BoneWeights[id];
+                const int delta_index0 = frame_index * vertex_count + id;
+                const int delta_index1 = (frame_index + 1) % UNITY_ACCESS_INSTANCED_PROP(Props, _FrameCount) *
+                    vertex_count + id;
 
-                o.position = TransformObjectToHClip(modified_vertex.xyz);
+
+                const float3 interpolated_delta = lerp(deltas[delta_index0].position.xyz, deltas[delta_index1].position.xyz,
+                                                       interpolation);
+
+                float3 modified_vertex = deltas[delta_index1].position.xyz;
+                modified_vertex.xyz += interpolated_delta.xyz;
+
+                o.position = TransformObjectToHClip(modified_vertex);
                 o.normal = TransformObjectToWorldNormal(v.normal);
+
                 float4 uv_offset = UNITY_ACCESS_INSTANCED_PROP(Props, _UVOffset);
                 o.uv = v.uv * uv_offset.zw + uv_offset.xy;
                 return o;

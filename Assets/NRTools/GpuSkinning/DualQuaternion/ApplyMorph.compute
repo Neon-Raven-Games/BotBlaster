@@ -33,7 +33,7 @@ void cs_main(uint3 id : SV_DispatchThreadID)
     const vertex_info vert_info = source.Load(id.x);
     const morph_delta morph_info = delta.Load(id.x);
 
-    target[id.x].position = lerp(vert_info.position, morph_info.position, weight);
-    target[id.x].normal = lerp(vert_info.normal, morph_info.normal, weight);
-    target[id.x].tangent = lerp(vert_info.tangent, morph_info.tangent, weight);
+    target[id.x].position = lerp(vert_info.position, morph_info.position, 1);
+    target[id.x].normal = lerp(vert_info.normal, morph_info.normal, 1);
+    // target[id.x].tangent = lerp(vert_info.tangent, morph_info.tangent, 1);
 }

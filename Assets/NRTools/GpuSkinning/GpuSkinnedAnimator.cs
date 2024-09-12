@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
 using NRTools.GpuSkinning.Util;
@@ -65,7 +66,9 @@ namespace NRTools.GpuSkinning
         {
             _animationData = DeserializeAnimationData(path);
             _boneMatrix = new Matrix4x4[_animationData.boneMatricesPerFrame.Count * _animationData.verticesInfo.Count];
-            var numBones = _animationData.boneMatricesPerFrame.Values.First().Count / 16;
+            // var numBones = _animationData.boneMatricesPerFrame.Values.First().Count / 16;
+            var numBones = 9; // todo number is not populating right
+            
             for (var i = 0; i < _animationData.boneMatricesPerFrame.Count; i++)
             {
                 var flattenedArray = _animationData.boneMatricesPerFrame[i];
@@ -131,13 +134,21 @@ namespace NRTools.GpuSkinning
         private void PopulateDeltas()
         {
             var morphDeltaSize = 48;
-            var morphDeltas = _animationData.frameDeltas.Values.SelectMany(list => list).ToArray();
+            var morphDeltasList = new List<MorphDelta>();
+            foreach (var VARIABLE in _animationData.frameDeltas)
+            {
+                foreach (var detla in VARIABLE)
+                    morphDeltasList.Add(detla);
+            }
+            
+            var morphDeltas = morphDeltasList.ToArray();
+
             _deltaBuffer = new ComputeBuffer(morphDeltas.Length, morphDeltaSize, ComputeBufferType.Structured);
             _morphResultBuffer = new ComputeBuffer(_animationData.verticesInfo.Count, 88, ComputeBufferType.Structured);
-            
             applyMorphShader.SetBuffer(_applyMorphKernelHandle, "source", _vertexBuffer);
             applyMorphShader.SetBuffer(_applyMorphKernelHandle, "delta", _deltaBuffer);
             applyMorphShader.SetBuffer(_applyMorphKernelHandle, "target", _morphResultBuffer); 
+            renderer.sharedMaterial.SetBuffer(_SMorphResultBuffer, _morphResultBuffer);
             
             _skinResultBuffer = new ComputeBuffer(_animationData.verticesInfo.Count, morphDeltaSize, ComputeBufferType.Structured);
             blendBoneShader.SetBuffer(_dualQuaternionKernelHandle, "skinned_vertex_infos", _skinResultBuffer);
@@ -194,7 +205,6 @@ namespace NRTools.GpuSkinning
             var frame0 = Mathf.FloorToInt(_currentFrame);
             var t = _currentFrame - frame0;
 
-            renderer.sharedMaterial.SetBuffer(_SMorphResultBuffer, _morphResultBuffer);
             renderer.sharedMaterial.SetBuffer(_SBlendResult, _skinResultBuffer);
             
             applyMorphShader.SetFloat("weight", t);
@@ -211,7 +221,7 @@ namespace NRTools.GpuSkinning
             var morphThreadGroups = Mathf.CeilToInt(_animationData.verticesInfo.Count / (float)_NUM_THREADS);
             applyMorphShader.Dispatch(_applyMorphKernelHandle, morphThreadGroups, 1, 1);
             
-            var boneThreadGroups = Mathf.CeilToInt(_animationData.boneMatricesPerFrame.Values.First().Count / (float)_NUM_THREADS);
+            var boneThreadGroups = Mathf.CeilToInt(9 / (float)_NUM_THREADS);
             // computeBoneShader.Dispatch(_boneBindKernelHandle, boneThreadGroups, 1, 1);
 
             var blendThreadGroups = Mathf.CeilToInt(_animationData.verticesInfo.Count / (float)_NUM_THREADS);

@@ -1,6 +1,7 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using Newtonsoft.Json;
-using Unity.Mathematics;
+using NRTools.GpuSkinning.Util;
 using UnityEngine;
 
 namespace NRTools.GpuSkinning
@@ -9,118 +10,111 @@ namespace NRTools.GpuSkinning
     {
         private static readonly int _SFrameIndex = Shader.PropertyToID("_FrameIndex");
         private static readonly int _SInterpolationFactor = Shader.PropertyToID("_InterpolationFactor");
-        private static readonly int _SVertexCount = Shader.PropertyToID("_VertexCount");
         private static readonly int _SFrameCount = Shader.PropertyToID("_FrameCount");
+        private static readonly int _SVertCount = Shader.PropertyToID("_VertexCount");
 
-        private static readonly int _SVertexIDs = Shader.PropertyToID("_VertexIDs");
-        private static readonly int _SDeltas = Shader.PropertyToID("_Deltas");
-        private static readonly int _SBoneDQ = Shader.PropertyToID("_BoneDQ");
-
-        private static readonly int _SBoneCount = Shader.PropertyToID("_BoneCount");
-        private static readonly int _SBoneIndices = Shader.PropertyToID("_BoneIndices");
-        private static readonly int _SBoneWeights = Shader.PropertyToID("_BoneWeights");
-        private static readonly int _SBoneMatrices = Shader.PropertyToID("_BoneMatrices");
+        private static readonly int _SVertices = Shader.PropertyToID("vertices");
+        private static readonly int _SDeltas = Shader.PropertyToID("deltas");
+        private static readonly int _SBoneDq = Shader.PropertyToID("bone_dq");
+        private static readonly int _SBoneMatrices = Shader.PropertyToID("bone_matrices");
 
         public string path;
         [SerializeField] private Mesh mesh;
         [SerializeField] private float animationSpeed = 1.0f;
-        [SerializeField] private AnimationData animationData;
+        [SerializeField] internal DualQuaternionAnimationData animationData;
         [SerializeField] private Renderer renderer;
-
-        // [SerializeField] private ComputeShader dualQuaternionShader;
 
         private MaterialPropertyBlock _propertyBlock;
 
         private int _numFrames;
+        private Matrix4x4[] _boneMatrix;
 
         private ComputeBuffer _vertexIDBuffer;
         private ComputeBuffer _deltaBuffer;
-
-        private ComputeBuffer _boneIndexBuffer;
-        private ComputeBuffer _boneWeightBuffer;
         private ComputeBuffer _boneMatrixBuffer;
-
         private ComputeBuffer _dualQuaternionBuffer;
-        private int _dualQuaternionKernelHandle;
 
         private Transform[] _bones;
-        private Vector3[] _baseVertices;
-        private Vector3[][] _deltaFrames;
-
-        private int[] _vertexIDs;
         private float _currentFrame;
 
         private void Start()
         {
+            DeserializeDualQuaternionSkinning();
             if (animationData == null || animationData.frameDeltas.Count == 0 ||
-                animationData.vertexIndices.Count == 0 || mesh == null)
+                animationData.verticesInfo.Count == 0 || mesh == null)
             {
                 Debug.LogError("Missing variables to pass to the GpuMeshAnimator");
                 return;
             }
 
-
-                _numFrames = animationData.frameDeltas.Count;
-
-            _baseVertices = mesh.vertices;
-            _vertexIDs = animationData.vertexIndices.ToArray();
-
-            LoadDeltaData();
-            int totalDeltas = _vertexIDs.Length * _numFrames;
-            Vector3[] allDeltas = new Vector3[totalDeltas];
-
-            for (int i = 0; i < _numFrames; i++)
+            _numFrames = animationData.frameDeltas.Count;
+            Debug.Log(animationData.frameDeltas.Count);
+            var morphDeltasList = new List<MorphDelta>();
+            foreach (var VARIABLE in animationData.frameDeltas)
             {
-                for (int j = 0; j < _vertexIDs.Length; j++)
-                {
-                    allDeltas[i * _vertexIDs.Length + j] = _deltaFrames[i][j];
-                }
+                foreach (var detla in VARIABLE)
+                    morphDeltasList.Add(detla);
             }
 
-            _deltaBuffer = new ComputeBuffer(totalDeltas, sizeof(float) * 3);
-            _deltaBuffer.SetData(allDeltas);
-            _vertexIDBuffer = new ComputeBuffer(_baseVertices.Length, sizeof(int));
-            _vertexIDBuffer.SetData(_vertexIDs);
+            var morphDeltas = morphDeltasList.ToArray();
 
-            LoadBoneData();
+            _deltaBuffer = new ComputeBuffer(morphDeltas.Length, 48, ComputeBufferType.Structured);
+            _deltaBuffer.SetData(morphDeltas);
 
-            renderer.sharedMaterial.SetBuffer(_SVertexIDs, _vertexIDBuffer);
-            renderer.sharedMaterial.SetBuffer(_SDeltas, _deltaBuffer);
-            renderer.sharedMaterial.SetBuffer(_SBoneIndices, _boneIndexBuffer);
-            renderer.sharedMaterial.SetBuffer(_SBoneWeights, _boneWeightBuffer);
+            _vertexIDBuffer = new ComputeBuffer(animationData.verticesInfo.Count, 88);
+            _vertexIDBuffer.SetData(animationData.verticesInfo.ToArray());
+
+            _dualQuaternionBuffer = new ComputeBuffer(animationData.dualQuaternions.Count, sizeof(float) * 8);
+            _dualQuaternionBuffer.SetData(animationData.dualQuaternions);
+
             renderer.sharedMaterial.SetBuffer(_SBoneMatrices, _boneMatrixBuffer);
+            renderer.sharedMaterial.SetBuffer(_SBoneDq, _dualQuaternionBuffer);
 
             _propertyBlock = new MaterialPropertyBlock();
-
-            var quat = DeserializeAnimationData(path);
-            _dualQuaternionBuffer = new ComputeBuffer(quat.dualQuaternions.Count, sizeof(float) * 8);
-            _dualQuaternionBuffer.SetData(quat.dualQuaternions);
-            
-            renderer.sharedMaterial.SetBuffer(_SBoneDQ, _dualQuaternionBuffer);
             renderer.GetPropertyBlock(_propertyBlock);
-            _propertyBlock.SetInt(_SVertexCount, _baseVertices.Length);
+            _propertyBlock.SetBuffer(_SVertices, _vertexIDBuffer);
+            _propertyBlock.SetBuffer(_SDeltas, _deltaBuffer);
+            _propertyBlock.SetInt(_SVertCount, animationData.verticesInfo.Count);
             _propertyBlock.SetInt(_SFrameCount, _numFrames);
-            _propertyBlock.SetInt(_SBoneCount, animationData.boneMatricesPerFrame.Count / _numFrames);
             renderer.SetPropertyBlock(_propertyBlock);
         }
+
+        private void LogBoneMatrices(int frame)
+        {
+            Debug.Log($"Logging Bone Matrices for Frame: {frame}");
+
+            var numBones = _boneMatrix.Length / _numFrames;
+            for (int i = 0; i < numBones; i++)
+            {
+                Matrix4x4 boneMatrix = _boneMatrix[frame * numBones + i];
+                Debug.Log($"Bone {i} Matrix:\n {boneMatrix}");
+            }
+        }
+
+        private int _shaderFrameIndex = 0;
 
         private void Update()
         {
             _currentFrame += Time.deltaTime * animationSpeed;
-            if (_currentFrame >= _numFrames) _currentFrame = 0;
+            if (_currentFrame >= _numFrames) _currentFrame -= _numFrames;
 
             var frame0 = Mathf.FloorToInt(_currentFrame);
             var frame1 = (frame0 + 1) % _numFrames;
             var t = _currentFrame - frame0;
 
-
             renderer.GetPropertyBlock(_propertyBlock);
-            _propertyBlock.SetInt(_SFrameIndex, frame0);
+            if (_shaderFrameIndex != frame0)
+            {
+                _shaderFrameIndex = frame0;
+                _propertyBlock.SetInt(_SFrameIndex, frame0);
+            }
+
+            Debug.Log("Shader should be: " +
+                      (animationData.verticesInfo.Count * frame0) / animationData.verticesInfo.Count);
+            _propertyBlock.SetInt(_SVertCount, animationData.verticesInfo.Count);
+            _propertyBlock.SetInt(_SFrameCount, _numFrames);
             _propertyBlock.SetFloat(_SInterpolationFactor, t);
             renderer.SetPropertyBlock(_propertyBlock);
-
-            // int boneCount = animationData.boneMatricesPerFrame.Count / _numFrames;
-            // SampleBoneMatricesForFrame(frame0, frame1, boneCount, t);
         }
 
         private static DualQuaternionAnimationData DeserializeAnimationData(string path)
@@ -133,48 +127,28 @@ namespace NRTools.GpuSkinning
         {
             if (_vertexIDBuffer != null) _vertexIDBuffer.Release();
             if (_deltaBuffer != null) _deltaBuffer.Release();
-            if (_boneIndexBuffer != null) _boneIndexBuffer.Release();
-            if (_boneWeightBuffer != null) _boneWeightBuffer.Release();
             if (_boneMatrixBuffer != null) _boneMatrixBuffer.Release();
+            if (_dualQuaternionBuffer != null) _dualQuaternionBuffer.Release();
         }
 
-        private void LoadDeltaData()
+        private void DeserializeDualQuaternionSkinning()
         {
-            _deltaFrames = new Vector3[animationData.frameDeltas.Count][];
-            for (var i = 0; i < animationData.frameDeltas.Count; i++)
-                _deltaFrames[i] = animationData.frameDeltas[i].deltaVertices.ToArray();
-        }
-
-        private void LoadBoneData()
-        {
-            var vertexCount = mesh.vertexCount;
-
-            var boneIndices = new int4[vertexCount];
-            var boneWeights = new float4[vertexCount];
-
-            for (var i = 0; i < vertexCount; i++)
+            animationData = DeserializeAnimationData(path);
+            Debug.Log("delta frame count: " + animationData.frameDeltas.Count);
+            _boneMatrix = new Matrix4x4[animationData.boneMatricesPerFrame.Count * animationData.verticesInfo.Count];
+            var numBones = 9;
+            for (var i = 0; i < animationData.boneMatricesPerFrame.Count; i++)
             {
-                var skinData = animationData.frameDeltas[0].deltaSkinData[i];
-                boneIndices[i] = skinData.boneIndices;
-                boneWeights[i] = skinData.boneWeights;
-            }
-
-            for (int i = 0; i < vertexCount; i++)
-            {
-                float weightSum = boneWeights[i].x + boneWeights[i].y + boneWeights[i].z + boneWeights[i].z;
-                if (Mathf.Abs(weightSum - 1.0f) > 0.01f)
+                var flattenedArray = animationData.boneMatricesPerFrame[i];
+                for (var j = 0; j < numBones; j++)
                 {
-                    Debug.LogWarning($"Bone weights for vertex {i} are not normalized: {weightSum}");
+                    var flat = flattenedArray[j].ToMatrix4x4();
+                    _boneMatrix[i * numBones + j] = flattenedArray[j].ToMatrix4x4();
                 }
             }
 
-            _boneIndexBuffer = new ComputeBuffer(vertexCount, sizeof(int) * 4);
-            _boneIndexBuffer.SetData(boneIndices);
-            _boneWeightBuffer = new ComputeBuffer(vertexCount, sizeof(float) * 4);
-            _boneWeightBuffer.SetData(boneWeights);
-
-            _boneMatrixBuffer = new ComputeBuffer(animationData.boneMatricesPerFrame.Count, sizeof(float) * 16);
-            _boneMatrixBuffer.SetData(animationData.boneMatricesPerFrame);
+            _boneMatrixBuffer = new ComputeBuffer(_boneMatrix.Length, sizeof(float) * 16);
+            _boneMatrixBuffer.SetData(_boneMatrix);
         }
     }
 }

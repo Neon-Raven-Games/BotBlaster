@@ -66,7 +66,7 @@
                 float compensation_coef;
             };
 
-            StructuredBuffer<vertex_info> _Vertices;
+            StructuredBuffer<vertex_info> vertices;
             StructuredBuffer<vertex_info> _BlendResult;
 
             v2f vert(const appdata v, uint id : SV_VertexID)
@@ -75,12 +75,13 @@
                 UNITY_SETUP_INSTANCE_ID(v);
                 UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 
-                float3 modified_vertex = lerp(_Vertices[id].position.xyz, _BlendResult[id].position.xyz, 0.5);
+                float3 modified_vertex = vertices[id].position.xyz;//, _BlendResult[id].position.xyz, 0.5);
 
                 o.position = TransformObjectToHClip(modified_vertex.xyz);
                 o.uv = v.uv;
 
-                const float3 modified_normal = normalize(lerp(_Vertices[id].normal, _BlendResult[id].normal, 0.5)); // Example
+                const float3 modified_normal = vertices[id].normal.xyz;
+                    //normalize(lerp(vertices[id].normal, _BlendResult[id].normal, 0.5)); // Example
                 o.normal = modified_normal;
 
                 return o;
