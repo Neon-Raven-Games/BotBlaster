@@ -10,6 +10,5 @@ public class IdleState : BaseHandCanonState
 
     public override void EnterState()
     {
-        handCannon.animator.SetTrigger(_SRelease);
     }
 }

@@ -59,7 +59,6 @@ MonoBehaviour:
   showDamageNumbers: 1
   enemyType: 0
   knockBackTime: 0.5
-  renderer: {fileID: 741802400700230609}
   deathParticleSystem: {fileID: 4007890294480360152}
   dashingChance: 0.003
   dashSpeed: 32
@@ -99,61 +98,63 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9968aa4bb17c434cb4e583bb5c3c8450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  textureType: 0
+  enemyType: 0
   AtlasData:
-  - textureType: 2
+  - textureType: 0
     enemyType: 0
     elementFlag: 32
     sceneName: 
     UVRect:
       serializedVersion: 2
-      x: 0.7050781
-      y: 0.28173828
-      width: 0.140625
-      height: 0.140625
+      x: 0
+      y: 0
+      width: 0.28125
+      height: 0.28125
     AtlasPage: 0
-  - textureType: 2
+  - textureType: 0
     enemyType: 0
     elementFlag: 2
     sceneName: 
     UVRect:
       serializedVersion: 2
-      x: 0.8461914
-      y: 0.28173828
-      width: 0.140625
-      height: 0.140625
+      x: 0.28173828
+      y: 0
+      width: 0.28125
+      height: 0.28125
     AtlasPage: 0
-  - textureType: 2
+  - textureType: 0
     enemyType: 0
     elementFlag: 8
     sceneName: 
     UVRect:
       serializedVersion: 2
-      x: 0.28173828
-      y: 0.42285156
-      width: 0.140625
-      height: 0.140625
+      x: 0.56347656
+      y: 0
+      width: 0.28125
+      height: 0.28125
     AtlasPage: 0
-  - textureType: 2
+  - textureType: 0
     enemyType: 0
     elementFlag: 4
     sceneName: 
     UVRect:
       serializedVersion: 2
-      x: 0.28173828
-      y: 0.56396484
-      width: 0.140625
-      height: 0.140625
+      x: 0
+      y: 0.28173828
+      width: 0.28125
+      height: 0.28125
     AtlasPage: 0
-  - textureType: 2
+  - textureType: 0
     enemyType: 0
     elementFlag: 16
     sceneName: 
     UVRect:
       serializedVersion: 2
-      x: 0.28173828
-      y: 0.7050781
-      width: 0.140625
-      height: 0.140625
+      x: 0
+      y: 0.56347656
+      width: 0.28125
+      height: 0.28125
     AtlasPage: 0
 --- !u!1001 &255713437343754228
 PrefabInstance:
@@ -379,11 +380,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: be6b7cf8c93497142a2724384f223e32, type: 3}
   m_PrefabInstance: {fileID: 255713437343754228}
   m_PrefabAsset: {fileID: 0}
---- !u!137 &741802400700230609 stripped
-SkinnedMeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 704553162739010597, guid: be6b7cf8c93497142a2724384f223e32, type: 3}
-  m_PrefabInstance: {fileID: 255713437343754228}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1102559292833536677 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: be6b7cf8c93497142a2724384f223e32, type: 3}
@@ -429,6 +425,10 @@ PrefabInstance:
     - target: {fileID: 1572899241069273974, guid: 8d41cd5eaaa0d564581fe8515976b4a6, type: 3}
       propertyPath: m_Layer
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1572899241069273974, guid: 8d41cd5eaaa0d564581fe8515976b4a6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1876129744152778253, guid: 8d41cd5eaaa0d564581fe8515976b4a6, type: 3}
       propertyPath: m_Layer

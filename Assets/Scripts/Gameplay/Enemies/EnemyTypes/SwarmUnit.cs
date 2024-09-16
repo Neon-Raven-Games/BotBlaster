@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using Gameplay.Elements;
-using NRTools.AtlasHelper;
+﻿using NRTools.AtlasHelper;
+using NRTools.GpuSkinning;
 using UnityEngine;
 
 namespace Gameplay.Enemies.EnemyTypes
@@ -11,10 +9,6 @@ namespace Gameplay.Enemies.EnemyTypes
     public class SwarmUnit : MonoBehaviour
     {
         [SerializeField] private GameObject deathParticles;
-        [SerializeField] private Animator animator;
-        [SerializeField] private TextureAnimator textureAnimator;
-        [SerializeField] private List<ElementMaterial> elementMaterials;
-        private Dictionary<ElementFlag, ElementMaterial> _elementMaterials;
         public float speed;
         public ElementFlag element;
         private Transform _swarmCenter;
@@ -28,16 +22,12 @@ namespace Gameplay.Enemies.EnemyTypes
         public Vector3 flockingDirection { get; set; }
         public bool isDiveBombing { get; set; }
         private MeshFilter _meshFilter;
-        private static readonly int _SHit = Animator.StringToHash("Hit");
-        private static readonly int _SAttack = Animator.StringToHash("Attack");
-        private static readonly int _SHitNum = Animator.StringToHash("HitNum");
+        private GpuMeshAnimator _gpuMeshAnimator;
 
         private void Awake()
         {
+            _gpuMeshAnimator = GetComponent<GpuMeshAnimator>();
             deathParticles.transform.parent = null;
-            _elementMaterials = new();
-            foreach (var mat in elementMaterials)
-                _elementMaterials.Add(mat.elementFlag, mat);
         }
 
         public void Initialize(Actor playerComponent, int currentDamage, int currentHealth, ElementFlag elementFlag)
@@ -48,13 +38,9 @@ namespace Gameplay.Enemies.EnemyTypes
             _currentHealth = currentHealth;
             element = elementFlag;
             if (element == ElementFlag.None) return;
-            textureAnimator.SwitchElement(elementFlag, _elementMaterials[elementFlag].characterMaterial);
-            if (!_atlasIndex) _atlasIndex = GetComponent<AtlasIndex>();
-            if (!_atlasIndex) return;
-            var rect = _atlasIndex.GetRect(element, out var page);
-            NRAtlasManager.SetUVAndAtlasPage(rect, page, renderer);
+            _gpuMeshAnimator.UpdateElement(element);
         }
-        [SerializeField] private Renderer renderer;
+        
         private AtlasIndex _atlasIndex;
 
         private void Update()
@@ -70,16 +56,14 @@ namespace Gameplay.Enemies.EnemyTypes
 
         public void DiveBomb(Vector3 playerPosition)
         {
-            animator.SetTrigger(_SAttack);
+            _gpuMeshAnimator.PlayAttackAnimation();
             _isDiveBombing = true;
             _diveBombTarget = playerPosition;
         }
 
         private void SetHitAnimation()
         {
-            var hitAnimation = UnityEngine.Random.Range(0, 3);
-            animator.SetInteger(_SHitNum, hitAnimation);
-            animator.SetTrigger(_SHit);
+            _gpuMeshAnimator.PlayOneShotHitAnimation();
         }
 
         private void OnCollisionEnter(Collision collision)

@@ -19,19 +19,12 @@ public class ShootingState : BaseHandCanonState
     public override void EnterState()
     {
         if (beam || beamObject) return;
-        handCannon.animator.SetTrigger(_SFire);
         handCannon.muzzleFlash.SetActive(false);
         base.EnterState();
-        RequestLaunch();
     }
 
-    public override void ExitState()
-    {
-        base.ExitState();
-        launchRequested = false;
-    }
-
-
+    
+    
     private void RequestLaunch()
     {
         launchRequested = true;
@@ -55,7 +48,6 @@ public class ShootingState : BaseHandCanonState
 
             var ball = ElementPool.GetElement(handCannon.blasterElement, handCannon.barrelTransform.position);
             LaunchDodgeball(ball);
-            handCannon.muzzleFlash.SetActive(true);
             launchRequested = false;
         }
     }
@@ -78,6 +70,7 @@ public class ShootingState : BaseHandCanonState
                 RequestLaunch();
                 fireTime = fireRate;
             }
+
             return;
         }
 
@@ -101,6 +94,9 @@ public class ShootingState : BaseHandCanonState
 
     private void LaunchDodgeball(GameObject dodgeball)
     {
+        handCannon.PlayOneShotAnimation();
+        handCannon.muzzleFlash.SetActive(false);
+        handCannon.muzzleFlash.SetActive(true);
         var rb = dodgeball.GetComponent<Rigidbody>();
         rb.isKinematic = false;
         rb.velocity = Vector3.zero;

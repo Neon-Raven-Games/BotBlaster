@@ -14,12 +14,13 @@ namespace NRTools.AtlasHelper.Editor
         public class AtlasIndexEditor : Editor
         {
             private AtlasIndex atlasIndex;
-            
+
             private void OnEnable()
             {
                 atlasIndex = (AtlasIndex) target;
                 var anim = atlasIndex.gameObject.GetComponent<GpuMeshAnimator>();
                 if (anim) atlasIndex.enemyType = anim.enemyType;
+                else atlasIndex.AtlasData.Clear();
 
                 var AtlasMaster = FindObjectOfType<AtlasMaster>();
                 if (!AtlasMaster)
@@ -31,17 +32,31 @@ namespace NRTools.AtlasHelper.Editor
                 AtlasMaster.AssignInstance(AtlasMaster);
                 atlasIndex.AtlasData.Clear();
 
-                var data = AtlasMaster.atlasData.Where(
-                    x =>
-                        x.textureType == TextureType.Bots &&
-                        x.enemyType == atlasIndex.enemyType).ToList();
-                atlasIndex.AtlasData = data;
+                if (atlasIndex.textureType == TextureType.Bots)
+                {
+                    var data = AtlasMaster.atlasData.Where(
+                        x =>
+                            x.textureType == TextureType.Bots &&
+                            x.enemyType == atlasIndex.enemyType).ToList();
+                    atlasIndex.textureType = TextureType.Bots;
+                    atlasIndex.AtlasData = data;
+                    var rect = AtlasMaster.GetRect(atlasIndex.enemyType, ElementFlag.Electricity, out var page);
+                    var rend = atlasIndex.GetComponent<Renderer>();
+                    if (!rend) rend = atlasIndex.GetComponentInChildren<Renderer>();
+                    if (rend) SetUVAndAtlasPage(rect, page, rend);
+                }
+                else
+                {
+                    var data = AtlasMaster.atlasData.Where(
+                        x =>
+                            x.textureType == atlasIndex.textureType).ToList();
 
-
-                var rect = AtlasMaster.GetRect(atlasIndex.enemyType, ElementFlag.Electricity, out var page);
-                var rend = atlasIndex.GetComponent<Renderer>();
-                if (!rend) rend = atlasIndex.GetComponentInChildren<Renderer>();
-                if (rend) SetUVAndAtlasPage(rect, page, rend);
+                    atlasIndex.AtlasData = data;
+                    var rect = AtlasMaster.GetUVRect(atlasIndex.textureType, ElementFlag.Electricity, out var page);
+                    var rend = atlasIndex.GetComponent<Renderer>();
+                    if (!rend) rend = atlasIndex.GetComponentInChildren<Renderer>();
+                    if (rend) SetUVAndAtlasPage(rect, page, rend);
+                }
             }
 
             public override void OnInspectorGUI()
@@ -49,7 +64,10 @@ namespace NRTools.AtlasHelper.Editor
                 serializedObject.Update();
 
                 // can we make enemy type appear in the inspector?
-                atlasIndex.enemyType = (EnemyType) EditorGUILayout.EnumPopup("Enemy Type", atlasIndex.enemyType);
+                atlasIndex.textureType = (TextureType) 
+                    EditorGUILayout.EnumPopup("Texture Type", atlasIndex.textureType);
+                if (atlasIndex.textureType == TextureType.Bots)
+                    atlasIndex.enemyType = (EnemyType) EditorGUILayout.EnumPopup("Enemy Type", atlasIndex.enemyType);
 
                 // Display basic information about the AtlasIndex
                 EditorGUILayout.LabelField("Atlas Index", EditorStyles.boldLabel);

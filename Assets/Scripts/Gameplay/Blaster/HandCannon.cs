@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Gameplay.Enemies;
 using NRTools.AtlasHelper;
+using NRTools.GpuSkinning;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Util;
@@ -8,14 +9,11 @@ using Util;
 public class HandCannon : MonoBehaviour
 {
     public ElementFlag blasterElement;
-    public List<BlasterElementMaterial> blasterElementMaterials;
-    [SerializeField] private SkinnedMeshRenderer blasterRenderer;
-    private Dictionary<ElementFlag, Material> _elementMaterials;
     private ElementFlag _previousElement;
     public AudioSource audioSource;
+    private GpuMeshAnimator _gpuMeshAnimator;
     [SerializeField] private InputActionAsset actionAsset;
     public Transform barrelTransform;
-    public Animator animator;
 
     [Header("Shooting Settings")] public GameObject muzzleFlash;
     public float launchForce = 20f;
@@ -29,32 +27,27 @@ public class HandCannon : MonoBehaviour
 
     private void Start()
     {
+        _gpuMeshAnimator = GetComponent<GpuMeshAnimator>();
         _states = new Dictionary<CannonState, BaseHandCanonState>
         {
             {CannonState.Shooting, new ShootingState(this)},
             {CannonState.Idle, new IdleState(this)}
         };
 
-        _elementMaterials = new Dictionary<ElementFlag, Material>();
-        foreach (var elementMaterial in blasterElementMaterials)
-            _elementMaterials.Add(elementMaterial.elementFlag, elementMaterial.material);
-
         SetBlasterMaterial();
         _currentState = _states[CannonState.Idle];
         _currentState.EnterState();
     }
 
+    public void PlayOneShotAnimation()
+    {
+        _gpuMeshAnimator.PlayOneShotHitAnimation();
+    }
+    
     private void SetBlasterMaterial()
     {
         if (soloCannon) return;
-        var index = GetComponent<AtlasIndex>();
-        var atlasData = index.AtlasData.Find(data => data.elementFlag == blasterElement);
-        if (atlasData != null)
-        {
-            var uvRect = atlasData.UVRect;
-            NRAtlasManager.SetUVAndAtlasPage(uvRect, 0, blasterRenderer);
-        }
-        // blasterRenderer.material = _elementMaterials[blasterElement];
+        _gpuMeshAnimator.UpdateElement(blasterElement);
     }
 
     private HandSide _handSide;
@@ -85,7 +78,7 @@ public class HandCannon : MonoBehaviour
         ChangeState(CannonState.Shooting);
     }
 
-    internal void TriggerReleasedAction(InputAction.CallbackContext obj)
+    public void TriggerReleasedAction(InputAction.CallbackContext obj)
     {
         _currentState?.FireReleaseAction();
     }

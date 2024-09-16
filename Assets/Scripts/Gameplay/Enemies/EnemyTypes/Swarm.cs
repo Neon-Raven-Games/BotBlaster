@@ -37,10 +37,11 @@ namespace Gameplay.Enemies.EnemyTypes
             if (!_initialized)
             {
                 _initialized = true;
-                InitializeSwarm(20);
                 return;
             }
 
+            if (_swarmUnits.Count == 0)
+                InitializeSwarm(swarmCount);
             SetSwarmActive(swarmCount);
         }
 

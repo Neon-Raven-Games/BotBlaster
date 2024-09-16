@@ -12,10 +12,12 @@ GameObject:
   - component: {fileID: 2477935615725513491}
   - component: {fileID: 8388120553515333759}
   - component: {fileID: 4368355744556676052}
+  - component: {fileID: 538743980688748038}
   - component: {fileID: -2314522952759843401}
+  - component: {fileID: 243064723461950218}
   m_Layer: 8
   m_Name: Grunt_Bot
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -28,11 +30,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2626754325937067992}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 7.332303, y: 3.3017879, z: 29.494778}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 2065162476593403738}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2477935615725513491
@@ -97,11 +100,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6406ad43ec8d4172b59cec46ad321a7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  textureType: 0
   enemyType: 0
   element: 32
   mesh: {fileID: 7939091802726959605, guid: be6b7cf8c93497142a2724384f223e32, type: 3}
   animationSpeed: 5
   renderer: {fileID: 8388120553515333759}
+--- !u!114 &538743980688748038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2626754325937067992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38fd7a02308f4360b27578c6199f52c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  element: 0
+  baseHealth: 0
+  baseDamage: 0
+  baseSpeed: 0
+  baseAttackRange: 0
+  baseAttackCoolDown: 0
+  currentHealth: 0
+  debuffs: 0
+  showDamageNumbers: 1
+  enemyType: 0
+  knockBackTime: 0.5
+  deathParticleSystem: {fileID: 7546733821228775143}
+  dashingChance: 0.003
+  dashSpeed: 32
+  attackDuration: 0.4
+  dashDuration: 4
+  rotationSpeed: 16
 --- !u!114 &-2314522952759843401
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,6 +147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9968aa4bb17c434cb4e583bb5c3c8450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  textureType: 2
   enemyType: 0
   AtlasData:
   - textureType: 2
@@ -122,61 +156,6 @@ MonoBehaviour:
     sceneName: 
     UVRect:
       serializedVersion: 2
-      x: 0
-      y: 0
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 2
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.28173828
-      y: 0
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 8
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.56347656
-      y: 0
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 4
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0
-      y: 0.28173828
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 16
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0
-      y: 0.56347656
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 32
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
       x: 0.7050781
       y: 0.28173828
       width: 0.140625
@@ -226,553 +205,123 @@ MonoBehaviour:
       width: 0.140625
       height: 0.140625
     AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 32
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0
-      y: 0
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 2
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.28173828
-      y: 0
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 8
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.56347656
-      y: 0
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 4
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0
-      y: 0.28173828
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 16
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0
-      y: 0.56347656
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 32
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.7050781
-      y: 0.28173828
-      width: 0.140625
-      height: 0.140625
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 2
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.8461914
-      y: 0.28173828
-      width: 0.140625
-      height: 0.140625
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 8
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.28173828
-      y: 0.42285156
-      width: 0.140625
-      height: 0.140625
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 4
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.28173828
-      y: 0.56396484
-      width: 0.140625
-      height: 0.140625
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 16
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.28173828
-      y: 0.7050781
-      width: 0.140625
-      height: 0.140625
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 32
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0
-      y: 0
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 2
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.28173828
-      y: 0
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 8
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.56347656
-      y: 0
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 4
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0
-      y: 0.28173828
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 16
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0
-      y: 0.56347656
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 32
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.7050781
-      y: 0.28173828
-      width: 0.140625
-      height: 0.140625
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 2
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.8461914
-      y: 0.28173828
-      width: 0.140625
-      height: 0.140625
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 8
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.28173828
-      y: 0.42285156
-      width: 0.140625
-      height: 0.140625
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 4
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.28173828
-      y: 0.56396484
-      width: 0.140625
-      height: 0.140625
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 16
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.28173828
-      y: 0.7050781
-      width: 0.140625
-      height: 0.140625
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 32
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0
-      y: 0
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 2
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.28173828
-      y: 0
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 8
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.56347656
-      y: 0
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 4
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0
-      y: 0.28173828
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 16
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0
-      y: 0.56347656
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 32
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.7050781
-      y: 0.28173828
-      width: 0.140625
-      height: 0.140625
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 2
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.8461914
-      y: 0.28173828
-      width: 0.140625
-      height: 0.140625
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 8
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.28173828
-      y: 0.42285156
-      width: 0.140625
-      height: 0.140625
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 4
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.28173828
-      y: 0.56396484
-      width: 0.140625
-      height: 0.140625
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 16
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.28173828
-      y: 0.7050781
-      width: 0.140625
-      height: 0.140625
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 32
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0
-      y: 0
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 2
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.28173828
-      y: 0
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 8
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.56347656
-      y: 0
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 4
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0
-      y: 0.28173828
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 16
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0
-      y: 0.56347656
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 32
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.7050781
-      y: 0.28173828
-      width: 0.140625
-      height: 0.140625
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 2
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.8461914
-      y: 0.28173828
-      width: 0.140625
-      height: 0.140625
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 8
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.28173828
-      y: 0.42285156
-      width: 0.140625
-      height: 0.140625
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 4
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.28173828
-      y: 0.56396484
-      width: 0.140625
-      height: 0.140625
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 16
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.28173828
-      y: 0.7050781
-      width: 0.140625
-      height: 0.140625
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 32
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0
-      y: 0
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 2
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.28173828
-      y: 0
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 8
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.56347656
-      y: 0
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 4
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0
-      y: 0.28173828
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 16
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0
-      y: 0.56347656
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 32
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.7050781
-      y: 0.28173828
-      width: 0.140625
-      height: 0.140625
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 2
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.8461914
-      y: 0.28173828
-      width: 0.140625
-      height: 0.140625
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 8
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.28173828
-      y: 0.42285156
-      width: 0.140625
-      height: 0.140625
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 4
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.28173828
-      y: 0.56396484
-      width: 0.140625
-      height: 0.140625
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 0
-    elementFlag: 16
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.28173828
-      y: 0.7050781
-      width: 0.140625
-      height: 0.140625
-    AtlasPage: 0
+--- !u!65 &243064723461950218
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2626754325937067992}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 1
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 4.8239846, y: 9.531905, z: 5.3169813}
+  m_Center: {x: 0, y: 0.845724, z: -0.8270005}
+--- !u!1001 &9038563836053820817
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2999764819144009622}
+    m_Modifications:
+    - target: {fileID: 772540025786753001, guid: 8d41cd5eaaa0d564581fe8515976b4a6, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1572899241069273974, guid: 8d41cd5eaaa0d564581fe8515976b4a6, type: 3}
+      propertyPath: m_Name
+      value: Vanishing PFX
+      objectReference: {fileID: 0}
+    - target: {fileID: 1572899241069273974, guid: 8d41cd5eaaa0d564581fe8515976b4a6, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1876129744152778253, guid: 8d41cd5eaaa0d564581fe8515976b4a6, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2569613099503268471, guid: 8d41cd5eaaa0d564581fe8515976b4a6, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6958090916472112613, guid: 8d41cd5eaaa0d564581fe8515976b4a6, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7045744998599279307, guid: 8d41cd5eaaa0d564581fe8515976b4a6, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7045744998599279307, guid: 8d41cd5eaaa0d564581fe8515976b4a6, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7045744998599279307, guid: 8d41cd5eaaa0d564581fe8515976b4a6, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7045744998599279307, guid: 8d41cd5eaaa0d564581fe8515976b4a6, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7045744998599279307, guid: 8d41cd5eaaa0d564581fe8515976b4a6, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7045744998599279307, guid: 8d41cd5eaaa0d564581fe8515976b4a6, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7045744998599279307, guid: 8d41cd5eaaa0d564581fe8515976b4a6, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7045744998599279307, guid: 8d41cd5eaaa0d564581fe8515976b4a6, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7045744998599279307, guid: 8d41cd5eaaa0d564581fe8515976b4a6, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7045744998599279307, guid: 8d41cd5eaaa0d564581fe8515976b4a6, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7045744998599279307, guid: 8d41cd5eaaa0d564581fe8515976b4a6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7045744998599279307, guid: 8d41cd5eaaa0d564581fe8515976b4a6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7045744998599279307, guid: 8d41cd5eaaa0d564581fe8515976b4a6, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 8d41cd5eaaa0d564581fe8515976b4a6, type: 3}
+--- !u!4 &2065162476593403738 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7045744998599279307, guid: 8d41cd5eaaa0d564581fe8515976b4a6, type: 3}
+  m_PrefabInstance: {fileID: 9038563836053820817}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7546733821228775143 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1572899241069273974, guid: 8d41cd5eaaa0d564581fe8515976b4a6, type: 3}
+  m_PrefabInstance: {fileID: 9038563836053820817}
+  m_PrefabAsset: {fileID: 0}

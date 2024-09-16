@@ -13,6 +13,6 @@ public class CannonEditor : Editor
         if (GUILayout.Button("Fire Action"))
             cannon.TriggerPerformedAction(default);
         if (GUILayout.Button("Fire Release Action"))
-            cannon.TriggerPerformedAction(default);
+            cannon.TriggerReleasedAction(default);
     }
 }

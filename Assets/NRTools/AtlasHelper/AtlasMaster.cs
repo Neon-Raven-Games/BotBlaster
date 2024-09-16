@@ -63,6 +63,22 @@ namespace NRTools.AtlasHelper
         }
 
 
+        public static Rect GetUVRect(TextureType type, ElementFlag element, out int page)
+        {
+            page = 0;
+            if (EnemyAtlasLookup == null || EnemyAtlasLookup.Count == 0) _instance.Awake();
+            foreach (var data in _instance.atlasData)
+            {
+                if (data.textureType == type && data.elementFlag == element)
+                {
+                    page = data.AtlasPage;
+                    return data.UVRect;
+                }
+            }
+
+            return Rect.zero;
+        }
+        
         public static Rect GetRect(EnemyType enemyType, ElementFlag element, out int page)
         {
             page = 0;

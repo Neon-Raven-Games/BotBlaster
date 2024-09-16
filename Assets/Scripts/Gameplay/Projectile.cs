@@ -5,7 +5,6 @@ namespace Gameplay
 {
     public class Projectile : MonoBehaviour
     {
-        [SerializeField] private GameObject muzzleFlash;
         public bool isPlayerProjectile;
         public ElementFlag elementFlag;
         public float speed;
@@ -16,22 +15,17 @@ namespace Gameplay
         private void Awake()
         {
             impact.transform.parent = null;
-            muzzleFlash.transform.parent = null;
         }
 
         private void OnEnable()
         {
             impact.SetActive(false);
-            muzzleFlash.transform.position = transform.position;
-            muzzleFlash.transform.rotation = transform.rotation;
-            muzzleFlash.SetActive(true);
         }
 
         private void OnDisable()
         {
             isPlayerProjectile = false;
             effectiveDamage = 0;
-            if (muzzleFlash) muzzleFlash.SetActive(false);
         }
 
         private void Update()

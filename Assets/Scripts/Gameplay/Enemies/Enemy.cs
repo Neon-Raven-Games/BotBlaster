@@ -1,20 +1,20 @@
 using System.Collections;
 using Gameplay.Enemies;
 using NRTools.AtlasHelper;
+using NRTools.GpuSkinning;
 using UnityEngine;
 
 public class Enemy : Actor
 {
     public EnemyType enemyType;
     [SerializeField] private float knockBackTime = 0.5f;
-    [SerializeField] private Renderer renderer;
     private bool _knockingBack;
     protected float lastAttackTime;
     
     protected Rigidbody rigidbody;
     protected Transform player;
     protected Actor playerComponent;
-    private AtlasIndex _atlasIndex;
+    protected GpuMeshAnimator meshAnimator;
 
     protected virtual void OnEnable()
     {
@@ -32,11 +32,10 @@ public class Enemy : Actor
             deathParticleSystem.transform.parent = transform;
         }
 
-        if(!_atlasIndex) _atlasIndex = GetComponent<AtlasIndex>();
-        if (!_atlasIndex || !renderer) return;
-        
-        var rect = _atlasIndex.GetRect(element, out var page);
-        NRAtlasManager.SetUVAndAtlasPage(rect, page, renderer);
+        if(!meshAnimator) meshAnimator = GetComponent<GpuMeshAnimator>();
+        if (!meshAnimator) return;
+        meshAnimator.enemyType = enemyType;
+        meshAnimator.UpdateElement(element);
     }
 
     public virtual void ApplyBalance(int waveNumber)
@@ -77,7 +76,6 @@ public class Enemy : Actor
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
     }
 
-
     public void Initialize(EnemyData enemyData)
     {
         base.Initialize(enemyData);
@@ -89,7 +87,6 @@ public class Enemy : Actor
     {
         var timeSinceLastAttack = Time.time - lastAttackTime;
 
-        // Apply attack speed boost if Wind element is active
         var adjustedAttackCooldown = currentAttackCoolDown;
         if ((element & ElementFlag.Wind) != 0)
         {
@@ -143,33 +140,9 @@ public class Enemy : Actor
         }
         else
         {
-            if (!_knockingBack)
-            {
-                _knockingBack = true;
-                KnockBack(hitDirection);
-            }
-
+            meshAnimator.PlayOneShotHitAnimation();
             currentHealth -= damage;
         }
-    }
-
-    // this needs to work for both flying and ground enemies
-    private IEnumerator KnockBackTimer()
-    {
-        knockBackTime = 0.5f;
-        while (knockBackTime > 0)
-        {
-            knockBackTime -= Time.deltaTime;
-            yield return null;
-        }
-
-        _knockingBack = false;
-    }
-
-    private void KnockBack(Vector3 hitDirection)
-    {
-        // todo, update knock back update edition
-        // StartCoroutine(KnockBackTimer());
     }
 
     private bool _dead;

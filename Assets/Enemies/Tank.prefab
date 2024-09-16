@@ -131,7 +131,6 @@ MonoBehaviour:
   showDamageNumbers: 1
   enemyType: 3
   knockBackTime: 0
-  renderer: {fileID: 4691266694475113247}
   deathParticleSystem: {fileID: 1876355520819786475}
   dashingChance: 0.003
   dashSpeed: 20
@@ -151,62 +150,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9968aa4bb17c434cb4e583bb5c3c8450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AtlasData:
-  - textureType: 2
-    enemyType: 3
-    elementFlag: 32
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.42285156
-      y: 0.56396484
-      width: 0.140625
-      height: 0.140625
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 3
-    elementFlag: 2
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.42285156
-      y: 0.7050781
-      width: 0.140625
-      height: 0.140625
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 3
-    elementFlag: 8
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.42285156
-      y: 0.8461914
-      width: 0.140625
-      height: 0.140625
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 3
-    elementFlag: 4
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.56396484
-      y: 0.56396484
-      width: 0.140625
-      height: 0.140625
-    AtlasPage: 0
-  - textureType: 2
-    enemyType: 3
-    elementFlag: 16
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.7050781
-      y: 0.56396484
-      width: 0.140625
-      height: 0.140625
-    AtlasPage: 0
+  textureType: 0
+  enemyType: 0
+  AtlasData: []
 --- !u!1001 &1143396302527402397
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1,0 +1,74 @@
+﻿using System.Collections.Generic;
+using UnityEngine;
+
+namespace NRTools.GpuSkinning
+{
+    public class GlassCannonAnimator : GpuMeshAnimator
+    {
+        private string botName = "GlassCannon";
+        private static readonly List<string> _SAnimationNames = new()
+        {
+            "GCannon_Dash_L",
+            "GCannon_Dash_R",
+            "GCannon_Fly_L",
+            "GCannon_Fly_R",
+            "GCannon_Hit_L",
+            "GCannon_Hit_R",
+            "GCannon_Idle",
+            "GCannon_Shoot"
+        };
+        
+        private static readonly Dictionary<GlassCannonAnimation, string> animationLookup = new()
+        {
+            {GlassCannonAnimation.DashLeft, _SAnimationNames[0]},
+            {GlassCannonAnimation.DashRight, _SAnimationNames[1]},
+            {GlassCannonAnimation.FlyLeft, _SAnimationNames[2]},
+            {GlassCannonAnimation.FlyRight, _SAnimationNames[3]},
+            {GlassCannonAnimation.HitLeft, _SAnimationNames[4]},
+            {GlassCannonAnimation.HitRight, _SAnimationNames[5]},
+            {GlassCannonAnimation.Idle, _SAnimationNames[6]},
+            {GlassCannonAnimation.Shoot, _SAnimationNames[7]}
+        };
+
+        private GlassCannonAnimation _currentAnimation;
+        private GlassCannonAnimation _nextAnimation;
+        public GlassCannonAnimation AnimationClip
+        {
+            get => _currentAnimation;
+            set
+            {
+                _currentAnimation = value;
+                SetAnimation(FetchAnimationData(value));
+            }
+        }
+        public override void PlayAttackAnimation()
+        {
+            _nextAnimation = GlassCannonAnimation.Idle;
+            AnimationClip = GlassCannonAnimation.Shoot;
+        }
+        public override void PlayOneShotHitAnimation()
+        {
+            base.PlayOneShotHitAnimation();
+            _nextAnimation = GlassCannonAnimation.Idle;
+            var hitIndex = Random.Range(0, 2);
+            var hitAnimation = GlassCannonAnimation.HitLeft + hitIndex;
+            AnimationClip = hitAnimation;
+        } 
+        
+        protected override void TransitionToNextAnimation()
+        {
+            base.TransitionToNextAnimation();
+            AnimationClip = _nextAnimation;
+        }
+        protected AnimationData FetchAnimationData(GlassCannonAnimation animationData)
+        {
+            return AnimationManager.GetAnimationData(botName, animationLookup[animationData]);
+        }
+        
+        protected override AnimationData InitialAnimation()
+        {
+            return FetchAnimationData(GlassCannonAnimation.Idle);
+        }
+
+    }
+}

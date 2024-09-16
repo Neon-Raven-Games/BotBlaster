@@ -49,19 +49,17 @@ public class AtlasFolder : EditorWindow
 
             var deserializedData = DeserializeAtlasData();
 
+            var index = 0;
+            foreach (var data in deserializedData) atlasDataArray[index++] = ConvertToSO(data);
+            
             for (var i = 0; i < textureGUIDs.Length; i++)
             {
                 var guid = textureGUIDs[i];
                 var path = AssetDatabase.GUIDToAssetPath(guid);
                 var asset = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
                 if (asset == null) continue;
-
-                // Use deserialized data if available
-                if (deserializedData != null && deserializedData.Count > i && deserializedData[i] != null)
-                {
-                    atlasDataArray[i] = ConvertToSO(deserializedData[i]);
-                }
-
+                if (atlasDataArray[i] == null) atlasDataArray[i] = CreateInstance<AtlasData>();
+                
                 if (path.Contains("Bots"))
                 {
                     atlasDataArray[i].textureType = TextureType.Bots;
@@ -73,6 +71,7 @@ public class AtlasFolder : EditorWindow
                 }
                 else if (path.Contains("Blaster"))
                 {
+                    Debug.Log("Blaster found!");
                     atlasDataArray[i].textureType = TextureType.Blaster;
                 }
                 else if (path.Contains("Environment"))
@@ -146,6 +145,7 @@ public class AtlasFolder : EditorWindow
                 while (iterator.NextVisible(false))
                     EditorGUILayout.PropertyField(iterator, true);
 
+                if (serializedAtlasDataArray == null) continue;
                 serializedAtlasDataArray[j].ApplyModifiedProperties();
 
                 GUILayout.EndVertical();
@@ -192,6 +192,7 @@ public class AtlasFolder : EditorWindow
         {
             var idx = atlasDataArray[i];
             atlasDataArray[i].UVRect = atlasUVRects[idx.AtlasPage][i];
+            Debug.Log(idx.textureType);
             var runtimeData = new AtlasRuntimeData
             {
                 UVRect = idx.UVRect,
@@ -210,14 +211,14 @@ public class AtlasFolder : EditorWindow
 
     private List<AtlasRuntimeData> DeserializeAtlasData()
     {
-        var AtlasMaster = FindObjectOfType<AtlasMaster>();
-        if (!AtlasMaster)
+        var atlasMaster = FindObjectOfType<AtlasMaster>();
+        if (!atlasMaster)
         {
             Debug.LogError("No AtlasMaster found in scene.");
             return null;
         }
 
-        return AtlasMaster.atlasData;
+        return atlasMaster.atlasData;
     }
 
     private const int MaxAtlasSize = 4096; // Example maximum size, check your hardware's max size

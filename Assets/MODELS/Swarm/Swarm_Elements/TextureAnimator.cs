@@ -13,13 +13,9 @@ public class ElementAnimatedTextures
 
 public class TextureAnimator : MonoBehaviour
 {
-    [SerializeField] private Material material;
     [SerializeField] private List<Texture> textures;
     [SerializeField] private float frameRate = 0.1f;
-    [SerializeField] private List<ElementAnimatedTextures> elementAnimatedTextures;
-    private static Dictionary<ElementFlag, List<Texture>> _elementAnimatedTextures;
     
-    // if we need to edit more properties, lets make 2 of these to avoid the conflict
     private MaterialPropertyBlock _propertyBlock;
    
     private int _currentFrame;
@@ -33,33 +29,8 @@ public class TextureAnimator : MonoBehaviour
         _propertyBlock = new MaterialPropertyBlock();
         _renderer = GetComponent<Renderer>();
         _playing = false;
-        if (_elementAnimatedTextures == null)
-        {
-            _elementAnimatedTextures = new();
-            lock (_elementAnimatedTextures)
-            {
-                foreach (var tex in elementAnimatedTextures)
-                {
-                    // can we convert the sprites to a texture?
-                    var textures = new List<Texture>();
-                    foreach (var sprite in tex.textures)
-                    {
-                        var texture = new Texture2D((int) sprite.rect.width, (int) sprite.rect.height);
-                        var pixels = sprite.texture.GetPixels((int) sprite.rect.x, (int) sprite.rect.y,
-                            (int) sprite.rect.width, (int) sprite.rect.height);
-                        texture.SetPixels(pixels);
-                        texture.Apply();
-                        textures.Add(texture);
-                    }
-
-                    _elementAnimatedTextures.Add(tex.elementFlag, textures);
-                }
-            }
-        }
-
-
-        textures = _elementAnimatedTextures[ElementFlag.Fire];
-        material.mainTexture = textures[0];
+        _renderer.GetPropertyBlock(_propertyBlock);
+        _propertyBlock.SetTexture(_SMainTex, textures[0]);
         _playing = true;
     }
 
@@ -76,15 +47,9 @@ public class TextureAnimator : MonoBehaviour
     public void SwitchElement(ElementFlag element, Material characterMaterial)
     {
         _playing = false;
-        textures = _elementAnimatedTextures[element];
-       
-        _renderer.GetPropertyBlock(_propertyBlock, 0); 
-        _propertyBlock.SetTexture(_SMainTex, characterMaterial.mainTexture);
-        _renderer.SetPropertyBlock(_propertyBlock, 0);
-        
-        _renderer.GetPropertyBlock(_propertyBlock, 1); 
+        _renderer.GetPropertyBlock(_propertyBlock); 
         _propertyBlock.SetTexture(_SMainTex, textures[_currentFrame]);
-        _renderer.SetPropertyBlock(_propertyBlock, 1);
+        _renderer.SetPropertyBlock(_propertyBlock);
         _currentFrame = 0;
         _timeSinceLastFrame = 0;
         _playing = true;
@@ -98,8 +63,8 @@ public class TextureAnimator : MonoBehaviour
 
         _timeSinceLastFrame = 0;
         _currentFrame = (_currentFrame + 1) % textures.Count;
-        _renderer.GetPropertyBlock(_propertyBlock, 1);  // Assuming the second material
+        _renderer.GetPropertyBlock(_propertyBlock);  // Assuming the second material
         _propertyBlock.SetTexture(_SMainTex, textures[_currentFrame]);
-        _renderer.SetPropertyBlock(_propertyBlock, 1);
+        _renderer.SetPropertyBlock(_propertyBlock);
     }
 }

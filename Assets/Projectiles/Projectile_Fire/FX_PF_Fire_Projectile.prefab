@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 94518915572263057}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.004, y: 0, z: -0.014}
   m_LocalScale: {x: 0.18114614, y: 0.18114614, z: 0.18114614}
   m_ConstrainProportionsScale: 1
@@ -34,7 +34,7 @@ Transform:
   - {fileID: 6254391095490258303}
   - {fileID: 1551864823145513106}
   m_Father: {fileID: 1597112295188672552}
-  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!198 &8692308585834663679
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -501,7 +501,7 @@ ParticleSystem:
     startRotationY:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0
+      scalar: 0.9190904
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -1247,7 +1247,7 @@ ParticleSystem:
     x:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 6.283185
+      scalar: 0
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -1353,7 +1353,7 @@ ParticleSystem:
     curve:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0
+      scalar: 6.283185
       minScalar: 0.7853982
       maxCurve:
         serializedVersion: 2
@@ -39001,7 +39001,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73e8c5a68e12402abcf7c8ca5f562aa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  muzzleFlash: {fileID: 1084992669401442576}
   isPlayerProjectile: 0
   elementFlag: 2
   speed: 10
@@ -82930,7 +82929,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7673062611469260750, guid: aaa82e4fe272f3e4dbdace95dc603176, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 10
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7673062611469260750, guid: aaa82e4fe272f3e4dbdace95dc603176, type: 3}
       propertyPath: m_LocalPosition.y
@@ -83229,7 +83228,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8403784940038170347, guid: 504d480a1eb5fd343bf980e6b4f1c9e6, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9005486215180007517, guid: 504d480a1eb5fd343bf980e6b4f1c9e6, type: 3}
       propertyPath: m_Layer
@@ -83244,11 +83243,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 504d480a1eb5fd343bf980e6b4f1c9e6, type: 3}
---- !u!1 &1084992669401442576 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8403784940038170347, guid: 504d480a1eb5fd343bf980e6b4f1c9e6, type: 3}
-  m_PrefabInstance: {fileID: 8912226692233416699}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5736167323358863615 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3761740711621422852, guid: 504d480a1eb5fd343bf980e6b4f1c9e6, type: 3}

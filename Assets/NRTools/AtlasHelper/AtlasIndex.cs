@@ -30,24 +30,47 @@ namespace NRTools.AtlasHelper
 {
     public class AtlasIndex : MonoBehaviour
     {
+        public TextureType textureType;
         public EnemyType enemyType;
-        public List<AtlasRuntimeData> AtlasData;
+        public List<AtlasRuntimeData> AtlasData = new();
 
         public Rect GetRect(ElementFlag element, out int page)
         {
             page = 0;
-            
+
             foreach (var data in AtlasData)
             {
-                if (enemyType == data.enemyType && data.elementFlag == element)
+                if (textureType == TextureType.Bots)
                 {
-                    page = data.AtlasPage;
-                    return data.UVRect;
+                    if (enemyType == data.enemyType && data.elementFlag == element)
+                    {
+                        page = data.AtlasPage;
+                        return data.UVRect;
+                    }
+                }
+
+                if (textureType is TextureType.Blaster or TextureType.BlasterCombined)
+                {
+                    if (data.elementFlag == element)
+                    {
+                        page = data.AtlasPage;
+                        return data.UVRect;
+                    }
                 }
             }
-            var rect = AtlasMaster.GetRect(enemyType, element, out var pgNum);
-            page = pgNum;
-            return rect;
+
+            if (textureType == TextureType.Bots)
+            {
+                var rect = AtlasMaster.GetRect(enemyType, element, out var pgNum);
+                page = pgNum;
+                return rect;
+            }
+            else
+            {
+                var rect = AtlasMaster.GetUVRect(textureType, element, out var pgNum);
+                page = pgNum;
+                return rect;
+            }
         }
     }
 }

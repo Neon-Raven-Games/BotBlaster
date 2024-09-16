@@ -5068,8 +5068,16 @@ PrefabInstance:
       value: Electricity_Projectile
       objectReference: {fileID: 0}
     - target: {fileID: 503841571413625508, guid: 8f3e542f0bf8ac84f9ef0d05f3057faa, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 503841571413625508, guid: 8f3e542f0bf8ac84f9ef0d05f3057faa, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 503841571413625508, guid: 8f3e542f0bf8ac84f9ef0d05f3057faa, type: 3}
+      propertyPath: m_TagString
+      value: Projectile
       objectReference: {fileID: 0}
     - target: {fileID: 1740949744797608658, guid: 8f3e542f0bf8ac84f9ef0d05f3057faa, type: 3}
       propertyPath: m_LocalPosition.x

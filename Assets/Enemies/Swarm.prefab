@@ -107,11 +107,9 @@ MonoBehaviour:
   debuffs: 0
   showDamageNumbers: 1
   enemyType: 1
-  knockBackForce: {x: 0, y: 0}
   knockBackTime: 0.5
-  minWaveSpawn: 0
   deathParticleSystem: {fileID: 245488990203132763}
-  swarmUnitPrefab: {fileID: 5811023757391740831, guid: edab8d31847aafe43a9b9e00632cd91c, type: 3}
+  swarmUnitPrefab: {fileID: 297419962382045597, guid: 340e76c2773e7fc479e227edd7b58655, type: 3}
   swarmCount: 4
   circleRadius: 20
   diveBombPercentage: 0.2

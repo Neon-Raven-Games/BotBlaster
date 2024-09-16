@@ -25,6 +25,7 @@ namespace Gameplay.Enemies.EnemyTypes
         {
             if (_attacking || _dashing) return;
             _attacking = true;
+            meshAnimator.PlayAttackAnimation();
             StartCoroutine(AttackRoutine());
         }
 

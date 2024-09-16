@@ -7,8 +7,6 @@ public class VRHand : MonoBehaviour
 {
     public HandSide handSide;
     [SerializeField] private InputActionAsset actionAsset;
-    [SerializeField] private VRUILaserSetup uiLaserSetup;
-    [SerializeField] private BlasterSelectUI selectUI;
     [SerializeField] private float uiSpawnDistance = 1f;   
     private HapticImpulsePlayer _impulsePlayer;
     private InputAction _blasterSelect;
@@ -48,17 +46,17 @@ public class VRHand : MonoBehaviour
     private void FinalizeChangeBlaster()
     {
         _handCannon.FinalizeElementChange();
-        selectUI.gameObject.SetActive(false);
-        uiLaserSetup.gameObject.SetActive(false);
+        // selectUI.gameObject.SetActive(false);
+        // uiLaserSetup.gameObject.SetActive(false);
         // change the handside blaster if valid 
     }
 
     private void InitializeChangeBlaster()
     {
         _handCannon.InitializeElementChange();
-        uiLaserSetup.gameObject.SetActive(true);
-        selectUI.transform.position = transform.position + transform.forward * uiSpawnDistance;
-        selectUI.transform.rotation = Quaternion.Euler(0, selectUI.transform.rotation.eulerAngles.y, 0);
-        selectUI.gameObject.SetActive(true);
+        // uiLaserSetup.gameObject.SetActive(true);
+        // selectUI.transform.position = transform.position + transform.forward * uiSpawnDistance;
+        // selectUI.transform.rotation = Quaternion.Euler(0, selectUI.transform.rotation.eulerAngles.y, 0);
+        // selectUI.gameObject.SetActive(true);
     }
 }
