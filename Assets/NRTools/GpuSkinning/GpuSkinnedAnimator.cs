@@ -1,15 +1,10 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Newtonsoft.Json;
-using NRTools.GpuSkinning.Util;
-using UnityEngine;
-using UnityEngine.Serialization;
+﻿using UnityEngine;
 
 namespace NRTools.GpuSkinning
 {
     public class GpuSkinnedAnimator : MonoBehaviour
     {
+        /*
         private static readonly int _SFrameIndex = Shader.PropertyToID("_FrameIndex");
         private static readonly int _SInterpolationFactor = Shader.PropertyToID("_InterpolationFactor");
         private static readonly int _SFrameCount = Shader.PropertyToID("_FrameCount");
@@ -256,5 +251,6 @@ namespace NRTools.GpuSkinning
             var json = File.ReadAllText(path);
             return JsonConvert.DeserializeObject<DualQuaternionAnimationData>(json);
         }
+        */
     }
 }

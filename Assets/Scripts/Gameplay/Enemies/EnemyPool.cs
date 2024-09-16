@@ -146,7 +146,6 @@ public class EnemyPool : MonoBehaviour
                 }
             }
         }
-
         CurrentEnemyCount = 0; 
         _instance.waveController.Ready();
     }

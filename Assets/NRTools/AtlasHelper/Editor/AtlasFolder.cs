@@ -24,6 +24,18 @@ public class AtlasFolder : EditorWindow
 
     private string[] textureGUIDs;
 
+    private AtlasData ConvertToSO(AtlasRuntimeData data)
+    {
+        var so = CreateInstance<AtlasData>();
+        so.textureType = data.textureType;
+        so.enemyType = data.enemyType;
+        so.elementFlag = data.elementFlag;
+        so.sceneName = data.sceneName;
+        so.UVRect = data.UVRect;
+        so.AtlasPage = data.AtlasPage;
+        return so;
+    }
+
     private void OnGUI()
     {
         if (textureGUIDs == null) textureGUIDs = AssetDatabase.FindAssets("t:Texture2D", new[] {"Assets/Art/Textures"});
@@ -45,37 +57,34 @@ public class AtlasFolder : EditorWindow
                 if (asset == null) continue;
 
                 // Use deserialized data if available
-                if (deserializedData != null && deserializedData.Length > i && deserializedData[i] != null)
+                if (deserializedData != null && deserializedData.Count > i && deserializedData[i] != null)
                 {
-                    atlasDataArray[i] = deserializedData[i];
+                    atlasDataArray[i] = ConvertToSO(deserializedData[i]);
                 }
-                else if (atlasDataArray[i] == null)
-                {
-                    atlasDataArray[i] = CreateInstance<AtlasData>();
-                    if (path.Contains("Bots"))
-                    {
-                        atlasDataArray[i].textureType = TextureType.Bots;
 
-                        if (path.Contains("Tank")) atlasDataArray[i].enemyType = EnemyType.Tank;
-                        else if (path.Contains("GlassCannon")) atlasDataArray[i].enemyType = EnemyType.GlassCannon;
-                        else if (path.Contains("Swarm")) atlasDataArray[i].enemyType = EnemyType.Swarm;
-                        else if (path.Contains("Grunt")) atlasDataArray[i].enemyType = EnemyType.Grunt;
-                    }
-                    else if (path.Contains("Blaster"))
-                    {
-                        atlasDataArray[i].textureType = TextureType.Blaster;
-                    }
-                    else if (path.Contains("Environment"))
-                    {
-                        atlasDataArray[i].textureType = TextureType.Environment;
-                    }
-                    
-                    if (path.Contains("Fire")) atlasDataArray[i].elementFlag = ElementFlag.Fire;
-                    else if (path.Contains("Elect")) atlasDataArray[i].elementFlag = ElementFlag.Electricity;
-                    else if (path.Contains("Rock")) atlasDataArray[i].elementFlag = ElementFlag.Rock;
-                    else if (path.Contains("Wind")) atlasDataArray[i].elementFlag = ElementFlag.Wind;
-                    else if (path.Contains("Water")) atlasDataArray[i].elementFlag = ElementFlag.Water;
+                if (path.Contains("Bots"))
+                {
+                    atlasDataArray[i].textureType = TextureType.Bots;
+
+                    if (path.Contains("Tank")) atlasDataArray[i].enemyType = EnemyType.Tank;
+                    else if (path.Contains("GlassCannon")) atlasDataArray[i].enemyType = EnemyType.GlassCannon;
+                    else if (path.Contains("Swarm")) atlasDataArray[i].enemyType = EnemyType.Swarm;
+                    else if (path.Contains("Grunt")) atlasDataArray[i].enemyType = EnemyType.Grunt;
                 }
+                else if (path.Contains("Blaster"))
+                {
+                    atlasDataArray[i].textureType = TextureType.Blaster;
+                }
+                else if (path.Contains("Environment"))
+                {
+                    atlasDataArray[i].textureType = TextureType.Environment;
+                }
+
+                if (path.Contains("Fire")) atlasDataArray[i].elementFlag = ElementFlag.Fire;
+                else if (path.Contains("Elect")) atlasDataArray[i].elementFlag = ElementFlag.Electricity;
+                else if (path.Contains("Rock")) atlasDataArray[i].elementFlag = ElementFlag.Rock;
+                else if (path.Contains("Wind")) atlasDataArray[i].elementFlag = ElementFlag.Wind;
+                else if (path.Contains("Water")) atlasDataArray[i].elementFlag = ElementFlag.Water;
 
                 // Create SerializedObject and update
                 serializedAtlasDataArray[i] = new SerializedObject(atlasDataArray[i]);
@@ -139,15 +148,6 @@ public class AtlasFolder : EditorWindow
 
                 serializedAtlasDataArray[j].ApplyModifiedProperties();
 
-                atlasDataArray[j].prefab = (GameObject) EditorGUILayout.ObjectField("Prefab", atlasDataArray[j].prefab,
-                    typeof(GameObject), false);
-
-                if (atlasDataArray[j].prefab != null)
-                {
-                    if (!atlasDataArray[j].prefab.GetComponent<AtlasIndex>())
-                        atlasDataArray[j].prefab.AddComponent<AtlasIndex>();
-                }
-
                 GUILayout.EndVertical();
                 GUILayout.Space(padding);
             }
@@ -165,6 +165,7 @@ public class AtlasFolder : EditorWindow
             GenerateAtlas();
             Debug.Log("Atlas created!");
             SerializeAtlasData();
+            atlasDataArray = null;
         }
 
         if (GUILayout.Button("Serialize Atlas Data"))
@@ -178,26 +179,19 @@ public class AtlasFolder : EditorWindow
 
     private void SerializeAtlasData()
     {
-        var processedMap = new Dictionary<AtlasIndex, bool>();
+        var AtlasMaster = FindObjectOfType<AtlasMaster>();
+        if (!AtlasMaster)
+        {
+            Debug.LogError("No AtlasMaster found in scene.");
+            return;
+        }
+
+        AtlasMaster.AssignInstance(AtlasMaster);
+        AtlasMaster.atlasData.Clear();
         for (int i = 0; i < atlasDataArray.Length; i++)
         {
             var idx = atlasDataArray[i];
-            if (idx.prefab == null) continue;
-
-            // Ensure that the prefab has an AtlasIndex component
-            var script = idx.prefab.GetComponent<AtlasIndex>();
-            if (script == null)
-            {
-                script = idx.prefab.AddComponent<AtlasIndex>();
-            }
-
             atlasDataArray[i].UVRect = atlasUVRects[idx.AtlasPage][i];
-            if (!processedMap.ContainsKey(script))
-            {
-                script.AtlasData.Clear();
-                processedMap.Add(script, true);
-            }
-
             var runtimeData = new AtlasRuntimeData
             {
                 UVRect = idx.UVRect,
@@ -207,49 +201,23 @@ public class AtlasFolder : EditorWindow
                 enemyType = idx.enemyType,
                 sceneName = idx.sceneName
             };
-            script.AtlasData.Add(runtimeData);
-
-            // Update prefab and save
-            var prefabPath = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(idx.prefab);
-            if (!string.IsNullOrEmpty(prefabPath))
-            {
-                PrefabUtility.RecordPrefabInstancePropertyModifications(script);
-                PrefabUtility.SavePrefabAsset(idx.prefab);
-            }
+            AtlasMaster.AddData(runtimeData);
         }
-
-        // Serialize the AtlasData array to JSON
-        var wrapper = new AtlasDataWrapper {data = atlasDataArray};
-        var jsonString = JsonUtility.ToJson(wrapper, true);
-        File.WriteAllText("Assets/AtlasData.json", jsonString);
 
         Debug.Log("Serialized Atlas Data to JSON.");
     }
 
 
-    private AtlasData[] DeserializeAtlasData()
+    private List<AtlasRuntimeData> DeserializeAtlasData()
     {
-        var jsonFilePath = "Assets/AtlasData.json";
-
-        // Ensure file exists before trying to read
-        if (!File.Exists(jsonFilePath))
+        var AtlasMaster = FindObjectOfType<AtlasMaster>();
+        if (!AtlasMaster)
         {
-            Debug.LogWarning("AtlasData.json file not found, skipping deserialization.");
-            return new AtlasData[0];
+            Debug.LogError("No AtlasMaster found in scene.");
+            return null;
         }
 
-        var jsonString = File.ReadAllText(jsonFilePath);
-
-        try
-        {
-            AtlasData[] atlasDataArray = JsonUtility.FromJson<AtlasDataWrapper>(jsonString).data;
-            return atlasDataArray;
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError($"Failed to deserialize AtlasData: {ex.Message}");
-            return new AtlasData[0];
-        }
+        return AtlasMaster.atlasData;
     }
 
     private const int MaxAtlasSize = 4096; // Example maximum size, check your hardware's max size
@@ -289,15 +257,12 @@ public class AtlasFolder : EditorWindow
 
         while (textures.Count > 0)
         {
-            // Create a new texture atlas
             var atlas = new Texture2D(atlasWidth, atlasHeight, TextureFormat.RGBA32, false);
             Rect[] uvRects = atlas.PackTextures(textures.ToArray(), 2, MaxAtlasSize);
 
-            // Remove packed textures from the list
             int packedCount = uvRects.Length;
             textures.RemoveRange(0, packedCount);
 
-            // Add the atlas and UV rects to lists
             generatedAtlases.Add(atlas);
             atlasUVRects.Add(uvRects);
 
@@ -352,7 +317,6 @@ public class AtlasFolder : EditorWindow
         return new Rect(minX, minY, maxX - minX + 1, maxY - minY + 1);
     }
 
-// Method to create a trimmed texture from the original
     Texture2D GetTrimmedTexture(Texture2D original, Rect trimmedRect)
     {
         if (trimmedRect.width == 0 || trimmedRect.height == 0)

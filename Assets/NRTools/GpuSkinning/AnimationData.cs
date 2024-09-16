@@ -12,25 +12,56 @@ namespace NRTools.GpuSkinning
         public float4 boneWeights; // Weights for each bone
     }
 
-    public class AnimationData : ScriptableObject
-    {
-        public List<int> vertexIndices; // List of vertex indices (keys of dictionary)
-        public List<FrameDelta> frameDeltas;
-        public List<Matrix4x4> boneMatricesPerFrame;
-    }
-
     [Serializable]
-    public class FrameDelta
+    public class AnimationLookupTable
     {
-        public List<VertexSkinData> deltaSkinData;
-        public List<Vector3> deltaVertices; // This will be serialized properly by Unity
+        public Dictionary<string, Dictionary<string, AnimationData>> lookupTable;
 
-        public FrameDelta(int count)
+        public AnimationLookupTable()
         {
-            deltaVertices = new List<Vector3>(count);
-            deltaSkinData = new List<VertexSkinData>(count);
+            lookupTable = new Dictionary<string, Dictionary<string, AnimationData>>();
+        }
+
+        public int Count => lookupTable.Count;
+
+        public void AddAnimation(string enemyType, string animationName, AnimationData animData)
+        {
+            if (!lookupTable.ContainsKey(enemyType))
+            {
+                lookupTable[enemyType] = new Dictionary<string, AnimationData>();
+            }
+            lookupTable[enemyType][animationName] = animData;
+        }
+
+        public AnimationData GetAnimationData(string enemyType, string animationName)
+        {
+            if (lookupTable.ContainsKey(enemyType) && lookupTable[enemyType].ContainsKey(animationName))
+            {
+                return lookupTable[enemyType][animationName];
+            }
+            return null;
         }
     }
+
+
+    public class AnimationData
+    {
+        public string animationName;
+        public int vertexOffset;
+        public int frameCount;
+        public int vertexCount;
+        public bool loop;
+
+        public AnimationData(string animationName, int vertexOffset, int frameCount, int vertexCount, bool loop)
+        {
+            this.animationName = animationName;
+            this.vertexOffset = vertexOffset;
+            this.frameCount = frameCount;
+            this.vertexCount = vertexCount;
+            this.loop = loop;
+        }
+    }
+
 
     // v4 over v3: float4 caveat in engine channel of discord
     // https://developer.nvidia.com/content/understanding-structured-buffer-performance
@@ -75,10 +106,7 @@ namespace NRTools.GpuSkinning
     [Serializable]
     public class DualQuaternionAnimationData
     {
-        public Vector4[] boneDirections;
-        public List<VertexInfo> verticesInfo;
-        public List<List<MorphDelta>> frameDeltas;
-        public Dictionary<int, List<float[]>> boneMatricesPerFrame;
-        public List<DualQuaternion> dualQuaternions;
+        public int numFrames;
+        public List<MorphDelta> frameDeltas;
     }
 }

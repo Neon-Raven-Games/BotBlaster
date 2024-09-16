@@ -19,9 +19,6 @@ public class AtlasData : ScriptableObject
 
     public Rect UVRect;
     public int AtlasPage;
-    
-    [HideInInspector]
-    public GameObject prefab;
 }
 
 namespace NRTools.AtlasHelper

@@ -139,24 +139,15 @@ namespace NRTools.GpuSkinning
                 "Please enter a file name to save the GPU animation data.");
             if (!string.IsNullOrEmpty(path))
             {
-                var data = new DualQuaternionAnimationData
-                {
-                    verticesInfo = verticesInfoCollection,
-                    boneMatricesPerFrame = boneMatricesPerFrame,
-                    dualQuaternions = dualQuaternions,
-                    boneDirections = InitializeBoneDirectionBuffer(skinnedMeshRenderer)
-                };
 
-                data.frameDeltas = deltas;
+
                 var settings = new JsonSerializerSettings
                 {
                     ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
                     Formatting = Formatting.Indented
                 };
 
-                var json = JsonConvert.SerializeObject(data, settings);
-                File.WriteAllText(path, json);
-                Debug.Log("GPU Animation Data saved to " + path);
+                Debug.Log("GPU Animation deprecated :P");
             }
         }
 

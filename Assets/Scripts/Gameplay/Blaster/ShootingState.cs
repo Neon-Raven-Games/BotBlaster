@@ -19,8 +19,7 @@ public class ShootingState : BaseHandCanonState
     public override void EnterState()
     {
         if (beam || beamObject) return;
-        handCannon.animator.Play("Fire");
-        // todo, handle muzzle flash
+        handCannon.animator.SetTrigger(_SFire);
         handCannon.muzzleFlash.SetActive(false);
         base.EnterState();
         RequestLaunch();
@@ -57,13 +56,13 @@ public class ShootingState : BaseHandCanonState
             var ball = ElementPool.GetElement(handCannon.blasterElement, handCannon.barrelTransform.position);
             LaunchDodgeball(ball);
             handCannon.muzzleFlash.SetActive(true);
-            // handCannon.audioSource.PlayOneShot(ConfigurationManager.GetBlasterSound());
             launchRequested = false;
         }
     }
 
     private float fireRate = 0.5f;
     private float fireTime;
+    private static readonly int _SFire = Animator.StringToHash("Fire");
 
     public override void Update()
     {
