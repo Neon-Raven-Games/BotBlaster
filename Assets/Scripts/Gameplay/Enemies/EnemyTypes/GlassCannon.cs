@@ -52,7 +52,7 @@ namespace Gameplay.Enemies.EnemyTypes
             proj.effectiveDamage = currentDamage;
             projectile.transform.LookAt(player);
 
-            // play animation/particle.sound
+            projectile.gameObject.SetActive(true);
             var t = 0f;
             while (t < chargeTime)
             {
@@ -63,7 +63,6 @@ namespace Gameplay.Enemies.EnemyTypes
                 yield return null;
             }
 
-            projectile.gameObject.SetActive(true);
             _isCharging = false;
             lastAttackTime = Time.time;
         }

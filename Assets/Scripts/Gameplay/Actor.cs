@@ -16,10 +16,10 @@ public class Actor : MonoBehaviour
     public float baseAttackCoolDown;
 
     public int currentHealth;
-    protected int currentDamage;
+    protected internal int currentDamage;
     protected float currentSpeed;
-    protected float currentAttackRange;
-    protected float currentAttackCoolDown;
+    protected internal float currentAttackRange;
+    protected internal float currentAttackCoolDown;
 
     private float _lastTick;
 
@@ -60,26 +60,30 @@ public class Actor : MonoBehaviour
         DamageNumberPool.SetElementDamageNumber(damageElementType, position, status, damage);
     }
 
-    
+
     public bool IsWeakAgainst(ElementFlag hitElement)
     {
         return (WeaknessesFor(element) & hitElement) != 0;
     }
-    
-    public int ApplyDamage(int damage, ElementFlag hitElement, Vector3 position, int elementLevel = 1, int stackLevel = 1)
+
+    public int ApplyDamage(int damage, ElementFlag hitElement, Vector3 position, int elementLevel = 1,
+        int stackLevel = 1)
     {
+        // we call this from the projectile:
+        // we are fire, player is water
+        // we call this method assuming that the player is the defender
         stackEffectivenessLevel = stackLevel;
-        damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Rock);
-        damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Water);
-        damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Fire);
-        damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Wind);
-        damage = ApplyElementalDamage(damage, element, hitElement, elementLevel, ElementFlag.Electricity);
+        damage = ApplyElementalDamage(damage, hitElement, element, elementLevel, ElementFlag.Rock);
+        damage = ApplyElementalDamage(damage, hitElement, element, elementLevel, ElementFlag.Water);
+        damage = ApplyElementalDamage(damage, hitElement, element, elementLevel, ElementFlag.Fire);
+        damage = ApplyElementalDamage(damage, hitElement, element, elementLevel, ElementFlag.Wind);
+        damage = ApplyElementalDamage(damage, hitElement, element, elementLevel, ElementFlag.Electricity);
 
         var weakness = WeaknessesFor(hitElement) & element;
         var strength = StrengthsFor(hitElement) & element;
-        
+
         if (showDamageNumbers) ShowDamageNumber(damage, hitElement, weakness != 0, strength != 0, position);
-        
+
         // remove elements without status effects
         hitElement &= ~ElementFlag.Rock;
         hitElement &= ~ElementFlag.Wind;
@@ -100,28 +104,38 @@ public class Actor : MonoBehaviour
         return damage;
     }
 
-    private int ApplyElementalDamage(int damage, ElementFlag attackerElement, ElementFlag defenderElement, int elementLevel, ElementFlag targetElement)
+    private int ApplyElementalDamage(int damage, ElementFlag attackerElement, ElementFlag defenderElement,
+        int elementLevel, ElementFlag targetElement)
     {
         if (attackerElement == ElementFlag.None || (attackerElement & targetElement) == 0)
         {
             return damage;
         }
 
-        var multiplier = ElementDecorator.BASE_MULTIPLIER * elementLevel;
+        var multiplier = (float)elementLevel;
 
+
+        // electricity and rock, but we want to check for 
+        // the weakness of the defender
+        
+        // defender element returns weakness for
         if ((defenderElement & WeaknessesFor(attackerElement)) != 0)
-            multiplier *= ElementDecorator.WEAKNESS_MULTIPLIER;
+            multiplier *= -ElementDecorator.WEAKNESS_MULTIPLIER;
         else if ((defenderElement & StrengthsFor(attackerElement)) != 0)
             multiplier *= ElementDecorator.STRENGTH_MULTIPLIER;
-
-        var finalDamage = damage + (int)(damage * multiplier * GetStackMultiplier(ElementFlag.Water));
+        else
+            multiplier = 0;
+        
+        var finalDamage = damage + (int) (damage * multiplier);
 
         return finalDamage;
     }
 
     private float GetStackMultiplier(ElementFlag debuffElement)
     {
-        return stacks.ContainsKey(debuffElement) ? stacks[debuffElement] + stackEffectivenessLevel * ElementDecorator.BASE_MULTIPLIER: 1f;
+        return stacks.ContainsKey(debuffElement)
+            ? stacks[debuffElement] + stackEffectivenessLevel * ElementDecorator.BASE_MULTIPLIER
+            : 0f;
     }
 
     // target element is weak against
@@ -132,12 +146,12 @@ public class Actor : MonoBehaviour
             case ElementFlag.Fire: return ElementFlag.Water | ElementFlag.Rock;
             case ElementFlag.Water: return ElementFlag.Electricity;
             case ElementFlag.Rock: return ElementFlag.Water;
-            case ElementFlag.Wind: return ElementFlag.Electricity;
+            case ElementFlag.Wind: return ElementFlag.Electricity | ElementFlag.Rock;
             case ElementFlag.Electricity: return ElementFlag.Rock;
             default: return ElementFlag.None;
         }
     }
-    
+
     // target element is strong against
     protected ElementFlag StrengthsFor(ElementFlag targetElement)
     {
@@ -154,35 +168,39 @@ public class Actor : MonoBehaviour
 
     protected float GetMovementCurrentSpeed()
     {
-        if ((debuffs & ElementFlag.Electricity) != 0)
-        {
-            float debuffFactor = (1.0f - 0.1f * stacks[ElementFlag.Electricity]) - (stackEffectivenessLevel * ElementDecorator.BASE_MULTIPLIER);
-            return currentSpeed * Mathf.Max(debuffFactor, 0f);
-        }
-
         return currentSpeed;
     }
 
     private int stackEffectivenessLevel;
-    // todo, we need to make dev controller adhere the same as enemies or vice versa
-    // the swarm needs to account for the fire debuff on each unit
+
     protected virtual void Update()
     {
         if (WaveController.paused) return;
-        if (_lastTick < Time.time && stacks[ElementFlag.Fire] > 0)
+        if (_lastTick < Time.time)
         {
             if (this is Swarm) return;
             _lastTick = Time.time + ElementDecorator.DEBUFF_TICK;
-            var fireDamage = ApplyDamage(baseDamage + (int) (stackEffectivenessLevel * ElementDecorator.BASE_MULTIPLIER), ElementFlag.Fire, transform.position, stacks[ElementFlag.Fire]);
-            
-            if (this is not DevController) currentHealth -= fireDamage;
-            if (currentHealth <= 0)
+
+            foreach (var status in stacks)
             {
-                var weak = WeaknessesFor(ElementFlag.Fire);
-                var strong = StrengthsFor(ElementFlag.Fire);
-                if ((weak & element) != 0) Die(StatusEffectiveness.Weak);
-                else if ((strong & element) != 0) Die(StatusEffectiveness.Strong);
-                else Die(StatusEffectiveness.Normal);
+                if (status.Value > 0)
+                {
+                    var multiplier = GetStackMultiplier(status.Key);
+                    var dmg = ApplyDamage(
+                        (int)(baseDamage + multiplier),
+                        status.Key, transform.position, status.Value);
+                    if (this is not DevController) currentHealth -= dmg;
+                }
+
+                if (currentHealth <= 0)
+                {
+                    var weak = WeaknessesFor(status.Key);
+                    var strong = StrengthsFor(status.Key);
+                    if ((weak & element) != 0) Die(StatusEffectiveness.Weak);
+                    else if ((strong & element) != 0) Die(StatusEffectiveness.Strong);
+                    else Die(StatusEffectiveness.Normal);
+                    break;
+                }
             }
         }
     }
@@ -214,7 +232,7 @@ public class Actor : MonoBehaviour
                 if (stacks[flag] < ElementDecorator.MAX_STACKS)
                 {
                     stacks[flag]++;
-                    // todo, refactor to actor level debuff
+                    // todo, we can manage this better locally
                     TimerManager.AddTimer(ElementDecorator.DEBUFF_DURATION, () => RemoveDebuff(flag));
                 }
             }

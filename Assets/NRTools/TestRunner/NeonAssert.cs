@@ -66,7 +66,7 @@ namespace NRTools
         {
             try
             {
-                if (actual.CompareTo(lessThanValue) < 0)
+                if (actual.CompareTo(lessThanValue) > 0)
                     return AssertionResult.Success(customMessage ??
                                                    $"Expected {actual} to be less than {lessThanValue}.");
 

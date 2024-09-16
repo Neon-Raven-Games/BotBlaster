@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using Gameplay.Util;
+using NRTools.Analytics;
 using UI;
 using UnityEngine;
 using UnityEngine.XR.OpenXR.Features.Extensions.PerformanceSettings;
@@ -30,7 +31,7 @@ public class WaveController : MonoBehaviour
     public void StartWaves()
     {
 #if UNITY_EDITOR
-        GameAnalyticsHelper.InitializeAnalytics();
+        GameAnalytics.InitializeAnalytics();
 #endif
         XrPerformanceSettingsFeature.SetPerformanceLevelHint(PerformanceDomain.Cpu, PerformanceLevelHint.Boost);
         enemySpawner.currentWave = 1;
@@ -41,13 +42,14 @@ public class WaveController : MonoBehaviour
         XrPerformanceSettingsFeature.SetPerformanceLevelHint(PerformanceDomain.Cpu, PerformanceLevelHint.SustainedHigh);
     }
 
-    public void StopWaves()
+    private void StopWaves()
     {
         paused = true;
         _waveSpawning = false;
         enemySpawner.currentWave = 1;
 #if UNITY_EDITOR
-        GameAnalyticsHelper.FinalizeAnalytics();
+        GameAnalytics.LogWaveData(enemySpawner._waveAnalytics);
+        GameAnalytics.FinalizeAnalytics();
 #endif
         waveEnemies = 0;
         EnemyPool.SleepAll();
@@ -62,11 +64,6 @@ public class WaveController : MonoBehaviour
         {
             if (!paused && enemySpawner.WaveCompleted())
             {
-#if UNITY_EDITOR
-                GameAnalyticsHelper.LogWaveData(enemySpawner.currentWave,
-                    GameBalancer.GetCurrentSpawnRadius(enemySpawner.currentWave),
-                    enemySpawner.currentWaveData.numberOfEnemies, enemySpawner.currentWaveData.elementFlags);
-#endif
                 waveEnemies = 0;
                 await PauseForPlayerUpgrades();
                 

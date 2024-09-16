@@ -11,8 +11,7 @@ public class UIDevelopment : MonoBehaviour
     [SerializeField] private InputActionAsset actionAsset;
     [SerializeField] private VRHand vrHand;
     [SerializeField] private DevController devController;
-    private HandSide handSide => vrHand.handSide;
-
+    [SerializeField] private HandCannon handCannon;
     [SerializeField] private float radialMenuStartAngle;
     [SerializeField] private float radialMenuSpread;
     [SerializeField] private float radialMenuAngle;
@@ -25,6 +24,11 @@ public class UIDevelopment : MonoBehaviour
     [SerializeField] private ElementFlag fourthElement;
     [SerializeField] private ElementFlag fifthElement;
 
+    private HandSide handSide => vrHand.handSide;
+
+    private readonly Vector3 _highlightScale = Vector3.one * 1.2f;
+    private readonly Vector3 _normalScale = Vector3.one;
+    
     private Vector3 _radialDirection;
     private Sequence _menuSequence;
 
@@ -39,6 +43,26 @@ public class UIDevelopment : MonoBehaviour
     private void OnDrawGizmos()
     {
         return;
+        var radialStart = GetRadialStart();
+        var directionMultiplier = 1;
+        for (var i = 0; i < transform.childCount; i++)
+        {
+            var child = transform.GetChild(i);
+
+            child.localScale = Vector3.zero;
+            child.localPosition = Vector3.zero;
+
+            var angleStep = (radialMenuAngle / (transform.childCount - 1)) * i;
+            var angle = radialMenuAngle + angleStep * directionMultiplier;
+            var radian = angle * Mathf.Deg2Rad;
+
+            var x = Mathf.Cos(radian) * radialMenuSpread;
+            var y = Mathf.Sin(radian) * radialMenuSpread;
+            var newPos = new Vector3(x, y, 0) + radialStart +
+                         radialMenuStartAngle * directionMultiplier * Vector3.right;
+            transform.GetChild(i).localPosition = newPos;
+        }
+
         foreach (Transform child in transform)
         {
             Gizmos.color = Color.magenta;
@@ -106,13 +130,12 @@ public class UIDevelopment : MonoBehaviour
     private void RadialMenuCanceledAction(InputAction.CallbackContext ctx)
     {
         _radialMenuInput = Vector2.zero;
-        _highlightedChild = null;
     }
 
     private void RadialMenuPerformedAction(InputAction.CallbackContext ctx)
     {
         _radialMenuInput = ctx.ReadValue<Vector2>();
-        HighlightChildBasedOnInput();
+        
     }
 
     private void GripPerformedAction(InputAction.CallbackContext obj)
@@ -122,17 +145,25 @@ public class UIDevelopment : MonoBehaviour
         _radialMenuAction.canceled += RadialMenuCanceledAction;
         _radialMenuAction.Enable();
         OpenMenu();
+        opened = true;
     }
 
     private void GripReleasedAction(InputAction.CallbackContext obj)
     {
+        opened = false;
         _radialMenuAction.Disable();
         _radialMenuAction.performed -= RadialMenuPerformedAction;
         _radialMenuAction.canceled -= RadialMenuCanceledAction;
         _radialMenuInput = Vector2.zero;
         devController.EnableThumbstick(handSide);
-
         CloseMenu();
+    }
+
+    private bool opened;
+    private void Update()
+    {
+        if (opened && _radialMenuInput != Vector2.zero) 
+            HighlightChildBasedOnInput();
     }
 
     public void OpenMenu()
@@ -149,11 +180,12 @@ public class UIDevelopment : MonoBehaviour
         {
             child.DOScale(Vector3.zero, offset).SetEase(Ease.OutBounce)
                 .OnComplete(() => child.gameObject.SetActive(false));
-            
+
             await UniTask.WaitForSeconds(offset / 2);
         }
 
         _animating = false;
+        _highlightedChild = null;
     }
 
     private bool _animating;
@@ -163,7 +195,7 @@ public class UIDevelopment : MonoBehaviour
         OffsetCloseMenu().Forget();
         if (_highlightedChild == null) return;
 
-        var highlightedIndex = System.Array.IndexOf(_children, _highlightedChild);
+        var highlightedIndex = Array.IndexOf(_children, _highlightedChild);
         var selectedElement = _elementFlags[highlightedIndex];
         SelectElement(selectedElement);
     }
@@ -177,7 +209,9 @@ public class UIDevelopment : MonoBehaviour
 
     private void SelectElement(ElementFlag selectedElement)
     {
-        Debug.Log($"Ship element to blaster: {selectedElement}");
+        handCannon.InitializeElementChange();
+        handCannon.blasterElement = selectedElement;
+        handCannon.FinalizeElementChange();
     }
 
     private void HighlightChildBasedOnInput()
@@ -217,17 +251,9 @@ public class UIDevelopment : MonoBehaviour
     private void HighlightMenuItem(Object item)
     {
         foreach (var child in _children)
-        {
-            if (child == item)
-            {
-                child.localScale = Vector3.one * 1.2f;
-            }
-            else
-            {
-                child.localScale = Vector3.one;
-            }
-        }
+            child.localScale = child == item ? _highlightScale : _normalScale;
     }
+
 
     private float[] _precomputedChildAngles;
     private Vector3[] _precomputedChildPositions;
@@ -273,16 +299,8 @@ public class UIDevelopment : MonoBehaviour
             _precomputedChildPositions[i] = newPos;
             _precomputedChildAngles[i] = Mathf.Atan2(y, x) * Mathf.Rad2Deg;
             if (_precomputedChildAngles[i] < 0) _precomputedChildAngles[i] += 360f;
-            if (handSide == HandSide.RIGHT)
-            {
-                child.transform.localPosition = newPos;
-            }
-            else
-            {
-                child.transform.localPosition = Vector3.zero;
-                _menuSequence.Join(child.DOLocalMove(newPos, menuDuration).SetEase(Ease.InBounce));
-            }
-            
+
+            child.transform.localPosition = newPos;
             _menuSequence.Join(child.DOScale(Vector3.one, menuDuration).SetEase(Ease.OutBounce));
             child.gameObject.SetActive(true);
         }
@@ -307,6 +325,7 @@ public class UIDevelopment : MonoBehaviour
                 child.transform.localPosition = Vector3.zero;
                 _menuSequence.Join(child.DOLocalMove(newPos, menuDuration).SetEase(Ease.InBounce));
             }
+
             _menuSequence.Join(child.DOScale(Vector3.one, menuDuration).SetEase(Ease.OutBounce));
             child.gameObject.SetActive(true);
         }

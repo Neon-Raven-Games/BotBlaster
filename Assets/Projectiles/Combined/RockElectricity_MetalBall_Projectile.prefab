@@ -122312,12 +122312,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73e8c5a68e12402abcf7c8ca5f562aa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  muzzleFlash: {fileID: 0}
   isPlayerProjectile: 0
   elementFlag: 8
   speed: 10
   damage: 1
-  impact: {fileID: 0}
+  impact: {fileID: 1010657842630357873}
   effectiveDamage: 0
 --- !u!54 &3209978441445762775
 Rigidbody:
@@ -171145,6 +171144,10 @@ PrefabInstance:
     - target: {fileID: 503841571413625508, guid: 721a0ff60175b644cb5b9077a14dcfc7, type: 3}
       propertyPath: m_Name
       value: Electricity_Muzzle
+      objectReference: {fileID: 0}
+    - target: {fileID: 503841571413625508, guid: 721a0ff60175b644cb5b9077a14dcfc7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1740949744797608658, guid: 721a0ff60175b644cb5b9077a14dcfc7, type: 3}
       propertyPath: m_LocalPosition.x

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Gameplay.Enemies;
 using NRTools.GpuSkinning;
@@ -8,24 +7,28 @@ using UnityEngine.InputSystem;
 
 public class HandCannon : MonoBehaviour
 {
+    public float FireRate => actor.baseAttackCoolDown;
     public ElementFlag blasterElement;
     private ElementFlag _previousElement;
+    
     public AudioSource audioSource;
     private GpuMeshAnimator _gpuMeshAnimator;
     [SerializeField] private InputActionAsset actionAsset;
     public Transform barrelTransform;
+    internal HandSide handSide;
 
-    [Header("Muzzle Flash")] 
-    [SerializeField] private GameObject fireFlash;
+    [Header("Muzzle Flash")] [SerializeField]
+    private GameObject fireFlash;
+
     [SerializeField] private GameObject waterFlash;
     [SerializeField] private GameObject windFlash;
     [SerializeField] private GameObject rockFlash;
     [SerializeField] private GameObject electricityFlash;
-    
-    [Header("Shooting Settings")] 
-    internal GameObject muzzleFlash;
-    public float launchForce = 20f;
 
+
+    [Header("Shooting Settings")] public float launchForce = 20f;
+    internal GameObject muzzleFlash;
+    internal CannonState state;
     private Dictionary<CannonState, BaseHandCanonState> _states;
     private BaseHandCanonState _currentState;
     private InputAction _triggerAction;
@@ -50,9 +53,8 @@ public class HandCannon : MonoBehaviour
     public void PlayOneShotAnimation()
     {
         _gpuMeshAnimator.PlayOneShotHitAnimation();
-        
     }
-    
+
     private void SetBlasterMaterial()
     {
         if (soloCannon) return;
@@ -61,17 +63,15 @@ public class HandCannon : MonoBehaviour
         if (blasterElement == ElementFlag.Water) muzzleFlash = waterFlash;
         if (blasterElement == ElementFlag.Wind) muzzleFlash = windFlash;
         if (blasterElement == ElementFlag.Rock) muzzleFlash = rockFlash;
-        
+
         _gpuMeshAnimator.UpdateElement(blasterElement);
     }
-
-    private HandSide _handSide;
 
     private void PopulateInput()
     {
         var hand = GetComponentInParent<VRHand>();
         if (!hand || soloCannon) return;
-        _handSide = hand.handSide;
+        handSide = hand.handSide;
         var side = hand.handSide;
         var handSideString = "Right";
         if (side == HandSide.LEFT) handSideString = "Left";
@@ -81,10 +81,11 @@ public class HandCannon : MonoBehaviour
         _triggerAction.canceled += TriggerReleasedAction;
     }
 
-    public void ChangeState(CannonState state)
+    public void ChangeState(CannonState nextState)
     {
         _currentState?.ExitState();
-        _currentState = _states[state];
+        state = nextState;
+        _currentState = _states[nextState];
         _currentState.EnterState();
     }
 
@@ -100,7 +101,7 @@ public class HandCannon : MonoBehaviour
 
     private void Update()
     {
-        _currentState?.Update();
+        _states[CannonState.Shooting].Update();
     }
 
     private void FixedUpdate()
@@ -118,8 +119,8 @@ public class HandCannon : MonoBehaviour
 
     public void Shoot()
     {
-        if (!soloCannon && _handSide == HandSide.LEFT) actor.PlayLeftFeedback();
-        else if (!soloCannon && _handSide == HandSide.RIGHT) actor.PlayRightFeedback();
+        if (!soloCannon && handSide == HandSide.LEFT) actor.PlayLeftFeedback();
+        else if (!soloCannon && handSide == HandSide.RIGHT) actor.PlayRightFeedback();
         ChangeState(CannonState.Shooting);
     }
 

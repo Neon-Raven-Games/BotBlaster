@@ -1116,8 +1116,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   handSide: 1
   actionAsset: {fileID: -944628639613478452, guid: c348712bda248c246b8c49b3db54643f, type: 3}
-  uiLaserSetup: {fileID: 0}
-  selectUI: {fileID: 0}
   uiSpawnDistance: 1
 --- !u!1 &4658907449896370131
 GameObject:
@@ -1242,6 +1240,7 @@ MonoBehaviour:
   analogThreshold: 0.2
   hmd: {fileID: 1494238556636612590}
   handsAnchor: {fileID: 2928578627118034917}
+  camOffset: {fileID: 8663881183593849148}
   rotationMode: 0
   smoothRotationSpeed: 100
   snapRotationAmount: 45
@@ -1785,8 +1784,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   handSide: 0
   actionAsset: {fileID: -944628639613478452, guid: c348712bda248c246b8c49b3db54643f, type: 3}
-  uiLaserSetup: {fileID: 2931169915660276801}
-  selectUI: {fileID: 0}
   uiSpawnDistance: 1
 --- !u!1 &7618962869411377751
 GameObject:

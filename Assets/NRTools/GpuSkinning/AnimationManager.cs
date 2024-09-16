@@ -20,6 +20,45 @@ namespace NRTools.GpuSkinning
         public static bool IsLoaded => _lookupTable != null && _allVertices != null;
         public static Action OnLoaded;
 
+        
+        // ================== Art ========================
+        // fire/water
+        // fire/electricity
+        // water/electricity
+        // blasters; fire, water, electricity, wind, rock
+        // combined blasters (make abstract with a color scheme for element combinations?)
+        // icons for upgrade menu
+        // icons for blaster element selection
+        // Boss
+        // Environment
+        
+        // ================== Code ========================
+        // beef up damage number oomph~
+        // projectile collisions~
+        // balance the enemies' health, damage speed~
+        // enemy health bars~
+        
+        // fix upgrade station design, needs to be better (git gud bro)
+        // generate waves on the fly instead of cached collections
+        // boss wave sequencing
+        // move the status defects to utilize the same as fire, remove status effects otherwise
+        // test and validate updated ui functionality
+        // animation polishing
+        
+        // ================= SoundDev ==================
+        // Wave Audio Mixing
+        // projectile launch
+        // projectile impact
+        // songs list, regular wave && boss wave
+        
+        // bot sounds;
+        // Common: death
+        // Tank: launch, tracks, hurt
+        // GlassCannon: hover/zoom, charge, hurt
+        // Grunt: moving, hurt, shoot
+        // SwarmBot: Hover, DiveBomb queue, diving sound
+        
+        
         private void Awake()
         {
             StartCoroutine(DeserializeLookupTable(lookupTablePath, AssignLookupCallback));
@@ -55,10 +94,7 @@ namespace NRTools.GpuSkinning
         }
         private void OnDestroy()
         {
-            if (_vertexBuffer != null)
-            {
-                _vertexBuffer.Release();
-            }
+            _vertexBuffer?.Release();
         }
 
         private static IEnumerator DeserializeLookupTable(string fileName, Action<AnimationLookupTable> callback)

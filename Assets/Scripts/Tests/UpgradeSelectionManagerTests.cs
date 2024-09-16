@@ -2,17 +2,26 @@ using UnityEngine;
 using UI;
 using Gameplay.Enemies;
 using NRTools;
-using UnityEngine.Assertions;
 
 public class UpgradeSelectionManagerTests
 {
     private UpgradeSelectionManager _upgradeSelectionManager;
     private DevController _player;
+    private readonly ActorData _actorData = new()
+        {
+            baseDamage = 15,
+            baseHealth = 100,
+            baseSpeed = 5,
+            baseAttackRange = 5,
+            baseAttackCooldown = 0.5f
+        };
 
     [Setup]
     public void Setup()
     {
         _player = Object.FindObjectOfType<DevController>();
+        _player.Initialize(_actorData);
+        
         _upgradeSelectionManager = Object.FindObjectOfType<UpgradeSelectionManager>();
         _upgradeSelectionManager.gameObject.SetActive(true);
     }
@@ -30,7 +39,7 @@ public class UpgradeSelectionManagerTests
         _upgradeSelectionManager.UpgradeSelected(UpgradeType.Damage, ElementFlag.Fire);
         var updatedFireEffectiveness = _player.elementEffectivenessUpgrades[ElementFlag.Fire];
         
-        return NeonAssert.AreEqual(initialFireEffectiveness + 1, updatedFireEffectiveness, 
+        return NeonAssert.AreEqual(initialFireEffectiveness + DevController.elementEffectivenessIncrement, updatedFireEffectiveness, 
             "Assert player damage upgrade.");
     }
 
@@ -48,10 +57,9 @@ public class UpgradeSelectionManagerTests
     [Test]
     public AssertionResult UpgradeSelected_HealthUpgrade_Increases_PlayerBaseHealth()
     {
-        var initialBaseHealth = _player.baseHealth;
+        var initialBaseHealth = _player.cappedHealth;
         _upgradeSelectionManager.UpgradeSelected(UtilityUpgrade.Health);
-        
-        return NeonAssert.LessThan(_player.baseHealth, initialBaseHealth, "Assert player base health upgrade");
+        return NeonAssert.GreaterThan(_player.cappedHealth, initialBaseHealth);
     }
     
     [Test]

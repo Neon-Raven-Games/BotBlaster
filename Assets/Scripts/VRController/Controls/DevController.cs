@@ -1,8 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Gameplay.Enemies;
-using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -42,6 +40,7 @@ public class DevController : Actor
     [SerializeField] private float analogThreshold = 0.2f;
     [SerializeField] private Transform hmd;
     [SerializeField] private Transform handsAnchor;
+    [SerializeField] private Transform camOffset;
 
     [Header("Rotation Settings")] [SerializeField]
     private RotationMode rotationMode;
@@ -77,6 +76,7 @@ public class DevController : Actor
     private CharacterController _controller;
     private VignetteController _vignetteController;
 
+    // input properties
     private InputAction _moveForwardAction;
     private InputAction _lookAction;
     private Vector2 _moveInput;
@@ -86,13 +86,19 @@ public class DevController : Actor
     private void Start()
     {
         currentHealth = baseHealth;
-
+        cappedHealth = baseHealth;
         _vignetteController = GetComponentInChildren<VignetteController>();
         _controller = GetComponent<CharacterController>();
         LocomotionVignette = initialLocomotionVignette;
         RotationVignette = initialRotationVignette;
+        ResetHandAnchor();
     }
 
+    public void HapticFeedback(HandSide handSide)
+    {
+        if (handSide == HandSide.LEFT) PlayLeftFeedback();
+        else PlayRightFeedback();
+    }
     public void HapticFeedback()
     {
         leftHand.PlayHapticImpulse(0.5f, 0.5f);
@@ -113,11 +119,7 @@ public class DevController : Actor
     {
         if (hasFocus)
         {
-            var handPos = handsAnchor.localPosition;
-            handPos.x = 0;
-            handPos.z = 0;
-            handPos.y = _controller.height;
-            handsAnchor.localPosition = handPos;
+            ResetHandAnchor();
             WaveController.paused = false;
         }
         else
@@ -126,7 +128,16 @@ public class DevController : Actor
         }
     }
 
-    private void Awake()
+    private void ResetHandAnchor()
+    {
+        var handPos = handsAnchor.localPosition;
+        handPos.x = 0;
+        handPos.z = 0;
+        handPos.y = camOffset.localPosition.y;
+        handsAnchor.localPosition = handPos;
+    }
+
+    protected override void Awake()
     {
         _moveForwardAction = actionAsset.FindAction("XRI Left Locomotion/Move", true);
         _moveForwardAction.Enable();
@@ -146,6 +157,8 @@ public class DevController : Actor
         currentHealth = baseHealth;
         currentSpeed = baseSpeed;
         currentAttackRange = baseAttackRange;
+
+        base.Awake();
     }
 
     private void OnDestroy()
@@ -169,31 +182,20 @@ public class DevController : Actor
 
     protected override void Update()
     {
+        ResetHandAnchor();
         UpdateHealthBar();
         HandleRotation();
         HandleMovement();
-        SynchBaseObjectWithCamera();
+        SyncBaseObjectWithCamera();
         _vignetteController.StopVignette();
     }
 
-
-
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.blue;
-        
-        // Gizmos.DrawSphere(_controller.transform.position, 0.2f);
-        Gizmos.color = Color.red;
-        // Gizmos.DrawSphere(hmd.transform.position, 0.2f);
-    }
-
-    private void SynchBaseObjectWithCamera()
+    private void SyncBaseObjectWithCamera()
     {
         var hmdPos = hmd.position;
         var targetPosition = new Vector3(hmdPos.x, transform.position.y, hmdPos.z);
         var movementOffset = targetPosition - transform.position;
-        
+
         transform.position += movementOffset;
         hmd.position = hmdPos;
         handsAnchor.localPosition = new Vector3(hmd.localPosition.x, handsAnchor.localPosition.y, hmd.localPosition.z);
@@ -271,12 +273,15 @@ public class DevController : Actor
         _controller.Move(movement);
     }
 
+    // todo, this doesn't need to deviate from enemy scaling
+    // also needs to be designed better lol
+    // we can redo this system when moving over status FX to damaging
     public const float healthUpgrade = 1.1f;
     public const float damageUpgrade = 1.1f;
     public const float elementStatusIncrement = 0.1f;
     public const float elementEffectivenessIncrement = 0.1f;
 
-    public Dictionary<ElementFlag, float> elementStatusUpgrades = new Dictionary<ElementFlag, float>
+    public readonly Dictionary<ElementFlag, float> elementStatusUpgrades = new()
     {
         {ElementFlag.Fire, 1f},
         {ElementFlag.Water, 1f},
@@ -285,13 +290,13 @@ public class DevController : Actor
         {ElementFlag.Electricity, 1f}
     };
 
-    public Dictionary<ElementFlag, int> elementEffectivenessUpgrades = new Dictionary<ElementFlag, int>
+    public readonly Dictionary<ElementFlag, float> elementEffectivenessUpgrades = new()
     {
-        {ElementFlag.Fire, 1},
-        {ElementFlag.Water, 1},
-        {ElementFlag.Rock, 1},
-        {ElementFlag.Wind, 1},
-        {ElementFlag.Electricity, 1}
+        {ElementFlag.Fire, 1.2f},
+        {ElementFlag.Water, 1.2f},
+        {ElementFlag.Rock, 1.2f},
+        {ElementFlag.Wind, 1.2f},
+        {ElementFlag.Electricity, 1.2f}
     };
 
     private IEnumerator HealthUpRoutine(int targetHp)
@@ -301,13 +306,13 @@ public class DevController : Actor
         {
             t += Time.deltaTime;
             currentHealth = (int) Mathf.Lerp(currentHealth, targetHp, t / 3f);
-            var healthPercentage = currentHealth / (float) baseHealth;
+            var healthPercentage = currentHealth / (float) cappedHealth;
             healthBarSlider.value = healthPercentage;
             bigCannonHealthBarSlider.value = healthPercentage;
             yield return null;
         }
 
-        currentHealth = baseHealth;
+        currentHealth = targetHp;
     }
 
     public int FetchEffectiveElementalDamage(ElementFlag elementFlag)
@@ -320,11 +325,10 @@ public class DevController : Actor
         return currentDamage;
     }
 
-
     private void UpdateHealthBar()
     {
         if (currentHealth <= 0 || !healthBarSlider || !bigCannonHealthBarSlider) return;
-        var healthPercentage = currentHealth / (float) baseHealth;
+        var healthPercentage = currentHealth / (float) cappedHealth;
         healthBarSlider.value = healthPercentage;
         bigCannonHealthBarSlider.value = healthPercentage;
     }
@@ -334,24 +338,29 @@ public class DevController : Actor
         if (currentHealth > 0) return;
         base.Die(statusEffectiveness);
         WaveController.EndGame();
+        cappedHealth = baseHealth;
         StartCoroutine(HealthUpRoutine(baseHealth));
     }
 
     public void UpgradeSelected(UpgradeType type, ElementFlag elementFlag)
     {
         if (type == UpgradeType.Damage)
-            elementEffectivenessUpgrades[elementFlag]++;
+            elementEffectivenessUpgrades[elementFlag] += elementEffectivenessIncrement;
         else if (type == UpgradeType.StatusEffect)
             elementStatusUpgrades[elementFlag] += elementStatusIncrement;
     }
+
+    public int cappedHealth;
 
     public void UpgradeSelected(UtilityUpgrade utilityUpgrade)
     {
         if (utilityUpgrade == UtilityUpgrade.Health)
         {
-            var curHealth = baseHealth;
-            baseHealth = (int) (curHealth * healthUpgrade);
-            if (baseHealth == curHealth) baseHealth++;
+            var currentCap = cappedHealth;
+            cappedHealth = (int) (cappedHealth * healthUpgrade);
+            if (cappedHealth == currentCap) cappedHealth++;
+            var healthPercentage = currentHealth / (float) baseHealth;
+            currentHealth = (int) (cappedHealth * healthPercentage);
         }
         else if (utilityUpgrade == UtilityUpgrade.Damage)
         {
@@ -364,7 +373,6 @@ public class DevController : Actor
             if (currentHealth < baseHealth) StartCoroutine(HealthUpRoutine(baseHealth));
             else
             {
-                Debug.LogWarning("Current health is already at max?");
                 currentHealth = baseHealth;
             }
         }

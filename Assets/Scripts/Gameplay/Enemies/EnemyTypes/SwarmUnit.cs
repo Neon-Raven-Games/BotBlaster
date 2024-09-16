@@ -9,6 +9,7 @@ namespace Gameplay.Enemies.EnemyTypes
     public class SwarmUnit : MonoBehaviour
     {
         [SerializeField] private GameObject deathParticles;
+        [SerializeField] private EnemyHealthBar healthBar;
         public float speed;
         public ElementFlag element;
         private Transform _swarmCenter;
@@ -75,13 +76,17 @@ namespace Gameplay.Enemies.EnemyTypes
                 var damage = collisionElement.damage;
                 var dmg = _swarmComponent.ApplyDamage(damage, flag, transform.position);
                 _currentHealth -= dmg;
-
                 if (_currentHealth <= 0)
                 {
+                    healthBar.FillEmpty();
                     _swarmComponent.SwarmUnitDead();
                     gameObject.SetActive(false);
                 }
-                else SetHitAnimation();
+                else
+                {
+                    healthBar.ReduceValue(dmg);
+                    SetHitAnimation();
+                }
             }
         }
 
@@ -107,8 +112,7 @@ namespace Gameplay.Enemies.EnemyTypes
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 8f);
             }
 
-            if (Vector3.Distance(transform.position, _diveBombTarget) < 0.5f)
-                OnDiveBombImpact();
+            if (Vector3.Distance(transform.position, _diveBombTarget) < 0.5f) OnDiveBombImpact();
         }
 
         private void OnDiveBombImpact()

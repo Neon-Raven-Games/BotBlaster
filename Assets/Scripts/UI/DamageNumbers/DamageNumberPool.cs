@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using Gameplay.Enemies;
 using UnityEngine;
 
@@ -18,6 +19,8 @@ public class DamageNumberPool : MonoBehaviour
             return;
         }
 
+        DOTween.SetTweensCapacity(400, 50);
+        DOTween.Init();
         _instance = this;
         _damageNumbers = new List<DamageNumber>(elementsToPool);
         SpawnProjectiles().Forget();

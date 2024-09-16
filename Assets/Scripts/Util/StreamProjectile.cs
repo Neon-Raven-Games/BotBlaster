@@ -22,7 +22,7 @@ namespace Util
 
         private void OnEnable()
         {
-            _currentDistance = 0f; // Start at zero distance
+            _currentDistance = 0f; 
             _laserCoroutine = StartCoroutine(FireLaserStream());
         }
 

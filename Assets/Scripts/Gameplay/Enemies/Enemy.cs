@@ -7,14 +7,17 @@ using UnityEngine;
 public class Enemy : Actor
 {
     public EnemyType enemyType;
-    [SerializeField] private float knockBackTime = 0.5f;
-    private bool _knockingBack;
+    [SerializeField] private EnemyHealthBar healthBar;
+    [SerializeField] private GameObject deathParticleSystem;
+
     protected float lastAttackTime;
-    
-    protected Rigidbody rigidbody;
     protected Transform player;
     protected Actor playerComponent;
     protected GpuMeshAnimator meshAnimator;
+
+    private Rigidbody rigidbody;
+    private bool _knockingBack;
+    private bool _dead;
 
     protected virtual void OnEnable()
     {
@@ -25,14 +28,14 @@ public class Enemy : Actor
         currentAttackRange = baseAttackRange;
         currentAttackCoolDown = baseAttackCoolDown;
         _dead = false;
-        
+
         if (deathParticleSystem)
         {
             deathParticleSystem.SetActive(false);
             deathParticleSystem.transform.parent = transform;
         }
 
-        if(!meshAnimator) meshAnimator = GetComponent<GpuMeshAnimator>();
+        if (!meshAnimator) meshAnimator = GetComponent<GpuMeshAnimator>();
         if (!meshAnimator) return;
         meshAnimator.enemyType = enemyType;
         meshAnimator.UpdateElement(element);
@@ -43,6 +46,12 @@ public class Enemy : Actor
         var multipliers = GameBalancer.GetBalanceMultipliers(waveNumber);
 
         currentHealth = Mathf.CeilToInt(baseHealth * multipliers.HealthMultiplier);
+        if (healthBar)
+        {
+            healthBar.SetMaxValue(currentHealth);
+            healthBar.FillMax();
+        }
+
         currentDamage = Mathf.CeilToInt(baseDamage * multipliers.DamageMultiplier);
         currentSpeed = baseSpeed * multipliers.SpeedMultiplier;
         currentAttackRange = baseAttackRange * multipliers.AttackRangeMultiplier;
@@ -130,10 +139,10 @@ public class Enemy : Actor
         damage = ApplyDamage(damage, elementFlag, transform.position);
         if (currentHealth - damage <= 0)
         {
+            healthBar.FillEmpty();
             _knockingBack = true;
             var weak = WeaknessesFor(elementFlag);
             var strong = StrengthsFor(elementFlag);
-
             if ((weak & element) != 0) Die(StatusEffectiveness.Weak);
             else if ((strong & element) != 0) Die(StatusEffectiveness.Strong);
             else Die(StatusEffectiveness.Normal);
@@ -141,12 +150,11 @@ public class Enemy : Actor
         else
         {
             meshAnimator.PlayOneShotHitAnimation();
+            healthBar.ReduceValue(damage);
             currentHealth -= damage;
         }
     }
 
-    private bool _dead;
-    [SerializeField] private GameObject deathParticleSystem;
 
     protected override void Die(StatusEffectiveness status)
     {
@@ -158,6 +166,7 @@ public class Enemy : Actor
             deathParticleSystem.transform.position = transform.position;
             deathParticleSystem.SetActive(true);
         }
+
         GameBalancer.KillEnemy(status, this);
     }
 }

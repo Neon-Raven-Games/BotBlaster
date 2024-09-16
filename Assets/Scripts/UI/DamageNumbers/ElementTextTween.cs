@@ -141,6 +141,16 @@ namespace UI.DamageNumbers
             var rend = text.GetComponent<MeshRenderer>();
             text.text = number.ToString();
             SetGlowProperties(element, rend, effectiveness);
+            if (effectiveness == StatusEffectiveness.Strong)
+            {
+                text.transform.DOPunchScale(Vector3.one * 1.2f, 0.5f, 1, 0.5f);
+                text.transform.DOJump(text.transform.position + new Vector3(Random.Range(-0.2f, 0.2f), 1, 0), 1, 1, 1f);
+            }
+            else if (effectiveness == StatusEffectiveness.Normal)
+            {
+                text.transform.DOJump(text.transform.position + new Vector3(Random.Range(-0.2f, 0.2f), 1, 0), 1, 1, 1f);
+            }
+            
             text.DOFade(0, 2f)
                 .SetEase(Ease.OutCubic)
                 .From(1f);

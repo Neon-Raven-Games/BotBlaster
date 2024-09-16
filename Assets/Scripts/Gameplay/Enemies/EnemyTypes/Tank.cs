@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using Util;
 
 namespace Gameplay.Enemies.EnemyTypes
 {
@@ -11,6 +12,7 @@ namespace Gameplay.Enemies.EnemyTypes
         [SerializeField] private float chargeDuration;
         [SerializeField] private float dashDuration;
         [SerializeField] private float rotationSpeed = 16f;
+        [SerializeField] private Transform barrelTransform;
         private bool _attacking;
         private bool _dashing;
 
@@ -23,15 +25,23 @@ namespace Gameplay.Enemies.EnemyTypes
 
         private IEnumerator AttackRoutine()
         {
+            transform.LookAt(player);
+            var projectile = ElementPool.GetElement(element, barrelTransform.position);
+            var proj = projectile.GetComponent<Projectile>();
+            proj.damage = currentDamage;
+            proj.effectiveDamage = currentDamage;
+            projectile.transform.LookAt(player);
             var attackPosition = player.position;
             var t = 0f;
             while (t < attackDuration)
             {
                 RotateToFlatPlayer(rotationSpeed);
+                projectile.transform.position = barrelTransform.position;
+                projectile.transform.Translate(Vector3.forward * t);
                 t += Time.deltaTime;
                 yield return null;
             }
-            
+            projectile.gameObject.SetActive(true);
             lastAttackTime = Time.time;
             playerComponent.ApplyDamage(currentDamage, element, attackPosition);
             _attacking = false;

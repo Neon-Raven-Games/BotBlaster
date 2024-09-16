@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Cysharp.Threading.Tasks;
 using Gameplay.Enemies;
+using NRTools.Analytics;
 using UnityEngine;
 
 // Muzzle parenting
@@ -31,6 +34,8 @@ public class EnemySpawner : MonoBehaviour
     {
         GameBalancer.spawner = this;
     }
+    
+    internal WaveAnalytics _waveAnalytics;
 
     public void StartNextWave()
     {
@@ -40,6 +45,17 @@ public class EnemySpawner : MonoBehaviour
             ? GameBalancer.GenerateWave(currentWave, GameBalancer.GetCurrentSpawnRadius(currentWave), centralPoint)
             : GameBalancer.GenerateBossWave(currentWave / bossWaveInterval, centralPoint);
 
+        if (_waveAnalytics != null)
+        {
+            _waveAnalytics.UpdatePlayTime();
+            GameAnalytics.LogWaveData(_waveAnalytics);
+        }
+
+        _waveAnalytics = new WaveAnalytics(currentWaveData.waveNumber, 
+            GameBalancer.GetCurrentSpawnRadius(currentWave), 
+            currentWaveData.numberOfEnemies, currentWaveData.elementFlags, 
+            new BalanceObject(FindObjectOfType<DevController>()));
+        
         WaveController.waveEnemies = currentWaveData.numberOfEnemies;
         SpawnWave().Forget();
         if (currentWave % bossWaveInterval == 0 && currentWave > 0) OnBossKilled();
@@ -71,6 +87,8 @@ public class EnemySpawner : MonoBehaviour
 
             if (paused || !WaveController.IsWaveSpawning()) await UniTask.WaitUntil(() => !paused || !WaveController.IsWaveSpawning());
             if (!WaveController.IsWaveSpawning()) return;
+            
+            // todo, just generate this shit here, don't cache it
             var enemyType = wave.enemyTypes[i % wave.enemyTypes.Length];
             var spawnPosition = wave.spawnPositions[i % wave.spawnPositions.Length];
             var element = wave.elementFlags[i % wave.elementFlags.Length];
@@ -80,7 +98,7 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 
-    private static void SpawnEnemy(EnemyType type, Vector3 position, int waveNumber, ElementFlag element)
+    private void SpawnEnemy(EnemyType type, Vector3 position, int waveNumber, ElementFlag element)
     {
         var enemy = EnemyPool.GetEnemy(type);
         enemy.element = element;
@@ -88,48 +106,19 @@ public class EnemySpawner : MonoBehaviour
         enemy.gameObject.SetActive(true);
         enemy.element = element;
         enemy.ApplyBalance(waveNumber);
+        
+        var enemyBalance = _waveAnalytics.EnemyBalanceData.FirstOrDefault(e => e.enemyType == type);
+    
+        if (enemyBalance == null)
+        {
+            enemyBalance = new EnemyBalanceObject(enemy) { count = 1, Elements = new List<ElementFlag> { element } };
+            _waveAnalytics.EnemyBalanceData.Add(enemyBalance);
+        }
+        else
+        {
+            enemyBalance.count++;
+            if (!enemyBalance.Elements.Contains(element)) enemyBalance.Elements.Add(element);
+        }
     }
 }
 
-public static class GameAnalyticsHelper
-{
-    private static readonly StringBuilder _SCsvBuilder = new();
-    private static DateTime _startTime;
-
-    private static string _filePath;
-
-    public static void InitializeAnalytics()
-    {
-#if UNITY_EDITOR
-        _startTime = DateTime.Now;
-        _SCsvBuilder.Clear();
-        _SCsvBuilder.AppendLine("WaveNumber,SpawnRadius,NumberOfEnemies,Elements,PlayTimeSeconds");
-        _filePath = Path.Combine(Application.persistentDataPath, $"GameAnalytics_{_startTime:yyyy-MM-dd_HH-mm-ss}.csv");
-#endif
-    }
-
-    public static void LogWaveData(int waveNumber, float spawnRadius, int numberOfEnemies, ElementFlag[] elements)
-    {
-#if UNITY_EDITOR
-        var elapsedTime = (DateTime.Now - _startTime).TotalSeconds;
-        string elementString = string.Join(";", elements);
-        _SCsvBuilder.AppendLine($"{waveNumber},{spawnRadius},{numberOfEnemies},{elementString},{elapsedTime}");
-
-        Debug.Log(
-            $"Logged Wave {waveNumber}: {spawnRadius} radius, {numberOfEnemies} enemies, Elements: {elementString}, Time: {elapsedTime}");
-#endif
-    }
-
-    public static void FinalizeAnalytics()
-    {
-#if UNITY_EDITOR
-        File.WriteAllText(_filePath, _SCsvBuilder.ToString());
-        Debug.Log($"Game analytics saved to {_filePath}");
-#endif
-    }
-
-    public static void ResetAnalytics()
-    {
-        _SCsvBuilder.Clear();
-    }
-}

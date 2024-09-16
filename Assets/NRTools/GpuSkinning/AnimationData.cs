@@ -44,6 +44,7 @@ namespace NRTools.GpuSkinning
     }
 
 
+    [Serializable]
     public class AnimationData
     {
         public string animationName;

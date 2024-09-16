@@ -5,90 +5,87 @@ using Util;
 
 public class ShootingState : BaseHandCanonState
 {
-    private CharacterController _controller;
-    private bool beam;
-    private GameObject beamObject;
-    private CharacterController controller;
-    private bool launchRequested;
+    private float fireRate => handCannon.FireRate;
+
+    private readonly CharacterController _controller;
+
+    private bool _beam;
+    private GameObject _beamObject;
+    private bool _launchRequested;
+    private float _fireTime;
 
     public ShootingState(HandCannon handCannon) : base(handCannon)
     {
-        controller = handCannon.actor.GetComponent<CharacterController>();
+        _controller = handCannon.actor.GetComponent<CharacterController>();
     }
 
     public override void EnterState()
     {
-        if (beam || beamObject) return;
+        if (_beam || _beamObject) return;
         handCannon.muzzleFlash.SetActive(false);
         base.EnterState();
     }
 
-    
-    
     private void RequestLaunch()
     {
-        launchRequested = true;
+        _launchRequested = true;
     }
 
     public override void FixedUpdate()
     {
-        if (launchRequested)
+        if (_launchRequested)
         {
             if (handCannon.soloCannon && handCannon.blasterElement != ElementFlag.Electricity &&
                 handCannon.blasterElement != ElementFlag.Fire && handCannon.blasterElement != ElementFlag.Water &&
                 handCannon.blasterElement != ElementFlag.Wind && handCannon.blasterElement != ElementFlag.Rock)
             {
-                beamObject = ElementPool.GetElement(handCannon.blasterElement, handCannon.barrelTransform.position);
-                if (!beamObject) return;
-                beam = true;
-                launchRequested = false;
-                beamObject.SetActive(true);
+                _beamObject = ElementPool.GetElement(handCannon.blasterElement, handCannon.barrelTransform.position);
+                if (!_beamObject) return;
+                _beam = true;
+                _launchRequested = false;
+                _beamObject.SetActive(true);
                 return;
             }
 
             var ball = ElementPool.GetElement(handCannon.blasterElement, handCannon.barrelTransform.position);
             LaunchDodgeball(ball);
-            launchRequested = false;
+            _launchRequested = false;
         }
     }
-
-    private float fireRate = 0.5f;
-    private float fireTime;
-    private static readonly int _SFire = Animator.StringToHash("Fire");
 
     public override void Update()
     {
         base.Update();
-        if (!beam || !beamObject)
+        if (!_beam || !_beamObject)
         {
-            if (fireTime > 0)
+            if (_fireTime > 0)
             {
-                fireTime -= Time.deltaTime;
+                _fireTime -= Time.deltaTime;
             }
-            else
+            else if (handCannon.state == CannonState.Shooting)
             {
                 RequestLaunch();
-                fireTime = fireRate;
+                _fireTime = fireRate;
             }
 
             return;
         }
 
-        beamObject.transform.position = handCannon.barrelTransform.position;
-        beamObject.transform.rotation = handCannon.barrelTransform.rotation;
-        beamObject.transform.position += controller.velocity.normalized * Time.deltaTime;
+        _beamObject.transform.position = handCannon.barrelTransform.position;
+        _beamObject.transform.rotation = handCannon.barrelTransform.rotation;
+        _beamObject.transform.position += _controller.velocity.normalized * Time.deltaTime;
     }
 
     public override void FireReleaseAction()
     {
         base.FireReleaseAction();
-        if (beamObject)
+        if (_beamObject)
         {
-            beamObject.SetActive(false);
-            beamObject = null;
+            _beamObject.SetActive(false);
+            _beamObject = null;
         }
 
-        beam = false;
+        _beam = false;
         ChangeState(CannonState.Idle);
     }
 
@@ -109,11 +106,13 @@ public class ShootingState : BaseHandCanonState
         projectile.isPlayerProjectile = true;
         projectile.damage = handCannon.actor.FetchDamage();
         projectile.effectiveDamage = handCannon.actor.FetchEffectiveElementalDamage(handCannon.blasterElement);
+
         dodgeball.SetActive(true);
 
         var launchVelocity = handCannon.barrelTransform.forward * handCannon.launchForce;
-        launchVelocity += controller.velocity;
+        launchVelocity += _controller.velocity;
 
         rb.velocity = launchVelocity;
+        handCannon.actor.HapticFeedback(handCannon.handSide);
     }
 }
