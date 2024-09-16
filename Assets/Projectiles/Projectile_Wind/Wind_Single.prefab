@@ -49,7 +49,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73e8c5a68e12402abcf7c8ca5f562aa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  muzzleFlash: {fileID: 4427351453057253910}
   isPlayerProjectile: 0
   elementFlag: 16
   speed: 10
@@ -223,11 +222,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a59b256dbe1e81e44b775e873c23218a, type: 3}
---- !u!1 &4427351453057253910 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1895688404305102205, guid: a59b256dbe1e81e44b775e873c23218a, type: 3}
-  m_PrefabInstance: {fileID: 2828201463617374059}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7328486168503594399 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4795147679852292852, guid: a59b256dbe1e81e44b775e873c23218a, type: 3}
@@ -271,7 +265,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4795147679852292852, guid: 8c4c6020091e0d74e92af8b2ecab0b10, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 4.41
       objectReference: {fileID: 0}
     - target: {fileID: 4795147679852292852, guid: 8c4c6020091e0d74e92af8b2ecab0b10, type: 3}
       propertyPath: m_LocalRotation.w
@@ -301,8 +295,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4910969835798112096, guid: 8c4c6020091e0d74e92af8b2ecab0b10, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -3.74
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6066058884892234451, guid: 8c4c6020091e0d74e92af8b2ecab0b10, type: 3}
+    - {fileID: 3501814643740556742, guid: 8c4c6020091e0d74e92af8b2ecab0b10, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

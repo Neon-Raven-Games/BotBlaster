@@ -1,10 +1,10 @@
+using System;
 using System.Collections.Generic;
 using Gameplay.Enemies;
-using NRTools.AtlasHelper;
 using NRTools.GpuSkinning;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Util;
+
 
 public class HandCannon : MonoBehaviour
 {
@@ -15,7 +15,15 @@ public class HandCannon : MonoBehaviour
     [SerializeField] private InputActionAsset actionAsset;
     public Transform barrelTransform;
 
-    [Header("Shooting Settings")] public GameObject muzzleFlash;
+    [Header("Muzzle Flash")] 
+    [SerializeField] private GameObject fireFlash;
+    [SerializeField] private GameObject waterFlash;
+    [SerializeField] private GameObject windFlash;
+    [SerializeField] private GameObject rockFlash;
+    [SerializeField] private GameObject electricityFlash;
+    
+    [Header("Shooting Settings")] 
+    internal GameObject muzzleFlash;
     public float launchForce = 20f;
 
     private Dictionary<CannonState, BaseHandCanonState> _states;
@@ -42,11 +50,18 @@ public class HandCannon : MonoBehaviour
     public void PlayOneShotAnimation()
     {
         _gpuMeshAnimator.PlayOneShotHitAnimation();
+        
     }
     
     private void SetBlasterMaterial()
     {
         if (soloCannon) return;
+        if (blasterElement == ElementFlag.Electricity) muzzleFlash = electricityFlash;
+        if (blasterElement == ElementFlag.Fire) muzzleFlash = fireFlash;
+        if (blasterElement == ElementFlag.Water) muzzleFlash = waterFlash;
+        if (blasterElement == ElementFlag.Wind) muzzleFlash = windFlash;
+        if (blasterElement == ElementFlag.Rock) muzzleFlash = rockFlash;
+        
         _gpuMeshAnimator.UpdateElement(blasterElement);
     }
 

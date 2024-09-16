@@ -39229,6 +39229,7 @@ MonoBehaviour:
   element: 48
   zAxisParticles:
   - {fileID: 1020422894865768110}
+  - {fileID: 7956465056778275088}
   projectileImpact: {fileID: 4856711531377022068}
   endDistance: 10
   jetSpeed: 8
