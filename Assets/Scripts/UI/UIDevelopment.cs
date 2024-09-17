@@ -135,7 +135,7 @@ public class UIDevelopment : MonoBehaviour
     private void RadialMenuPerformedAction(InputAction.CallbackContext ctx)
     {
         _radialMenuInput = ctx.ReadValue<Vector2>();
-        
+        HighlightChildBasedOnInput();
     }
 
     private void GripPerformedAction(InputAction.CallbackContext obj)
@@ -145,25 +145,17 @@ public class UIDevelopment : MonoBehaviour
         _radialMenuAction.canceled += RadialMenuCanceledAction;
         _radialMenuAction.Enable();
         OpenMenu();
-        opened = true;
     }
 
     private void GripReleasedAction(InputAction.CallbackContext obj)
     {
-        opened = false;
         _radialMenuAction.Disable();
         _radialMenuAction.performed -= RadialMenuPerformedAction;
         _radialMenuAction.canceled -= RadialMenuCanceledAction;
+        CloseMenu();
+        
         _radialMenuInput = Vector2.zero;
         devController.EnableThumbstick(handSide);
-        CloseMenu();
-    }
-
-    private bool opened;
-    private void Update()
-    {
-        if (opened && _radialMenuInput != Vector2.zero) 
-            HighlightChildBasedOnInput();
     }
 
     public void OpenMenu()

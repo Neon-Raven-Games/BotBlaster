@@ -64,7 +64,6 @@ public static class GameBalancer
         }
         else if (waveNumber < _MID_WAVE_LIMIT)
         {
-            Debug.Log("Probability list initialized for mid waves.");
             _SEnemyProbability.AddItem(EnemyType.Grunt, 50);
             _SEnemyProbability.AddItem(EnemyType.GlassCannon, 30);
             _SEnemyProbability.AddItem(EnemyType.Tank, 20);
@@ -78,7 +77,6 @@ public static class GameBalancer
         }
         else if (waveNumber < _LATE_WAVE_LIMIT)
         {
-            Debug.Log("Probability list initialized for late waves.");
             _SEnemyProbability.AddItem(EnemyType.Grunt, 40);
             _SEnemyProbability.AddItem(EnemyType.GlassCannon, 30);
             _SEnemyProbability.AddItem(EnemyType.Tank, 20);
@@ -92,7 +90,6 @@ public static class GameBalancer
         }
         else
         {
-            Debug.Log("Probability list initialized for else.");
             foreach (ElementFlag element in Enum.GetValues(typeof(ElementFlag)))
             {
                 if (element == ElementFlag.None) continue;
@@ -137,13 +134,11 @@ public static class GameBalancer
         Debug.Log($"Boss defeated! Total bosses defeated: {BossesDefeated}");
     }
 
-    // Central method to compute the spawn radius dynamically
+    // deprecated, we are now spawning in a fixed radius for that astro bot feel
     public static float GetCurrentSpawnRadius(int currentWave)
     {
         var wavesUntilBoss = bossWaveInterval - (currentWave % bossWaveInterval);
         var progressToBoss = wavesUntilBoss / (float) bossWaveInterval;
-
-        // Calculate and return the current spawn radius using the progression toward the boss
         return Mathf.Lerp(minSpawnRadius, maxSpawnRadius, progressToBoss);
     }
 

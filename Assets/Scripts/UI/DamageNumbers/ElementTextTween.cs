@@ -143,8 +143,9 @@ namespace UI.DamageNumbers
             SetGlowProperties(element, rend, effectiveness);
             if (effectiveness == StatusEffectiveness.Strong)
             {
-                text.transform.DOPunchScale(Vector3.one * 1.2f, 0.5f, 1, 0.5f);
-                text.transform.DOJump(text.transform.position + new Vector3(Random.Range(-0.2f, 0.2f), 1, 0), 1, 1, 1f);
+                text.transform.DOPunchScale(Vector3.one * 1.2f, 0.5f, 1, 0.4f);
+                text.transform.DOJump(text.transform.position + new Vector3(Random.Range(-0.2f, 0.2f), 1, 0), 1
+                    , 2, 1.4f);
             }
             else if (effectiveness == StatusEffectiveness.Normal)
             {
@@ -159,24 +160,21 @@ namespace UI.DamageNumbers
         private static void SetGlowProperties(ElementFlag element, MeshRenderer rend,
             StatusEffectiveness statusEffectiveness)
         {
-            float glowMultiplier, pulsateDuration, scaleMultiplier;
+            float glowMultiplier, pulsateDuration;
             switch (statusEffectiveness)
             {
                 case StatusEffectiveness.Strong:
                     glowMultiplier = 1f;
-                    pulsateDuration = 0.5f; // Fast pulsation
-                    scaleMultiplier = 1.3f; // Slightly larger scale
+                    pulsateDuration = 0.5f; 
                     break;
                 case StatusEffectiveness.Weak:
                     glowMultiplier = 0.25f;
-                    pulsateDuration = 1.5f; // Slow pulsation
-                    scaleMultiplier = 1f; // No scaling
+                    pulsateDuration = 1.5f;
                     break;
                 case StatusEffectiveness.Normal:
                 default:
                     glowMultiplier = 0.5f;
-                    pulsateDuration = 1f; // Moderate pulsation
-                    scaleMultiplier = 1.1f; // Slightly larger scale, but less than Strong
+                    pulsateDuration = 1f; 
                     break;
             }
 
@@ -213,8 +211,6 @@ namespace UI.DamageNumbers
             SetGlowProperty(glowMultiplier, rend, pulsateDuration, _SGlowInner, materialProperties.glowInner);
             SetGlowProperty(glowMultiplier, rend, pulsateDuration, _SGlowOuter, materialProperties.glowOuter);
 
-            // Animate scale and position
-            rend.transform.DOScale(scaleMultiplier, pulsateDuration).SetEase(Ease.OutElastic).From(1f);
             rend.transform.DOMoveY(rend.transform.position.y + .4f, 2f).SetEase(Ease.OutCubic)
                 .OnComplete(() => rend.gameObject.SetActive(false));
         }

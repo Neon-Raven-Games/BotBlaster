@@ -181,21 +181,24 @@ public class Actor : MonoBehaviour
             if (this is Swarm) return;
             _lastTick = Time.time + ElementDecorator.DEBUFF_TICK;
 
-            foreach (var status in stacks)
+            
+            foreach (ElementFlag flag in Enum.GetValues(typeof(ElementFlag)))
             {
-                if (status.Value > 0)
+                if (flag == ElementFlag.None) continue;
+                var status = stacks[flag];
+                if (status > 0)
                 {
-                    var multiplier = GetStackMultiplier(status.Key);
+                    var multiplier = GetStackMultiplier(flag);
                     var dmg = ApplyDamage(
                         (int)(baseDamage + multiplier),
-                        status.Key, transform.position, status.Value);
+                        flag, transform.position, status);
                     if (this is not DevController) currentHealth -= dmg;
                 }
 
                 if (currentHealth <= 0)
                 {
-                    var weak = WeaknessesFor(status.Key);
-                    var strong = StrengthsFor(status.Key);
+                    var weak = WeaknessesFor(flag);
+                    var strong = StrengthsFor(flag);
                     if ((weak & element) != 0) Die(StatusEffectiveness.Weak);
                     else if ((strong & element) != 0) Die(StatusEffectiveness.Strong);
                     else Die(StatusEffectiveness.Normal);

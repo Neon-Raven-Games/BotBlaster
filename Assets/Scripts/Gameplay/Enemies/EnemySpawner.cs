@@ -1,23 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using Cysharp.Threading.Tasks;
 using Gameplay.Enemies;
+using Gameplay.Enemies.EnemyTypes;
 using NRTools.Analytics;
 using UnityEngine;
-
-// Muzzle parenting
-// UI Select not generated at runtime. make it hard coded and pentagram
-
-// AI Animations:
-// Expression based on wave level (number animations? wave based division)
-// Hurt/Hit
-// Death
-// Falling (right before death on flying enemies0
-// Shooting/Divebombing - Attack (Divebomb for swarm units, powerup/shoot for glass cannon, melee for tank/grunt)
-// Lerp animation in (lerp color? High white intensity, then fade to normal color)
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -34,13 +22,38 @@ public class EnemySpawner : MonoBehaviour
     {
         GameBalancer.spawner = this;
     }
-    
+
     internal WaveAnalytics _waveAnalytics;
+
+    [SerializeField] private float spawnRadius = 10f;
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+    
+        DrawWireCircle(centralPoint.position, spawnRadius, 50);
+    }
+
+    private static void DrawWireCircle(Vector3 position, float radius, int segments)
+    {
+        var angle = 0f;
+        var angleStep = 360f / segments;
+        var prevPoint = position + new Vector3(Mathf.Cos(Mathf.Deg2Rad * angle), 0, Mathf.Sin(Mathf.Deg2Rad * angle)) * radius;
+
+        for (var i = 0; i <= segments; i++)
+        {
+            angle += angleStep;
+            var nextPoint = position + new Vector3(Mathf.Cos(Mathf.Deg2Rad * angle), 0, Mathf.Sin(Mathf.Deg2Rad * angle)) * radius;
+            Gizmos.DrawLine(prevPoint, nextPoint);
+            prevPoint = nextPoint;
+        }
+    }
+
 
     public void StartNextWave()
     {
         GameBalancer.InitializeElementProbability(currentWave);
-        
+
         currentWaveData = currentWave % bossWaveInterval != 0 && currentWave != 0
             ? GameBalancer.GenerateWave(currentWave, GameBalancer.GetCurrentSpawnRadius(currentWave), centralPoint)
             : GameBalancer.GenerateBossWave(currentWave / bossWaveInterval, centralPoint);
@@ -51,11 +64,11 @@ public class EnemySpawner : MonoBehaviour
             GameAnalytics.LogWaveData(_waveAnalytics);
         }
 
-        _waveAnalytics = new WaveAnalytics(currentWaveData.waveNumber, 
-            GameBalancer.GetCurrentSpawnRadius(currentWave), 
-            currentWaveData.numberOfEnemies, currentWaveData.elementFlags, 
+        _waveAnalytics = new WaveAnalytics(currentWave,
+            GameBalancer.GetCurrentSpawnRadius(currentWave),
+            currentWaveData.numberOfEnemies, currentWaveData.elementFlags,
             new BalanceObject(FindObjectOfType<DevController>()));
-        
+
         WaveController.waveEnemies = currentWaveData.numberOfEnemies;
         SpawnWave().Forget();
         if (currentWave % bossWaveInterval == 0 && currentWave > 0) OnBossKilled();
@@ -85,9 +98,10 @@ public class EnemySpawner : MonoBehaviour
 
             await UniTask.Delay(TimeSpan.FromSeconds(wave.spawnInterval));
 
-            if (paused || !WaveController.IsWaveSpawning()) await UniTask.WaitUntil(() => !paused || !WaveController.IsWaveSpawning());
+            if (paused || !WaveController.IsWaveSpawning())
+                await UniTask.WaitUntil(() => !paused || !WaveController.IsWaveSpawning());
             if (!WaveController.IsWaveSpawning()) return;
-            
+
             // todo, just generate this shit here, don't cache it
             var enemyType = wave.enemyTypes[i % wave.enemyTypes.Length];
             var spawnPosition = wave.spawnPositions[i % wave.spawnPositions.Length];
@@ -103,15 +117,18 @@ public class EnemySpawner : MonoBehaviour
         var enemy = EnemyPool.GetEnemy(type);
         enemy.element = element;
         enemy.transform.position = position;
+        if (type == EnemyType.Swarm && enemy is Swarm swarm)
+            swarm.swarmCount = Mathf.CeilToInt(1 * ElementDecorator.STRENGTH_MULTIPLIER * waveNumber);
+
         enemy.gameObject.SetActive(true);
         enemy.element = element;
         enemy.ApplyBalance(waveNumber);
-        
+
         var enemyBalance = _waveAnalytics.EnemyBalanceData.FirstOrDefault(e => e.enemyType == type);
-    
+
         if (enemyBalance == null)
         {
-            enemyBalance = new EnemyBalanceObject(enemy) { count = 1, Elements = new List<ElementFlag> { element } };
+            enemyBalance = new EnemyBalanceObject(enemy) {count = 1, Elements = new List<ElementFlag> {element}};
             _waveAnalytics.EnemyBalanceData.Add(enemyBalance);
         }
         else
@@ -121,4 +138,3 @@ public class EnemySpawner : MonoBehaviour
         }
     }
 }
-

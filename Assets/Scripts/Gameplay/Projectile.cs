@@ -14,12 +14,12 @@ namespace Gameplay
 
         private void Awake()
         {
-            impact.transform.parent = null;
+            if (impact) impact.transform.parent = null;
         }
 
         private void OnEnable()
         {
-            impact.SetActive(false);
+            if (impact) impact.SetActive(false);
         }
 
         private void OnDisable()

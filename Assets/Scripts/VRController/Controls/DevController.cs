@@ -184,8 +184,8 @@ public class DevController : Actor
     {
         ResetHandAnchor();
         UpdateHealthBar();
-        HandleRotation();
-        HandleMovement();
+        // HandleRotation();
+        // HandleMovement();
         SyncBaseObjectWithCamera();
         _vignetteController.StopVignette();
     }
@@ -364,9 +364,8 @@ public class DevController : Actor
         }
         else if (utilityUpgrade == UtilityUpgrade.Damage)
         {
-            var curDamage = baseDamage;
-            baseDamage = (int) (curDamage * damageUpgrade);
-            if (baseDamage == curDamage) baseDamage++;
+            currentDamage = (int) (currentDamage * damageUpgrade);
+            if (baseDamage == currentDamage) currentDamage++;
         }
         else if (utilityUpgrade == UtilityUpgrade.HealthRegen)
         {

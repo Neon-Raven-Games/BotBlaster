@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Gameplay.Enemies;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace NRTools.AtlasHelper
@@ -61,12 +59,13 @@ namespace NRTools.AtlasHelper
                 }
             }
         }
-
-
+        
         public static Rect GetUVRect(TextureType type, ElementFlag element, out int page)
         {
             page = 0;
             if (EnemyAtlasLookup == null || EnemyAtlasLookup.Count == 0) _instance.Awake();
+            if (_instance == null ||_instance.atlasData == null) 
+                return Rect.zero;
             foreach (var data in _instance.atlasData)
             {
                 if (data.textureType == type && data.elementFlag == element)
@@ -75,7 +74,6 @@ namespace NRTools.AtlasHelper
                     return data.UVRect;
                 }
             }
-
             return Rect.zero;
         }
         

@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using DG.Tweening;
 
@@ -29,8 +28,7 @@ public class EnemyHealthBar : MonoBehaviour
     {
         currentValue -= value;
         var newScale = Mathf.Clamp(currentValue / maxValue, 0, 1);
-        foreGround.transform.DOScaleX(newScale, 0.5f).SetEase(Ease.OutCubic);
-        foreGround.transform.DOPunchScale(new Vector3(0.2f, 0, 0), 0.2f, 10, 1);
+        foreGround.transform.DOScaleX(newScale, 0.5f).SetEase(Ease.OutBounce);
     }
 
     public void IncreaseValue(float value)

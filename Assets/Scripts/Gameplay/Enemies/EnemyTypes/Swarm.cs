@@ -9,7 +9,7 @@ namespace Gameplay.Enemies.EnemyTypes
     public class Swarm : Enemy
     {
         [SerializeField] private GameObject swarmUnitPrefab;
-        [SerializeField] private int swarmCount = 5;
+        [SerializeField] internal int swarmCount = 5;
         [SerializeField] private float circleRadius = 5f;
         [SerializeField] private float diveBombPercentage = 0.2f;
         [SerializeField] private float diveBombCooldown = 5f;
@@ -40,8 +40,7 @@ namespace Gameplay.Enemies.EnemyTypes
                 return;
             }
 
-            if (_swarmUnits.Count == 0)
-                InitializeSwarm(swarmCount);
+            if (_swarmUnits.Count == 0) InitializeSwarm(swarmCount);
             SetSwarmActive(swarmCount);
         }
 
@@ -68,6 +67,9 @@ namespace Gameplay.Enemies.EnemyTypes
         private void SetSwarmActive(int count)
         {
             currentSwarmUnitCount = count;
+            if (_swarmUnits.Count < count) 
+                InitializeSwarm(count - _swarmUnits.Count + 1);
+            
             for (var i = 0; i < count; i++)
             {
                 var angle = i * Mathf.PI * 2f / count;
@@ -81,6 +83,7 @@ namespace Gameplay.Enemies.EnemyTypes
                 swarmUnit.Initialize(playerComponent, currentDamage, currentHealth / count, element);
                 swarmUnit.gameObject.SetActive(true);
             }
+            
             MoveSwarmAsync().Forget();
         }
 
