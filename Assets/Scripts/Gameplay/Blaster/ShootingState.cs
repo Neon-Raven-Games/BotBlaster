@@ -51,23 +51,19 @@ public class ShootingState : BaseHandCanonState
         }
     }
 
-    // War Planes flying over tank made cool scene (swarm)
-    // fire rate offset to make each hand shoot alternating
-    // purposely alter spawning patterns based on element in which hand, especially if dual wielding
     private float fireRate => handCannon.FireRate;
 
     public override void Update()
     {
         base.Update();
-
-        if (_fireTime > 0)
+        if (handCannon.fireTime > 0)
         {
-            _fireTime -= Time.deltaTime;
+            handCannon.fireTime -= Time.deltaTime;
         }
         else if (handCannon.state == CannonState.Shooting)
         {
             RequestLaunch();
-            _fireTime = fireRate;
+            handCannon.fireTime = fireRate;
         }
 
         // todo, move this over to new class for combined hand cannon

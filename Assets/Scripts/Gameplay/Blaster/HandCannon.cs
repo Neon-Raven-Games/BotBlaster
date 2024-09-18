@@ -10,6 +10,7 @@ public class HandCannon : MonoBehaviour
     public float FireRate => actor.baseAttackCoolDown;
     public ElementFlag blasterElement;
     private ElementFlag _previousElement;
+    public float fireTime;
     
     public AudioSource audioSource;
     private GpuMeshAnimator _gpuMeshAnimator;

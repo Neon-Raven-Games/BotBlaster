@@ -18,10 +18,18 @@ using UnityEngine;
 // ===test the projectiles since large changes were made. If alles klar, finish up player with powerup mechanic===
 
 // *Player/Elements - Power-up mechanic, large improvement
-// ~Gameplay/Balance - Large improvement, balance out the power ups
-// ~Enemies/Balance - Large improvement
+// *Gameplay/Balance - Large improvement, balance out the power ups
+// *Enemies/Balance - Large improvement
+// *fire rate offset to make each hand shoot alternating
 // ===Test the balance to ensure power ups feel rewarding and the game is challenging===
 
+// enemy movement pattern note:
+// War Planes flying over tank made cool scene (swarm)
+
+// 9/18, finish enemies and combined blasters, implement single cannons.
+// 9/19, finish rendering biz
+// 9/20, UI and game feel
+// 9/21, sound dev and polish passes
 
 // Enemies/Shooting - QoL
 // Enemies/Movement Patterns - Large improvement
