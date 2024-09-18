@@ -16,12 +16,10 @@ public class Enemy : Actor
     protected GpuMeshAnimator meshAnimator;
 
     private Rigidbody rigidbody;
-    private bool _knockingBack;
     private bool _dead;
 
     protected virtual void OnEnable()
     {
-        _knockingBack = false;
         currentHealth = baseHealth;
         currentDamage = baseDamage;
         currentSpeed = baseSpeed;
@@ -140,7 +138,6 @@ public class Enemy : Actor
         if (currentHealth - damage <= 0)
         {
             healthBar.FillEmpty();
-            _knockingBack = true;
             var weak = WeaknessesFor(elementFlag);
             var strong = StrengthsFor(elementFlag);
             if ((weak & element) != 0) Die(StatusEffectiveness.Weak);

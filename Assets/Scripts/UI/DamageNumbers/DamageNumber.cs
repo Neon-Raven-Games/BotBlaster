@@ -1,34 +1,28 @@
-using System;
 using Gameplay.Enemies;
 using TMPro;
 using UI.DamageNumbers;
 using UnityEngine;
 
-[Serializable]
-public class DamageNumberIndex
-{
-    public ElementFlag elementFlag;
-    public TextMeshPro text;
-}
-
 public class DamageNumber : MonoBehaviour
 {
     private Transform _mainCamera;
-    private TextMeshPro text;
-    public void SetScoreText(int score, int multiplier)
-    {
-        ScoreTextTween.TweenScoreText(text, score, multiplier);
-    }
+    private TextMeshPro _text;
 
     public void SetElementText(ElementFlag elementFlag, StatusEffectiveness statusEffectiveness, int number)
     {
-        ElementTextTween.TweenElementText(text, elementFlag, statusEffectiveness, number);
+        ElementTextTween.TweenElementText(_text, elementFlag, statusEffectiveness, number);
+    }
+
+    public void ClearText()
+    {
+        _text.text = "";
     }
 
     private void Awake()
     {
-        _mainCamera = Camera.main.transform;
-        text = GetComponent<TextMeshPro>();
+        if (Camera.main != null) 
+            _mainCamera = Camera.main.transform;
+        _text = GetComponent<TextMeshPro>();
     }
 
     private void Update()

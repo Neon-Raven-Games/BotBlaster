@@ -38,6 +38,7 @@ namespace Gameplay.Enemies.EnemyTypes
 
         protected override void Attack()
         {
+            if (_isCharging) return;
             _isCharging = true;
             StartCoroutine(ChargeAttack());
         }
@@ -52,19 +53,21 @@ namespace Gameplay.Enemies.EnemyTypes
             proj.effectiveDamage = currentDamage;
             projectile.transform.LookAt(player);
 
-            projectile.gameObject.SetActive(true);
             var t = 0f;
             while (t < chargeTime)
             {
                 t += Time.deltaTime;
                 transform.LookAt(playerPosition);
+                projectile.transform.LookAt(playerPosition);
                 projectile.transform.position = barrelTransform.position;
-                projectile.transform.Translate(Vector3.forward * t);
                 yield return null;
             }
-
-            _isCharging = false;
+            
+            if (currentHealth > 0 && gameObject.activeInHierarchy)
+                projectile.gameObject.SetActive(true);
+            
             lastAttackTime = Time.time;
+            _isCharging = false;
         }
 
         protected override void Move()

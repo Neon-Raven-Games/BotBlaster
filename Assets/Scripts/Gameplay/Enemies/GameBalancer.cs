@@ -2,22 +2,31 @@ using System;
 using Gameplay.Enemies;
 using RNGNeeds;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public static class GameBalancer
 {
-    private static readonly ProbabilityList<ElementFlag> _SElementProbabilityList = new();
-    private static readonly ProbabilityList<EnemyType> _SEnemyProbability = new();
+    // player performance, adaptive difficulty scale
+    private const float _HEALTH_PERFORMANCE_WEIGHT = 0.4f;
+    private const float _KILL_RATE_PERFORMANCE_WEIGHT = 0.3f;
+    private const float _DAMAGE_TAKEN_PERFORMANCE_WEIGHT = 0.3f;
 
-    private const float _POST_BOSS_HEALTH_BOOST = 1.1f;
-    private const float _POST_BOSS_DAMAGE_BOOST = 1.05f;
+    // spawning
+    private static float _spawnRateModifier = 2.5f;
+    private static float _difficultyRamp = 1.05f;
+    private static float _randomFactorRange = 0.9f;
+    private const float baseSpawnRateModifier = 2.5f;
+
+    // enemy spawn probabilities
+    internal static readonly ProbabilityList<ElementFlag> _SElementProbabilityList = new();
+    internal static readonly ProbabilityList<EnemyType> _SEnemyProbability = new();
+    public static float playerPerformance = 1;
+
+    private const float _POST_BOSS_HEALTH_BOOST = 1.01f;
+    private const float _POST_BOSS_DAMAGE_BOOST = 1.01f;
     public static int BossesDefeated { get; private set; } = 0;
 
-
-    public const float minSpawnRadius = 7f;
-    public const float maxSpawnRadius = 20f;
-    public const int bossWaveInterval = 10;
-
-    private const float _HEALTH_SCALING_FACTOR = 1.1f;
+    private const float _HEALTH_SCALING_FACTOR = 1.05f;
     private const float _DAMAGE_SCALING_FACTOR = 1.05f;
     private const float _SPEED_SCALING_FACTOR = 1.02f;
     private const float _ATTACK_RANGE_SCALING_FACTOR = 1.02f;
@@ -46,83 +55,81 @@ public static class GameBalancer
 
     public static void InitializeElementProbability(int waveNumber)
     {
-        _SElementProbabilityList.ClearList();
-        _SEnemyProbability.ClearList();
-
-        if (waveNumber < _EARLY_WAVE_LIMIT)
+        lock (_SEnemyProbability)
         {
-            _SEnemyProbability.AddItem(EnemyType.Grunt, 70);
-            _SEnemyProbability.AddItem(EnemyType.GlassCannon, 20);
-            _SEnemyProbability.AddItem(EnemyType.Tank, 10);
+            _SElementProbabilityList.ClearList();
 
-            // In early waves, bias towards Water element
-            _SElementProbabilityList.AddItem(ElementFlag.Water, _EARLY_WATER_PROBABILITY);
-            _SElementProbabilityList.AddItem(ElementFlag.Fire, _EARLY_FIRE_PROBABILITY);
-            _SElementProbabilityList.AddItem(ElementFlag.Rock, _EARLY_ROCK_PROBABILITY);
-            _SElementProbabilityList.AddItem(ElementFlag.Wind, _EARLY_WIND_PROBABILITY);
-            _SElementProbabilityList.AddItem(ElementFlag.Electricity, _EARLY_ELECTRICITY_PROBABILITY);
-        }
-        else if (waveNumber < _MID_WAVE_LIMIT)
-        {
-            _SEnemyProbability.AddItem(EnemyType.Grunt, 50);
-            _SEnemyProbability.AddItem(EnemyType.GlassCannon, 30);
-            _SEnemyProbability.AddItem(EnemyType.Tank, 20);
-            _SEnemyProbability.AddItem(EnemyType.Swarm, 5);
+            _SEnemyProbability.ClearList();
 
-            _SElementProbabilityList.AddItem(ElementFlag.Water, _MID_WATER_PROBABILITY);
-            _SElementProbabilityList.AddItem(ElementFlag.Fire, _MID_FIRE_PROBABILITY);
-            _SElementProbabilityList.AddItem(ElementFlag.Rock, _MID_EARTH_PROBABILITY);
-            _SElementProbabilityList.AddItem(ElementFlag.Wind, _MID_WIND_PROBABILITY);
-            _SElementProbabilityList.AddItem(ElementFlag.Electricity, _MID_ELECTRICITY_PROBABILITY);
-        }
-        else if (waveNumber < _LATE_WAVE_LIMIT)
-        {
-            _SEnemyProbability.AddItem(EnemyType.Grunt, 40);
-            _SEnemyProbability.AddItem(EnemyType.GlassCannon, 30);
-            _SEnemyProbability.AddItem(EnemyType.Tank, 20);
-            _SEnemyProbability.AddItem(EnemyType.Swarm, 15);
-
-            _SElementProbabilityList.AddItem(ElementFlag.Water, _LATE_ELEMENT_PROBABILITY);
-            _SElementProbabilityList.AddItem(ElementFlag.Fire, _LATE_ELEMENT_PROBABILITY);
-            _SElementProbabilityList.AddItem(ElementFlag.Rock, _LATE_ELEMENT_PROBABILITY);
-            _SElementProbabilityList.AddItem(ElementFlag.Wind, _LATE_ELEMENT_PROBABILITY);
-            _SElementProbabilityList.AddItem(ElementFlag.Electricity, _LATE_ELEMENT_PROBABILITY);
-        }
-        else
-        {
-            foreach (ElementFlag element in Enum.GetValues(typeof(ElementFlag)))
+            if (waveNumber < _EARLY_WAVE_LIMIT)
             {
-                if (element == ElementFlag.None) continue;
-                _SElementProbabilityList.AddItem(element, _LATE_ELEMENT_PROBABILITY);
-            }
+                _SEnemyProbability.AddItem(EnemyType.Grunt, 70);
+                _SEnemyProbability.AddItem(EnemyType.GlassCannon, 20);
+                _SEnemyProbability.AddItem(EnemyType.Tank, 10);
 
-            _SEnemyProbability.AddItem(EnemyType.GlassCannon, 30);
-            _SEnemyProbability.AddItem(EnemyType.Tank, 30);
-            _SEnemyProbability.AddItem(EnemyType.Grunt, 35);
-            _SEnemyProbability.AddItem(EnemyType.Swarm, 25);
+                // In early waves, bias towards Water element
+                _SElementProbabilityList.AddItem(ElementFlag.Water, _EARLY_WATER_PROBABILITY);
+                _SElementProbabilityList.AddItem(ElementFlag.Rock, _EARLY_ROCK_PROBABILITY);
+                _SElementProbabilityList.AddItem(ElementFlag.Wind, _EARLY_WIND_PROBABILITY);
+                _SElementProbabilityList.AddItem(ElementFlag.Electricity, _EARLY_ELECTRICITY_PROBABILITY);
+            }
+            else if (waveNumber < _MID_WAVE_LIMIT)
+            {
+                _SEnemyProbability.AddItem(EnemyType.Grunt, 45);
+                _SEnemyProbability.AddItem(EnemyType.GlassCannon, 35);
+                _SEnemyProbability.AddItem(EnemyType.Tank, 15);
+                _SEnemyProbability.AddItem(EnemyType.Swarm, 10);
+                _SElementProbabilityList.AddItem(ElementFlag.Water, _MID_WATER_PROBABILITY);
+                _SElementProbabilityList.AddItem(ElementFlag.Fire, _MID_FIRE_PROBABILITY);
+                _SElementProbabilityList.AddItem(ElementFlag.Rock, _MID_EARTH_PROBABILITY);
+                _SElementProbabilityList.AddItem(ElementFlag.Wind, _MID_WIND_PROBABILITY);
+                _SElementProbabilityList.AddItem(ElementFlag.Electricity, _MID_ELECTRICITY_PROBABILITY);
+            }
+            else if (waveNumber < _LATE_WAVE_LIMIT)
+            {
+                _SEnemyProbability.AddItem(EnemyType.Grunt, 40);
+                _SEnemyProbability.AddItem(EnemyType.GlassCannon, 30);
+                _SEnemyProbability.AddItem(EnemyType.Tank, 20);
+                _SEnemyProbability.AddItem(EnemyType.Swarm, 15);
+                _SElementProbabilityList.AddItem(ElementFlag.Water, _LATE_ELEMENT_PROBABILITY);
+                _SElementProbabilityList.AddItem(ElementFlag.Fire, _LATE_ELEMENT_PROBABILITY);
+                _SElementProbabilityList.AddItem(ElementFlag.Rock, _LATE_ELEMENT_PROBABILITY);
+                _SElementProbabilityList.AddItem(ElementFlag.Wind, _LATE_ELEMENT_PROBABILITY);
+                _SElementProbabilityList.AddItem(ElementFlag.Electricity, _LATE_ELEMENT_PROBABILITY);
+            }
+            else
+            {
+                foreach (ElementFlag element in Enum.GetValues(typeof(ElementFlag)))
+                {
+                    if (element == ElementFlag.None) continue;
+                    _SElementProbabilityList.AddItem(element, _LATE_ELEMENT_PROBABILITY);
+                }
+
+                _SEnemyProbability.AddItem(EnemyType.GlassCannon, 35);
+                _SEnemyProbability.AddItem(EnemyType.Tank, 20);
+                _SEnemyProbability.AddItem(EnemyType.Grunt, 45);
+                _SEnemyProbability.AddItem(EnemyType.Swarm, 20);
+            }
         }
     }
 
-    // Method to get balance multipliers based on the wave number
     public static BalanceMultipliers GetBalanceMultipliers(int waveNumber)
     {
-        // Apply regular scaling based on wave number
         var multipliers = new BalanceMultipliers
         {
             HealthMultiplier = Mathf.Pow(_HEALTH_SCALING_FACTOR, waveNumber),
             DamageMultiplier = Mathf.Pow(_DAMAGE_SCALING_FACTOR, waveNumber),
             SpeedMultiplier = Mathf.Pow(_SPEED_SCALING_FACTOR, waveNumber),
             AttackRangeMultiplier = Mathf.Pow(_ATTACK_RANGE_SCALING_FACTOR, waveNumber),
-            AttackCooldownMultiplier = Mathf.Pow(_COOLDOWN_SCALING_FACTOR, waveNumber) // Cooldown decreases over time
+            AttackCooldownMultiplier = Mathf.Pow(_COOLDOWN_SCALING_FACTOR, waveNumber)
         };
 
-        // Apply additional scaling if boss waves have been completed
         if (BossesDefeated > 0)
         {
             multipliers.HealthMultiplier *=
-                Mathf.Pow(_POST_BOSS_HEALTH_BOOST, BossesDefeated); // Boost health after bosses
+                Mathf.Pow(_POST_BOSS_HEALTH_BOOST, BossesDefeated);
             multipliers.DamageMultiplier *=
-                Mathf.Pow(_POST_BOSS_DAMAGE_BOOST, BossesDefeated); // Boost damage after bosses
+                Mathf.Pow(_POST_BOSS_DAMAGE_BOOST, BossesDefeated);
         }
 
         return multipliers;
@@ -134,14 +141,6 @@ public static class GameBalancer
         Debug.Log($"Boss defeated! Total bosses defeated: {BossesDefeated}");
     }
 
-    // deprecated, we are now spawning in a fixed radius for that astro bot feel
-    public static float GetCurrentSpawnRadius(int currentWave)
-    {
-        var wavesUntilBoss = bossWaveInterval - (currentWave % bossWaveInterval);
-        var progressToBoss = wavesUntilBoss / (float) bossWaveInterval;
-        return Mathf.Lerp(minSpawnRadius, maxSpawnRadius, progressToBoss);
-    }
-
     public static void KillEnemy(StatusEffectiveness statusEffectiveness, Enemy deadEnemy)
     {
         EnemyPool.HandleEnemyDeactivation(deadEnemy);
@@ -149,52 +148,108 @@ public static class GameBalancer
         WaveController.waveEnemies--;
     }
 
-    public static Wave GenerateBossWave(int tier, Transform centerPoint)
+    public static Wave GenerateBossWave(int tier)
     {
-        var numberOfEnemies = _BOSS_MINIONS + 1;
-        var selectedEnemyTypes = new EnemyType[numberOfEnemies];
-        var elementFlags = new ElementFlag[numberOfEnemies];
+        int numberOfEnemies = _BOSS_MINIONS + 1; // 1 boss + minions
+        float spawnInterval = 0.75f;
 
-        // Boss enemy is the first in the array
-        selectedEnemyTypes[0] = EnemyType.Tank;
-        elementFlags[0] = _SElementProbabilityList.PickValue();
+        return new Wave(numberOfEnemies, spawnInterval, tier);
+    }
 
-        for (var i = 1; i < numberOfEnemies; i++)
+    public static void UpdateSpawnModifier(int waveNumber)
+    {
+        // todo, balance getting too hard?
+        // Exponential scaling based on wave number for more aggressive difficulty increase
+        // maybe we can modify this curve if gets too hard
+        _spawnRateModifier = Mathf.Pow(_difficultyRamp, waveNumber) * baseSpawnRateModifier;
+
+        var randomFactor = Random.Range(_randomFactorRange, 1.1f);
+        _spawnRateModifier *= randomFactor;
+        if (playerPerformance > 1.0f)
         {
-            selectedEnemyTypes[i] = EnemyType.Swarm;
-            elementFlags[i] = elementFlags[0];
+            _spawnRateModifier *= playerPerformance;
+        }
+        else
+        {
+            _spawnRateModifier *= Mathf.Lerp(0.5f, 1.1f, playerPerformance);
         }
 
-        var spawnPoints =
-            SpawnPointGenerator.GenerateSpawnPoints(numberOfEnemies, 5f, centerPoint,
-                selectedEnemyTypes); // 5f is a smaller radius for the boss wave
-        var spawnInterval = 0.75f;
+        _spawnRateModifier = Mathf.Clamp(_spawnRateModifier, 1.0f, 5.0f);
+    }
 
-        return new Wave(numberOfEnemies, selectedEnemyTypes, spawnInterval, spawnPoints, tier, elementFlags);
+    public static void CalculatePlayerPerformance(DevController player)
+    {
+        // Avoid division by zero for healthFactor
+        var cappedHealth = Mathf.Max(player.cappedHealth, 1f); // Ensure cappedHealth is not zero
+        var healthFactor = Mathf.Clamp(player.currentHealth / cappedHealth, 0.5f, 1.0f);
+
+        // Kill rate and average kill rate handling
+        var killRate = WaveController.GetKillRate();
+        var averageKillRate = Mathf.Max(WaveController.AverageKillRate(), 1f); // Avoid division by zero
+        var normalizedKillRate = Mathf.Clamp(killRate / averageKillRate, 0.5f, 1.5f);
+
+        // Recent damage taken and capped health handling
+        var recentDamageTaken = player.GetRecentDamageTaken();
+        var normalizedDamage = Mathf.Clamp(1.0f - (recentDamageTaken / cappedHealth), 0.5f, 1.0f);
+
+        // Calculate final performance score using weighted factors
+        var performance = (healthFactor * _HEALTH_PERFORMANCE_WEIGHT) +
+                          (normalizedKillRate * _KILL_RATE_PERFORMANCE_WEIGHT) +
+                          (normalizedDamage * _DAMAGE_TAKEN_PERFORMANCE_WEIGHT);
+
+        // Log for debugging
+        Debug.Log("|Player Performance: " + performance);
+
+        // A value between 0.5 (struggling) and 1.5 (excelling)
+        playerPerformance = performance;
     }
 
 
-    public static Wave GenerateWave(int waveNumber, float spawnRadius, Transform centralPoint)
+    public static Wave GenerateWave(int waveNumber)
     {
-        var numberOfEnemies = Mathf.CeilToInt(waveNumber * 2.5f);
-        var selectedEnemyTypes = new EnemyType[numberOfEnemies];
-        var elementFlags = new ElementFlag[numberOfEnemies];
-        
-        for (var i = 0; i < numberOfEnemies; i++)
-        {
-            selectedEnemyTypes[i] = _SEnemyProbability.PickValue();
-            elementFlags[i] = _SElementProbabilityList.PickValue(); // Get elements based on probability list
-        }
-
-        var spawnPoints =
-            SpawnPointGenerator.GenerateSpawnPoints(numberOfEnemies, spawnRadius, centralPoint, selectedEnemyTypes);
+        var numberOfEnemies = Mathf.CeilToInt(waveNumber * _spawnRateModifier);
         var spawnInterval = Mathf.Max(1.5f - waveNumber * 0.01f, 0.3f);
 
-        return new Wave(numberOfEnemies, selectedEnemyTypes, spawnInterval, spawnPoints, waveNumber, elementFlags);
+        UpdateSpawnModifier(waveNumber);
+        Debug.Log("SpawnRate Modifier after wave generation: " + _spawnRateModifier);
+        return new Wave(numberOfEnemies, spawnInterval, waveNumber);
     }
 
-    public static EnemySpawner spawner { get; set; }
+    public static void UpdateElementProbabilities(ElementFlag playerElement)
+    {
+        lock (_SEnemyProbability)
+        {
+            _SElementProbabilityList.ClearList();
+            var weakElement = WeaknessesFor(playerElement);
+            _SElementProbabilityList.AddItem(weakElement, 60);
+
+            foreach (ElementFlag element in Enum.GetValues(typeof(ElementFlag)))
+            {
+                if (element == weakElement || element == ElementFlag.None || !IsSingleFlag(element)) continue;
+                _SElementProbabilityList.AddItem(element, 10);
+            }
+        }
+    }
+
+    private static bool IsSingleFlag(ElementFlag element)
+    {
+        return element != 0 && (element & (element - 1)) == 0;
+    }
+
+    public static ElementFlag WeaknessesFor(ElementFlag targetElement)
+    {
+        switch (targetElement)
+        {
+            case ElementFlag.Fire: return ElementFlag.Electricity;
+            case ElementFlag.Water: return ElementFlag.Fire;
+            case ElementFlag.Rock: return ElementFlag.Fire;
+            case ElementFlag.Wind: return ElementFlag.Fire;
+            case ElementFlag.Electricity: return ElementFlag.Water;
+            default: return ElementFlag.None;
+        }
+    }
 }
+
 public struct BalanceMultipliers
 {
     public float HealthMultiplier;

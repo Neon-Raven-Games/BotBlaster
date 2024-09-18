@@ -152,6 +152,9 @@ namespace Gameplay.Enemies.EnemyTypes
             cohesion = cohesion.normalized * cohesionFactor;
 
             var randomMovement = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)) * randomFactor;
+            
+            if (!this || !swarmUnit) return;
+            
             var sway = Mathf.Sin(Time.time * swayFrequency + swarmUnit.transform.position.x) * swayAmplitude;
 
             var noiseX = Mathf.PerlinNoise(Time.time * noiseScale, swarmUnit.transform.position.y) * 2f - 1f;
@@ -160,10 +163,7 @@ namespace Gameplay.Enemies.EnemyTypes
             var swayMotion = new Vector3(noiseX, sway, noiseZ);
             var flockingDirection = (separation + alignment + cohesion + randomMovement + swayMotion).normalized;
 
-            // Smooth out movement by blending with previous direction
             flockingDirection = Vector3.Lerp(swarmUnit.transform.forward, flockingDirection, 0.1f);
-
-            // Store the flocking direction to apply it later on the main thread
             swarmUnit.flockingDirection = flockingDirection;
         }
         private void ApplyMovement(SwarmUnit swarmUnit)

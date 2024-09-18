@@ -85,6 +85,18 @@ namespace UI.DamageNumbers
                 }
             },
             {
+                ElementFlag.Electricity, new DamageMaterialProperties
+                {
+                    fromFaceColor = new Color(1f, 1f, .38f, 1f),
+                    toFaceColor = new Color(1, 1, 0, 1),
+                    glowColor = new Color(1, 1, 0, 0.5019608f),
+                    glowOffset = 0.6f,
+                    glowInner = 0.66f,
+                    glowOuter = 0.263f,
+                    glowPower = 0.588f
+                }
+            },
+            {
                 ElementFlag.Wind | ElementFlag.Electricity, new DamageMaterialProperties
                 {
                     fromFaceColor = new Color(1f, 1f, 1, 1f),
@@ -109,17 +121,29 @@ namespace UI.DamageNumbers
                 }
             },
             {
-                ElementFlag.Electricity, new DamageMaterialProperties
+                ElementFlag.Wind | ElementFlag.Fire, new DamageMaterialProperties
                 {
-                    fromFaceColor = new Color(1f, 1f, .38f, 1f),
-                    toFaceColor = new Color(1, 1, 0, 1),
-                    glowColor = new Color(1, 1, 0, 0.5019608f),
+                    fromFaceColor = new Color(1f, 1f, 1, 1f),
+                    toFaceColor = new Color(0.85f, 0.54f, 0.1f, 1),
+                    glowColor = new Color(1f, 0.3f, .3f, 0.5019608f),
                     glowOffset = 0.6f,
                     glowInner = 0.66f,
                     glowOuter = 0.263f,
                     glowPower = 0.588f
                 }
-            }
+            },
+            {
+                ElementFlag.Wind | ElementFlag.Rock, new DamageMaterialProperties
+                {
+                    fromFaceColor = new Color(1f, 1f, 1, 1f),
+                    toFaceColor = new Color(0.85f, 0.54f, 0.1f, 1),
+                    glowColor = new Color(1f, 0.53f, .53f, 0.5019608f),
+                    glowOffset = 0.6f,
+                    glowInner = 0.66f,
+                    glowOuter = 0.263f,
+                    glowPower = 0.588f
+                }
+            },
         };
 
         private static readonly Dictionary<StatusEffectiveness, Color> _SFaceColors = new()
@@ -131,7 +155,7 @@ namespace UI.DamageNumbers
         private static void SetFaceColor(MeshRenderer rend, StatusEffectiveness status, MaterialPropertyBlock mpb)
         {
             mpb.SetColor(_SFaceColor, _SFaceColors[status]);
-            rend.SetPropertyBlock(mpb); // Apply the property block to the renderer
+            rend.SetPropertyBlock(mpb);
         }
 
         public static void TweenElementText(TextMeshPro text, ElementFlag element, StatusEffectiveness effectiveness,
@@ -181,16 +205,13 @@ namespace UI.DamageNumbers
             if (!_SElementMaterialProperties.ContainsKey(element)) return;
             var materialProperties = _SElementMaterialProperties[element];
 
-            // Use a Material Property Block to avoid modifying the material directly
             var mpb = new MaterialPropertyBlock();
 
-            // Set the face color
             if (statusEffectiveness == StatusEffectiveness.Strong)
             {
-                // Start with initial face color and animate to the target color
-                rend.GetPropertyBlock(mpb); // Load existing property block values
+                rend.GetPropertyBlock(mpb); 
                 mpb.SetColor(_SFaceColor, materialProperties.fromFaceColor);
-                rend.SetPropertyBlock(mpb); // Set the updated property block
+                rend.SetPropertyBlock(mpb);
 
                 rend.material.DOColor(materialProperties.toFaceColor, _SFaceColor, pulsateDuration)
                     .SetEase(Ease.InOutSine)
@@ -198,14 +219,12 @@ namespace UI.DamageNumbers
             }
             else
             {
-                // Directly set face color based on status effectiveness
                 SetFaceColor(rend, statusEffectiveness, mpb);
             }
 
             mpb.SetColor(_SGlowColor, materialProperties.glowColor);
             rend.SetPropertyBlock(mpb);
 
-            // Now animate the glow-related properties using DOFloat for pulsating effects
             SetGlowProperty(glowMultiplier, rend, pulsateDuration, _SGlowPower, materialProperties.glowPower);
             SetGlowProperty(glowMultiplier, rend, pulsateDuration, _SGlowOffset, materialProperties.glowOffset);
             SetGlowProperty(glowMultiplier, rend, pulsateDuration, _SGlowInner, materialProperties.glowInner);
@@ -221,16 +240,13 @@ namespace UI.DamageNumbers
         {
             var mpb = new MaterialPropertyBlock();
 
-            // Calculate initial and target values for the tween
             var initialValue = value * glowMultiplier;
             var targetValue = value * (glowMultiplier * 1.5f);
 
-            // Apply the initial value using Material Property Block
-            rend.GetPropertyBlock(mpb); // Retrieve the existing property block
+            rend.GetPropertyBlock(mpb); 
             mpb.SetFloat(key, initialValue);
-            rend.SetPropertyBlock(mpb); // Set the updated property block
+            rend.SetPropertyBlock(mpb); 
 
-            // Use DOFloat directly on the material for pulsating (animation/tweening)
             rend.material.DOFloat(targetValue, key, pulsateDuration)
                 .SetEase(Ease.InOutSine)
                 .SetLoops(-1, LoopType.Yoyo)

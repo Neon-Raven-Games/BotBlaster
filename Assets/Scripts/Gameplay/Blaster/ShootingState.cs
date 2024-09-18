@@ -5,8 +5,6 @@ using Util;
 
 public class ShootingState : BaseHandCanonState
 {
-    private float fireRate => handCannon.FireRate;
-
     private readonly CharacterController _controller;
 
     private bool _beam;
@@ -21,7 +19,6 @@ public class ShootingState : BaseHandCanonState
 
     public override void EnterState()
     {
-        if (_beam || _beamObject) return;
         handCannon.muzzleFlash.SetActive(false);
         base.EnterState();
     }
@@ -35,17 +32,18 @@ public class ShootingState : BaseHandCanonState
     {
         if (_launchRequested)
         {
-            if (handCannon.soloCannon && handCannon.blasterElement != ElementFlag.Electricity &&
-                handCannon.blasterElement != ElementFlag.Fire && handCannon.blasterElement != ElementFlag.Water &&
-                handCannon.blasterElement != ElementFlag.Wind && handCannon.blasterElement != ElementFlag.Rock)
-            {
-                _beamObject = ElementPool.GetElement(handCannon.blasterElement, handCannon.barrelTransform.position);
-                if (!_beamObject) return;
-                _beam = true;
-                _launchRequested = false;
-                _beamObject.SetActive(true);
-                return;
-            }
+            // todo, make a different hand cannon for combined elements
+            // if (handCannon.soloCannon && handCannon.blasterElement != ElementFlag.Electricity &&
+            //     handCannon.blasterElement != ElementFlag.Fire && handCannon.blasterElement != ElementFlag.Water &&
+            //     handCannon.blasterElement != ElementFlag.Wind && handCannon.blasterElement != ElementFlag.Rock)
+            // {
+            //     _beamObject = ElementPool.GetElement(handCannon.blasterElement, handCannon.barrelTransform.position);
+            //     if (!_beamObject) return;
+            //     _beam = true;
+            //     _launchRequested = false;
+            //     _beamObject.SetActive(true);
+            //     return;
+            // }
 
             var ball = ElementPool.GetElement(handCannon.blasterElement, handCannon.barrelTransform.position);
             LaunchDodgeball(ball);
@@ -53,39 +51,42 @@ public class ShootingState : BaseHandCanonState
         }
     }
 
+    // War Planes flying over tank made cool scene (swarm)
+    // fire rate offset to make each hand shoot alternating
+    // purposely alter spawning patterns based on element in which hand, especially if dual wielding
+    private float fireRate => handCannon.FireRate;
+
     public override void Update()
     {
         base.Update();
-        if (!_beam || !_beamObject)
-        {
-            if (_fireTime > 0)
-            {
-                _fireTime -= Time.deltaTime;
-            }
-            else if (handCannon.state == CannonState.Shooting)
-            {
-                RequestLaunch();
-                _fireTime = fireRate;
-            }
 
-            return;
+        if (_fireTime > 0)
+        {
+            _fireTime -= Time.deltaTime;
+        }
+        else if (handCannon.state == CannonState.Shooting)
+        {
+            RequestLaunch();
+            _fireTime = fireRate;
         }
 
-        _beamObject.transform.position = handCannon.barrelTransform.position;
-        _beamObject.transform.rotation = handCannon.barrelTransform.rotation;
-        _beamObject.transform.position += _controller.velocity.normalized * Time.deltaTime;
+        // todo, move this over to new class for combined hand cannon
+        // _beamObject.transform.position = handCannon.barrelTransform.position;
+        // _beamObject.transform.rotation = handCannon.barrelTransform.rotation;
+        // _beamObject.transform.position += _controller.velocity.normalized * Time.deltaTime;
     }
 
     public override void FireReleaseAction()
     {
         base.FireReleaseAction();
-        if (_beamObject)
-        {
-            _beamObject.SetActive(false);
-            _beamObject = null;
-        }
-
-        _beam = false;
+        // todo move to combined class
+        // if (_beamObject)
+        // {
+        //     _beamObject.SetActive(false);
+        //     _beamObject = null;
+        // }
+        //
+        // _beam = false;
         ChangeState(CannonState.Idle);
     }
 
@@ -98,20 +99,20 @@ public class ShootingState : BaseHandCanonState
         rb.isKinematic = false;
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
-
         dodgeball.transform.position = handCannon.barrelTransform.position;
         dodgeball.transform.rotation = handCannon.barrelTransform.rotation;
 
         var projectile = dodgeball.GetComponent<Projectile>();
         projectile.isPlayerProjectile = true;
-        projectile.damage = handCannon.actor.FetchDamage();
+        projectile.damage = handCannon.actor.baseDamage;
+        projectile.cannon = handCannon;
         projectile.effectiveDamage = handCannon.actor.FetchEffectiveElementalDamage(handCannon.blasterElement);
 
         dodgeball.SetActive(true);
+        projectile.speed = 80;
 
         var launchVelocity = handCannon.barrelTransform.forward * handCannon.launchForce;
         launchVelocity += _controller.velocity;
-
         rb.velocity = launchVelocity;
         handCannon.actor.HapticFeedback(handCannon.handSide);
     }

@@ -57,7 +57,8 @@ public class Actor : MonoBehaviour
         var status = StatusEffectiveness.Normal;
         if (isWeak) status = StatusEffectiveness.Weak;
         if (isStrong) status = StatusEffectiveness.Strong;
-        DamageNumberPool.SetElementDamageNumber(damageElementType, position, status, damage);
+        
+        // DamageNumberPool.SetElementDamageNumber(damageElementType, position, status, damage);
     }
 
 
@@ -69,9 +70,8 @@ public class Actor : MonoBehaviour
     public int ApplyDamage(int damage, ElementFlag hitElement, Vector3 position, int elementLevel = 1,
         int stackLevel = 1)
     {
-        // we call this from the projectile:
-        // we are fire, player is water
-        // we call this method assuming that the player is the defender
+        if (hitElement == ElementFlag.None) return damage;
+        
         stackEffectivenessLevel = stackLevel;
         damage = ApplyElementalDamage(damage, hitElement, element, elementLevel, ElementFlag.Rock);
         damage = ApplyElementalDamage(damage, hitElement, element, elementLevel, ElementFlag.Water);
@@ -84,13 +84,14 @@ public class Actor : MonoBehaviour
 
         if (showDamageNumbers) ShowDamageNumber(damage, hitElement, weakness != 0, strength != 0, position);
 
-        // remove elements without status effects
         hitElement &= ~ElementFlag.Rock;
         hitElement &= ~ElementFlag.Wind;
-
+        damage = Math.Abs(damage);
         if (this is DevController dev)
         {
             currentHealth -= damage;
+            dev.AddRecentDamageTaken(damage);
+            // todo vignette
             dev.HapticFeedback();
             if (currentHealth <= 0)
             {
@@ -152,7 +153,6 @@ public class Actor : MonoBehaviour
         }
     }
 
-    // target element is strong against
     protected ElementFlag StrengthsFor(ElementFlag targetElement)
     {
         switch (targetElement)
@@ -189,10 +189,9 @@ public class Actor : MonoBehaviour
                 if (status > 0)
                 {
                     var multiplier = GetStackMultiplier(flag);
-                    var dmg = ApplyDamage(
-                        (int)(baseDamage + multiplier),
-                        flag, transform.position, status);
-                    if (this is not DevController) currentHealth -= dmg;
+                    var applicableDmg = (int) Math.Abs(baseDamage + multiplier);
+                    var dmg = ApplyDamage(applicableDmg, flag, transform.position, status);
+                    if (this is Enemy enemy) enemy.TakeDamage(dmg, Vector3.zero, flag);
                 }
 
                 if (currentHealth <= 0)

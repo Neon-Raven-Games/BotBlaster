@@ -14,20 +14,20 @@ namespace NRTools.Analytics
         public int WaveNumber { get; set; }
         public float SpawnRadius { get; set; }
         public int NumberOfEnemies { get; set; }
-        public ElementFlag[] Elements { get; set; }
         public double PlayTimeSeconds { get; set; }
         public BalanceObject PlayerBalance { get; set; }
         public readonly List<EnemyBalanceObject> EnemyBalanceData = new();
+        public float playerPerformance;
 
         public DateTime WaveStartTime { get; private set; }
 
-        public WaveAnalytics(int waveNumber, float spawnRadius, int numberOfEnemies, ElementFlag[] elements,
+        public WaveAnalytics(int waveNumber, float spawnRadius, int numberOfEnemies, 
             BalanceObject playerBalance)
         {
+            playerPerformance = GameBalancer.playerPerformance;
             WaveNumber = waveNumber;
             SpawnRadius = spawnRadius;
             NumberOfEnemies = numberOfEnemies;
-            Elements = elements;
             PlayerBalance = playerBalance;
             WaveStartTime = DateTime.Now;
         }
@@ -41,8 +41,8 @@ namespace NRTools.Analytics
         {
             // Wave Data
             string waveData = "Self Wave Data\n" +
-                              "WaveNumber,SpawnRadius,NumberOfEnemies,Elements,PlayTimeSeconds,WaveStartTime\n" +
-                              $"{WaveNumber},{SpawnRadius},{NumberOfEnemies},{string.Join(";", Elements)},{PlayTimeSeconds},{WaveStartTime}\n";
+                              "WaveNumber,SpawnRadius,NumberOfEnemies,PlayTimeSeconds,WaveStartTime\n" +
+                              $"{WaveNumber},{SpawnRadius},{NumberOfEnemies},{PlayTimeSeconds},{WaveStartTime}\n";
 
             // Player Balance Data
             string playerBalanceData = "Player Balance Data\n" +
@@ -57,14 +57,13 @@ namespace NRTools.Analytics
                 {
                     enemyDataByType[enemyBalance.enemyType] = new List<string>
                     {
-                        $"EnemyType,WaveNumber,CurrentDamage,BaseDamage,CurrentHealth,BaseHealth,CurrentAttackRange,CurrentAttackCooldown,Count,Elements"
+                        $"EnemyType,WaveNumber,CurrentDamage,BaseDamage,CurrentHealth,BaseHealth,CurrentAttackRange,CurrentAttackCooldown,Count"
                     };
                 }
 
                 // Append enemy data for this wave
                 enemyDataByType[enemyBalance.enemyType].Add(
-                    $"{enemyBalance.enemyType},{WaveNumber},{enemyBalance.currentDamage},{enemyBalance.baseDamage},{enemyBalance.currentHealth},{enemyBalance.baseHealth},{enemyBalance.currentAttackRange},{enemyBalance.currentAttackCoolDown},{enemyBalance.count},{string.Join(";", enemyBalance.Elements)}"
-                );
+                    $"{enemyBalance.enemyType},{WaveNumber},{enemyBalance.currentDamage},{enemyBalance.baseDamage},{enemyBalance.currentHealth},{enemyBalance.baseHealth},{enemyBalance.currentAttackRange},{enemyBalance.currentAttackCoolDown},{enemyBalance.count}");
             }
 
             // Combine enemy data into CSV string

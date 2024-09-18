@@ -7,7 +7,6 @@ public class VRHand : MonoBehaviour
 {
     public HandSide handSide;
     [SerializeField] private InputActionAsset actionAsset;
-    [SerializeField] private float uiSpawnDistance = 1f;   
     private HapticImpulsePlayer _impulsePlayer;
     private InputAction _blasterSelect;
     private HandCannon _handCannon;

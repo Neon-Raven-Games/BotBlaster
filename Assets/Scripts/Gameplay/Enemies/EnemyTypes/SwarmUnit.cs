@@ -1,4 +1,5 @@
-﻿using NRTools.AtlasHelper;
+﻿using System;
+using NRTools.AtlasHelper;
 using NRTools.GpuSkinning;
 using UnityEngine;
 
@@ -60,6 +61,11 @@ namespace Gameplay.Enemies.EnemyTypes
             _gpuMeshAnimator.PlayAttackAnimation();
             _isDiveBombing = true;
             _diveBombTarget = playerPosition;
+        }
+
+        private void OnEnable()
+        {
+            healthBar.FillMax();
         }
 
         private void SetHitAnimation()

@@ -33,6 +33,7 @@ namespace Util
             }
 
             _instance = this;
+
             foreach (var elementProjectile in elementProjectiles)
             {
                 elementProjectile.projectiles = new List<GameObject>(elementsToPool);
@@ -43,11 +44,10 @@ namespace Util
         public static GameObject GetElement(ElementFlag elementFlag, Vector3 position)
         {
             var elementProjectile = _instance._elementProjectiles.TryGetValue(elementFlag, out var projectile)
-                ? projectile
-                : null;
+                ? projectile : null;
             if (elementProjectile == null)
             {
-                Debug.LogError("Element not found in pool.");
+                Debug.LogError("Element not found in pool: " + elementFlag);
                 return null;
             }
 

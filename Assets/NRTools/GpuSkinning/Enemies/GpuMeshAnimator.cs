@@ -18,9 +18,10 @@ namespace NRTools.GpuSkinning
         private static readonly int _SFrameOffset = Shader.PropertyToID("_FrameOffset");
         private static readonly int _SUVOffset = Shader.PropertyToID("_UVOffset");
         public TextureType textureType;
-        [ShowIf("textureType",TextureType.Bots)]
+
+        [ShowIf("textureType", TextureType.Bots)]
         public EnemyType enemyType;
-        
+
         [SerializeField] private ElementFlag element;
         [SerializeField] private Mesh mesh;
         [SerializeField] private float animationSpeed = 1.0f;
@@ -38,7 +39,7 @@ namespace NRTools.GpuSkinning
         {
             _currentFrame = 0;
         }
-        
+
         protected virtual AnimationData GetNextAnimation()
         {
             return null;
@@ -47,7 +48,7 @@ namespace NRTools.GpuSkinning
         public virtual void PlayOneShotHitAnimation()
         {
         }
-        
+
         public virtual void PlayAttackAnimation()
         {
         }
@@ -58,6 +59,7 @@ namespace NRTools.GpuSkinning
             if (element != ElementFlag.None)
             {
                 if (AnimationManager.IsLoaded) OnAnimationManagerLoaded();
+
                 _atlasIndex = GetComponent<AtlasIndex>();
 
                 if (_atlasIndex)
@@ -130,9 +132,19 @@ namespace NRTools.GpuSkinning
             _propertyBlock.SetInt(_SVertCount, _animationData.vertexCount);
             _propertyBlock.SetInt(_SFrameOffset, _animationData.vertexOffset);
 
-            var uvRect = _atlasIndex.GetRect(element, out var page);
-            _propertyBlock.SetVector(_SUVOffset, new Vector4(
-                uvRect.x, uvRect.y, uvRect.width, uvRect.height));
+            if (element == ElementFlag.None)
+            {
+                // todo, when we have uv mappings for none, we need to have a uv rect for the plain blaster/enemies
+                var uvRect = _atlasIndex.GetRect(ElementFlag.Electricity, out var page);
+                _propertyBlock.SetVector(_SUVOffset, new Vector4(
+                    uvRect.x, uvRect.y, uvRect.width, uvRect.height));
+            }
+            else
+            {
+                var uvRect = _atlasIndex.GetRect(element, out var page);
+                _propertyBlock.SetVector(_SUVOffset, new Vector4(
+                    uvRect.x, uvRect.y, uvRect.width, uvRect.height));
+            }
 
             _propertyBlock.SetFloat(_SLocalScale, Math.Abs(transform.localScale.x));
 
@@ -162,6 +174,7 @@ namespace NRTools.GpuSkinning
             {
                 t = 0f;
             }
+
             renderer.GetPropertyBlock(_propertyBlock);
             if (_shaderFrameIndex != frame0)
             {

@@ -3,12 +3,11 @@ using UnityEditor;
 
 public class CharacterGizmo : MonoBehaviour
 {
+#if UNITY_EDITOR
     [SerializeField] public string gizmoText = "Character";
     [SerializeField] private Color gizmoColor = Color.cyan;
     [SerializeField] private Color labelColor = Color.white;
     [SerializeField] private float labelOffset = 0.7f;
-    [SerializeField] private float fontSize = 12;
-#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         DrawCharacterGizmo();

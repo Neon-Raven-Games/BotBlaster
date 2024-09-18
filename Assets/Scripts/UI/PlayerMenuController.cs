@@ -6,8 +6,6 @@ public class PlayerMenuController : MonoBehaviour
 {
     private GameObject player;
     [SerializeField] private float hologramDistance = 2f; // Distance in front of the player
-    [SerializeField] private float animationDuration = 1f; // Duration of the animation
-    [SerializeField] private GameObject pedestal;
     [SerializeField] private float heightOffset = 1.5f;
     [SerializeField] private float menuYRotationOffset = 60f;
     

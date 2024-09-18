@@ -103,6 +103,7 @@ public class DevController : Actor
     {
         leftHand.PlayHapticImpulse(0.5f, 0.5f);
         rightHand.PlayHapticImpulse(0.5f, 0.5f);
+        _vignetteController.PunchTweenDamageVignette();
     }
 
     public void PlayLeftFeedback()
@@ -184,6 +185,7 @@ public class DevController : Actor
     {
         ResetHandAnchor();
         UpdateHealthBar();
+        HandleRecentDamageTimer();
         // HandleRotation();
         // HandleMovement();
         SyncBaseObjectWithCamera();
@@ -317,6 +319,7 @@ public class DevController : Actor
 
     public int FetchEffectiveElementalDamage(ElementFlag elementFlag)
     {
+        if (elementFlag == ElementFlag.None) return currentDamage;
         return Mathf.CeilToInt(currentDamage * elementEffectivenessUpgrades[elementFlag]);
     }
 
@@ -405,4 +408,30 @@ public class DevController : Actor
             _lookAction.Disable();
         }
     }
+    
+
+    private int recentDamageTaken;
+    private float recentDamageTimerSeconds = 4f;
+    private float recentDamageTimer;
+    public float GetRecentDamageTaken()
+    {
+        return recentDamageTaken;
+    }
+
+    public void AddRecentDamageTaken(int damage)
+    {
+        recentDamageTaken += damage;
+    }
+    
+    private void HandleRecentDamageTimer()
+    {
+        if (recentDamageTimer > 0)
+        {
+            recentDamageTimer -= Time.deltaTime;
+            return;
+        }
+        recentDamageTimer = recentDamageTimerSeconds;
+        recentDamageTaken = 0;
+    }
+
 }

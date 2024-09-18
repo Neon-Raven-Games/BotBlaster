@@ -5,12 +5,24 @@ namespace Gameplay
 {
     public class Projectile : MonoBehaviour
     {
-        public bool isPlayerProjectile;
+        private bool _isPlayerProjectile;
+
+        public bool isPlayerProjectile
+        {
+            get => _isPlayerProjectile;
+            set
+            {
+                _isPlayerProjectile = value;
+                gameObject.layer = LayerMask.NameToLayer(value ? 
+                    "PlayerProjectile" : "RobotProjectile");
+            }
+        }
         public ElementFlag elementFlag;
         public float speed;
         public int damage;
         public GameObject impact;
         public int effectiveDamage;
+        public HandCannon cannon;
 
         private void Awake()
         {
@@ -20,12 +32,14 @@ namespace Gameplay
         private void OnEnable()
         {
             if (impact) impact.SetActive(false);
+            speed = 20;
         }
 
         private void OnDisable()
         {
             isPlayerProjectile = false;
             effectiveDamage = 0;
+            cannon = null;
         }
 
         private void Update()
@@ -47,6 +61,12 @@ namespace Gameplay
             else if (collision.gameObject.CompareTag("Player") && !isPlayerProjectile)
             {
                 collision.gameObject.GetComponent<Actor>().ApplyDamage(damage, elementFlag, collision.GetContact(0).point);
+            }
+            else if (collision.gameObject.CompareTag("PowerUp") && cannon)
+            {
+                cannon.InitializeElementChange();
+                cannon.blasterElement = collision.gameObject.GetComponent<PowerUp>().GetElement();
+                cannon.FinalizeElementChange();
             }
             else if (collision.gameObject.CompareTag("Player") && isPlayerProjectile) return;
             

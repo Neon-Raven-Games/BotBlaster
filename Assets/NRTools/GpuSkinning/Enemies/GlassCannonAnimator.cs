@@ -49,6 +49,10 @@ namespace NRTools.GpuSkinning
         public override void PlayOneShotHitAnimation()
         {
             base.PlayOneShotHitAnimation();
+            if (AnimationClip == GlassCannonAnimation.HitLeft || AnimationClip == GlassCannonAnimation.HitRight)
+            {
+                return;
+            }
             _nextAnimation = GlassCannonAnimation.Idle;
             var hitIndex = Random.Range(0, 2);
             var hitAnimation = GlassCannonAnimation.HitLeft + hitIndex;

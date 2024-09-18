@@ -23,16 +23,14 @@ public class DamageNumberPool : MonoBehaviour
         DOTween.Init();
         _instance = this;
         _damageNumbers = new List<DamageNumber>(elementsToPool);
-        SpawnProjectiles().Forget();
+        InitializeNumbers().Forget();
     }
-    private static int index = 0;
 
     public static DamageNumber GetDamageNumber(Vector3 position)
     {
         var damageNumber = _instance._damageNumbers.Find(x => !x.gameObject.activeInHierarchy);
         if (damageNumber == null)
         {
-                index = 0;
                 damageNumber = Instantiate(_instance.damageNumberPrefab, _instance.transform);
                 damageNumber.gameObject.SetActive(false);
                 _instance._damageNumbers.Add(damageNumber);
@@ -44,16 +42,11 @@ public class DamageNumberPool : MonoBehaviour
     public static void SetElementDamageNumber(ElementFlag elementFlag, Vector3 position, StatusEffectiveness statusEffectiveness, int number)
     {
         var damageNumber = GetDamageNumber(position);
+        damageNumber.ClearText();
         damageNumber.SetElementText(elementFlag, statusEffectiveness, number);
     }
     
-    public static void SetScoreDamageNumber(Vector3 position, int score, int multiplier)
-    {
-        var damageNumber = GetDamageNumber(position);
-        damageNumber.SetScoreText(score, multiplier);
-    }
-
-    private async UniTaskVoid SpawnProjectiles()
+    private async UniTaskVoid InitializeNumbers()
     {
         for (var i = 0; i < elementsToPool; i++)
         {

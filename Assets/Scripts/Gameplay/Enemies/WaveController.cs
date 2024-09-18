@@ -1,3 +1,4 @@
+using System;
 using Cysharp.Threading.Tasks;
 using Gameplay.Util;
 using NRTools.Analytics;
@@ -9,6 +10,11 @@ public class WaveController : MonoBehaviour
 {
     [SerializeField] public GameObject ui;
     [SerializeField] float menuSpawnDelay;
+
+    private static int totalKillsInWave;
+    private static float waveStartTime;
+    private static float totalKillRate = 1;
+    private static int wavesCompleted = 0;
 
     public EnemySpawner enemySpawner;
     private bool _waveSpawning;
@@ -57,6 +63,8 @@ public class WaveController : MonoBehaviour
 
     private async UniTaskVoid WaveRoutine()
     {
+        totalKillsInWave = 0;
+        waveStartTime = Time.time;
         enemySpawner.StartNextWave();
         _waveSpawning = true;
 
@@ -66,7 +74,10 @@ public class WaveController : MonoBehaviour
             {
                 waveEnemies = 0;
                 await PauseForPlayerUpgrades();
-                
+
+        totalKillsInWave = 0;
+        waveStartTime = Time.time;
+                EndWave();
                 enemySpawner.StartNextWave();
             }
 
@@ -77,6 +88,18 @@ public class WaveController : MonoBehaviour
         EnemyPool.SleepAll();
         waveEnemies = 0;
         enemySpawner.paused = true;
+    }
+
+    public static void EndWave()
+    {
+        float waveDuration = Time.time - waveStartTime; // Duration of the wave in seconds
+        float killsPerSecond = totalKillsInWave / waveDuration; // Calculate kills per second
+        float killsPerMinute = killsPerSecond * 60f; // Convert to kills per minute
+
+        // Update the average kill rate across all waves
+        totalKillRate = ((totalKillRate * wavesCompleted) + killsPerMinute) / (wavesCompleted + 1);
+        wavesCompleted++;
+
     }
 
     private async UniTask PauseForPlayerUpgrades()
@@ -91,7 +114,20 @@ public class WaveController : MonoBehaviour
         _instance.StopWaves();
         ScoreManager.FinalizeScore();
     }
-    
+
+    public static float GetKillRate()
+    {
+        float waveDuration = Time.time - waveStartTime;
+        waveDuration = Mathf.Max(waveDuration, 1f); 
+        return totalKillsInWave / waveDuration * 60f;
+    }
+
+
+    public static float AverageKillRate()
+    {
+        return totalKillRate; // Return the average kill rate across all waves
+    }
+
     public static bool IsWaveSpawning() => _instance._waveSpawning;
 
     public void Ready()

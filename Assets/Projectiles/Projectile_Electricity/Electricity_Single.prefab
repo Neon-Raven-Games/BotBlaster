@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6742716863480170487}
   - component: {fileID: 103960784706671777}
   - component: {fileID: 609465207064016499}
-  - component: {fileID: 2108002885321764522}
+  - component: {fileID: 6443079046417945056}
   m_Layer: 6
   m_Name: Electricity_Single
   m_TagString: Projectile
@@ -4928,10 +4928,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73e8c5a68e12402abcf7c8ca5f562aa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  muzzleFlash: {fileID: 4118868224156216775}
-  isPlayerProjectile: 0
   elementFlag: 32
-  speed: 10
+  speed: 20
   damage: 1
   impact: {fileID: 9207250617647884717}
   effectiveDamage: 0
@@ -4951,12 +4949,12 @@ SphereCollider:
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
-  m_ProvidesContacts: 0
+  m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 3
   m_Radius: 0.4
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &2108002885321764522
+--- !u!54 &6443079046417945056
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5048,11 +5046,6 @@ PrefabInstance:
 --- !u!4 &2881795234036010417 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1740949744797608658, guid: 721a0ff60175b644cb5b9077a14dcfc7, type: 3}
-  m_PrefabInstance: {fileID: 4600191649217685347}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &4118868224156216775 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 503841571413625508, guid: 721a0ff60175b644cb5b9077a14dcfc7, type: 3}
   m_PrefabInstance: {fileID: 4600191649217685347}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7106879458349618738

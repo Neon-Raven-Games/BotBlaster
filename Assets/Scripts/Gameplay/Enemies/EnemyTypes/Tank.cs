@@ -18,7 +18,7 @@ namespace Gameplay.Enemies.EnemyTypes
 
         protected override void Attack()
         {
-            if (_attacking || _dashing) return;
+            if (_attacking || _dashing || !gameObject.activeInHierarchy) return;
             _attacking = true;
             StartCoroutine(AttackRoutine());
         }
@@ -37,13 +37,11 @@ namespace Gameplay.Enemies.EnemyTypes
             {
                 RotateToFlatPlayer(rotationSpeed);
                 projectile.transform.position = barrelTransform.position;
-                projectile.transform.Translate(Vector3.forward * t);
                 t += Time.deltaTime;
                 yield return null;
             }
             projectile.gameObject.SetActive(true);
             lastAttackTime = Time.time;
-            playerComponent.ApplyDamage(currentDamage, element, attackPosition);
             _attacking = false;
         }
 

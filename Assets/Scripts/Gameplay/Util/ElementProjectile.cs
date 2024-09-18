@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Gameplay.Enemies;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Gameplay.Util
 {
@@ -15,6 +16,7 @@ namespace Gameplay.Util
 
         public GameObject GetObject()
         {
+            if (projectiles.Count < index) return Object.Instantiate(projectile);
             return projectiles[index];
         }
     }

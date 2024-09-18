@@ -59,10 +59,11 @@ public class HandCannon : MonoBehaviour
     {
         if (soloCannon) return;
         if (blasterElement == ElementFlag.Electricity) muzzleFlash = electricityFlash;
-        if (blasterElement == ElementFlag.Fire) muzzleFlash = fireFlash;
-        if (blasterElement == ElementFlag.Water) muzzleFlash = waterFlash;
-        if (blasterElement == ElementFlag.Wind) muzzleFlash = windFlash;
-        if (blasterElement == ElementFlag.Rock) muzzleFlash = rockFlash;
+        else if (blasterElement == ElementFlag.Fire) muzzleFlash = fireFlash;
+        else if (blasterElement == ElementFlag.Water) muzzleFlash = waterFlash;
+        else if (blasterElement == ElementFlag.Wind) muzzleFlash = windFlash;
+        else if (blasterElement == ElementFlag.Rock) muzzleFlash = rockFlash;
+        else if (blasterElement == ElementFlag.None) muzzleFlash = electricityFlash;
 
         _gpuMeshAnimator.UpdateElement(blasterElement);
     }

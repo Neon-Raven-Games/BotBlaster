@@ -16,6 +16,7 @@ namespace UI
         {
             await UniTask.WaitUntil(() =>
             {
+                if (!this) return true;
                 return !gameObject.activeInHierarchy;
             });
         }

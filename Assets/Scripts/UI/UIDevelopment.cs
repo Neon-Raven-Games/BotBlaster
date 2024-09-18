@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Object = UnityEngine.Object;
 
+// todo, this is deprecated, no use for it now, but was kind of cool?
 public class UIDevelopment : MonoBehaviour
 {
     [SerializeField] private InputActionAsset actionAsset;
@@ -39,43 +40,6 @@ public class UIDevelopment : MonoBehaviour
     private InputAction _gripAction;
     private InputAction _radialMenuAction;
     private Vector2 _radialMenuInput;
-
-    private void OnDrawGizmos()
-    {
-        return;
-        var radialStart = GetRadialStart();
-        var directionMultiplier = 1;
-        for (var i = 0; i < transform.childCount; i++)
-        {
-            var child = transform.GetChild(i);
-
-            child.localScale = Vector3.zero;
-            child.localPosition = Vector3.zero;
-
-            var angleStep = (radialMenuAngle / (transform.childCount - 1)) * i;
-            var angle = radialMenuAngle + angleStep * directionMultiplier;
-            var radian = angle * Mathf.Deg2Rad;
-
-            var x = Mathf.Cos(radian) * radialMenuSpread;
-            var y = Mathf.Sin(radian) * radialMenuSpread;
-            var newPos = new Vector3(x, y, 0) + radialStart +
-                         radialMenuStartAngle * directionMultiplier * Vector3.right;
-            transform.GetChild(i).localPosition = newPos;
-        }
-
-        foreach (Transform child in transform)
-        {
-            Gizmos.color = Color.magenta;
-            if (child.gameObject.name.ToLower().Contains("fire")) Gizmos.color = Color.red;
-            else if (child.gameObject.name.ToLower().Contains("elect")) Gizmos.color = Color.yellow;
-            else if (child.gameObject.name.ToLower().Contains("water")) Gizmos.color = Color.blue;
-            else if (child.gameObject.name.ToLower().Contains("rock")) Gizmos.color = new Color(.7f, .3f, .1f);
-            else if (child.gameObject.name.ToLower().Contains("wind")) Gizmos.color = Color.white;
-
-            if (Gizmos.color == Color.magenta) continue;
-            Gizmos.DrawWireSphere(child.transform.position, 0.01f);
-        }
-    }
 
     private void CacheMenuChildren()
     {

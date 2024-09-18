@@ -106,7 +106,7 @@ MonoBehaviour:
   enemyType: 1
   element: 0
   mesh: {fileID: -780855428634915223, guid: 624a14fcc74ece94faab4db580ba6a03, type: 3}
-  animationSpeed: 1
+  animationSpeed: 4
   renderer: {fileID: 1302064575815573116}
 --- !u!114 &6542462445506343797
 MonoBehaviour:

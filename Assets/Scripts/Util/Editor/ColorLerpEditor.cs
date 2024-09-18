@@ -11,14 +11,14 @@ public class ColorLerpEditor : Editor
         // lerpValue = serializedObject.FindProperty("lerpValue");
     }
 
-    public override void OnInspectorGUI()
-    {
-        base.OnInspectorGUI();
-        return;
-        serializedObject.Update();
-
-        // EditorGUILayout.Slider(lerpValue, 0f, 1f, new GUIContent("Lerp Value"));
-
-        // serializedObject.ApplyModifiedProperties();
-    }
+    // public override void OnInspectorGUI()
+    // {
+    //     base.OnInspectorGUI();
+    //     return;
+    //     serializedObject.Update();
+    //
+    //     EditorGUILayout.Slider(lerpValue, 0f, 1f, new GUIContent("Lerp Value"));
+    //
+    //     serializedObject.ApplyModifiedProperties();
+    // }
 }

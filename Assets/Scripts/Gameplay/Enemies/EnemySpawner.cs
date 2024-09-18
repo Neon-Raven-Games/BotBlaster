@@ -9,41 +9,39 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
+    [SerializeField] private DevController player;
     private const int MAX_ENEMY_COUNT = 20;
     public Transform centralPoint;
     public int currentWave;
     public bool paused;
 
-    [SerializeField] private int bossWaveInterval = 5;
+    [SerializeField] private int bossWaveInterval = 20;
 
     internal Wave currentWaveData;
-
-    public void Awake()
-    {
-        GameBalancer.spawner = this;
-    }
-
     internal WaveAnalytics _waveAnalytics;
 
     [SerializeField] private float spawnRadius = 10f;
 
+    #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-    
         DrawWireCircle(centralPoint.position, spawnRadius, 50);
     }
+#endif
 
     private static void DrawWireCircle(Vector3 position, float radius, int segments)
     {
         var angle = 0f;
         var angleStep = 360f / segments;
-        var prevPoint = position + new Vector3(Mathf.Cos(Mathf.Deg2Rad * angle), 0, Mathf.Sin(Mathf.Deg2Rad * angle)) * radius;
+        var prevPoint = position + new Vector3(Mathf.Cos(Mathf.Deg2Rad * angle), 0, Mathf.Sin(Mathf.Deg2Rad * angle)) *
+            radius;
 
         for (var i = 0; i <= segments; i++)
         {
             angle += angleStep;
-            var nextPoint = position + new Vector3(Mathf.Cos(Mathf.Deg2Rad * angle), 0, Mathf.Sin(Mathf.Deg2Rad * angle)) * radius;
+            var nextPoint = position +
+                            new Vector3(Mathf.Cos(Mathf.Deg2Rad * angle), 0, Mathf.Sin(Mathf.Deg2Rad * angle)) * radius;
             Gizmos.DrawLine(prevPoint, nextPoint);
             prevPoint = nextPoint;
         }
@@ -54,21 +52,24 @@ public class EnemySpawner : MonoBehaviour
     {
         GameBalancer.InitializeElementProbability(currentWave);
 
+        GameBalancer.CalculatePlayerPerformance(player);
         currentWaveData = currentWave % bossWaveInterval != 0 && currentWave != 0
-            ? GameBalancer.GenerateWave(currentWave, GameBalancer.GetCurrentSpawnRadius(currentWave), centralPoint)
-            : GameBalancer.GenerateBossWave(currentWave / bossWaveInterval, centralPoint);
+            ? GameBalancer.GenerateWave(currentWave)
+            : GameBalancer.GenerateBossWave(currentWave / bossWaveInterval);
 
+#if UNITY_EDITOR
         if (_waveAnalytics != null)
         {
             _waveAnalytics.UpdatePlayTime();
             GameAnalytics.LogWaveData(_waveAnalytics);
         }
-
-        _waveAnalytics = new WaveAnalytics(currentWave,
-            GameBalancer.GetCurrentSpawnRadius(currentWave),
-            currentWaveData.numberOfEnemies, currentWaveData.elementFlags,
+        
+        _waveAnalytics = new WaveAnalytics(
+            currentWave,
+            spawnRadius,
+            currentWaveData.numberOfEnemies, 
             new BalanceObject(FindObjectOfType<DevController>()));
-
+#endif
         WaveController.waveEnemies = currentWaveData.numberOfEnemies;
         SpawnWave().Forget();
         if (currentWave % bossWaveInterval == 0 && currentWave > 0) OnBossKilled();
@@ -83,34 +84,31 @@ public class EnemySpawner : MonoBehaviour
     public bool WaveCompleted() =>
         EnemyPool.CurrentEnemyCount == 0 && WaveController.waveEnemies <= 0;
 
-    private async UniTaskVoid SpawnWave()
+    public async UniTaskVoid SpawnWave()
     {
-        var wave = currentWaveData;
-        var enemies = wave.numberOfEnemies;
-
-        for (var i = 0; i < enemies; i++)
+        for (int i = 0; i < currentWaveData.numberOfEnemies; i++)
         {
             while (EnemyPool.CurrentEnemyCount >= MAX_ENEMY_COUNT)
             {
-                Debug.Log("Max enemies, waiting");
-                await UniTask.Yield();
+                await UniTask.Delay(50);
             }
 
-            await UniTask.Delay(TimeSpan.FromSeconds(wave.spawnInterval));
+            await UniTask.Delay(TimeSpan.FromSeconds(currentWaveData.spawnInterval));
 
-            if (paused || !WaveController.IsWaveSpawning())
-                await UniTask.WaitUntil(() => !paused || !WaveController.IsWaveSpawning());
             if (!WaveController.IsWaveSpawning()) return;
 
-            // todo, just generate this shit here, don't cache it
-            var enemyType = wave.enemyTypes[i % wave.enemyTypes.Length];
-            var spawnPosition = wave.spawnPositions[i % wave.spawnPositions.Length];
-            var element = wave.elementFlags[i % wave.elementFlags.Length];
-            SpawnEnemy(enemyType, spawnPosition, wave.waveNumber, element);
+            var enemyType = GameBalancer._SEnemyProbability.PickValue();
+            var spawnPosition = SpawnPointGenerator.GenerateSingleSpawnPoint(centralPoint, enemyType, spawnRadius);
+            var element = GameBalancer._SElementProbabilityList.PickValue();
+            SpawnEnemy(enemyType, spawnPosition, currentWave, element);
 
+            // we should update the intensity here when approached on the todo
+            // UpdateAudioIntensity(i);
+        
             await UniTask.Yield();
         }
     }
+
 
     private void SpawnEnemy(EnemyType type, Vector3 position, int waveNumber, ElementFlag element)
     {

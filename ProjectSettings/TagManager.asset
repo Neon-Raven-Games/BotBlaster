@@ -8,6 +8,7 @@ TagManager:
   - Enemy
   - FxTemporaire
   - Projectile
+  - PowerUp
   layers:
   - Default
   - TransparentFX
@@ -15,10 +16,10 @@ TagManager:
   - 
   - Water
   - UI
-  - Projectile
+  - PlayerProjectile
   - Player
-  - MeleeEnemy
-  - 
+  - RobotProjectile
+  - Robot
   - 
   - 
   - 
