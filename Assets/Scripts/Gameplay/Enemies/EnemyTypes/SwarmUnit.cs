@@ -104,7 +104,7 @@ namespace Gameplay.Enemies.EnemyTypes
                 _swarmComponent.SwarmUnitDead();
                 gameObject.SetActive(false);
             }
-            else SetHitAnimation();
+            else if(!_isDiveBombing) SetHitAnimation();
         }
 
         private void PerformDiveBomb()
