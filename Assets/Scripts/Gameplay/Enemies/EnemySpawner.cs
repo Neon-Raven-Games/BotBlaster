@@ -18,11 +18,12 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private int bossWaveInterval = 20;
 
     internal Wave currentWaveData;
+#if UNITY_EDITOR
     internal WaveAnalytics _waveAnalytics;
-
+#endif
     [SerializeField] private float spawnRadius = 10f;
 
-    #if UNITY_EDITOR
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
@@ -63,11 +64,11 @@ public class EnemySpawner : MonoBehaviour
             _waveAnalytics.UpdatePlayTime();
             GameAnalytics.LogWaveData(_waveAnalytics);
         }
-        
+
         _waveAnalytics = new WaveAnalytics(
             currentWave,
             spawnRadius,
-            currentWaveData.numberOfEnemies, 
+            currentWaveData.numberOfEnemies,
             new BalanceObject(FindObjectOfType<DevController>()));
 #endif
         WaveController.waveEnemies = currentWaveData.numberOfEnemies;
@@ -98,30 +99,29 @@ public class EnemySpawner : MonoBehaviour
             if (!WaveController.IsWaveSpawning()) return;
 
             var enemyType = GameBalancer._SEnemyProbability.PickValue();
-            var spawnPosition = SpawnPointGenerator.GenerateSingleSpawnPoint(centralPoint, enemyType, spawnRadius);
             var element = GameBalancer._SElementProbabilityList.PickValue();
-            SpawnEnemy(enemyType, spawnPosition, currentWave, element);
+            SpawnEnemy(enemyType, currentWave, element);
 
             // we should update the intensity here when approached on the todo
             // UpdateAudioIntensity(i);
-        
+
             await UniTask.Yield();
         }
     }
 
 
-    private void SpawnEnemy(EnemyType type, Vector3 position, int waveNumber, ElementFlag element)
+    private void SpawnEnemy(EnemyType type, int waveNumber, ElementFlag element)
     {
         var enemy = EnemyPool.GetEnemy(type);
         enemy.element = element;
-        enemy.transform.position = position;
         if (type == EnemyType.Swarm && enemy is Swarm swarm)
             swarm.swarmCount = Mathf.CeilToInt(1 * ElementDecorator.STRENGTH_MULTIPLIER * waveNumber);
 
-        enemy.gameObject.SetActive(true);
         enemy.element = element;
         enemy.ApplyBalance(waveNumber);
+        IntroController.StartIntro(enemy);
 
+#if UNITY_EDITOR
         var enemyBalance = _waveAnalytics.EnemyBalanceData.FirstOrDefault(e => e.enemyType == type);
 
         if (enemyBalance == null)
@@ -134,5 +134,6 @@ public class EnemySpawner : MonoBehaviour
             enemyBalance.count++;
             if (!enemyBalance.Elements.Contains(element)) enemyBalance.Elements.Add(element);
         }
+#endif
     }
 }

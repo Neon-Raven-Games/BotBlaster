@@ -168,7 +168,7 @@ MonoBehaviour:
   ySpawnHeightRange: {x: 4, y: 8}
   rotationSpeed: 16
   strafeSpeed: 1
-  strafeDistance: 9
+  strafeDistance: 4
   targetHeight: 7.52
   swoopSpeed: 6
   swoopBufferDistance: 15

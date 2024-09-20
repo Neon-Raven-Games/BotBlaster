@@ -35,7 +35,6 @@ namespace NRTools.GpuSkinning
         private GruntBotAnimation _nextAnimation;
         public GruntBotAnimation AnimationClip
         {
-            get => _currentAnimation;
             set
             {
                 _currentAnimation = value;

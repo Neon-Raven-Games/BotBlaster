@@ -5164,6 +5164,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blasterElement: 2
+  fireTime: 0
   audioSource: {fileID: 3714642629481509678}
   actionAsset: {fileID: -944628639613478452, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   barrelTransform: {fileID: 6357633715678360110}
@@ -15759,6 +15760,7 @@ MonoBehaviour:
   actionAsset: {fileID: -944628639613478452, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   vrHand: {fileID: 0}
   devController: {fileID: 0}
+  handCannon: {fileID: 0}
   radialMenuStartAngle: 0.14
   radialMenuSpread: -0.14
   radialMenuAngle: -109.9
@@ -16104,7 +16106,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 9d334a500909f87468631d49be3f2609, type: 2}
     - target: {fileID: -3887185075125053422, guid: a4f2e10c579201144982023cd5d23790, type: 3}
       propertyPath: m_BlendShapeWeights.Array.data[0]
-      value: 100
+      value: 93.518524
       objectReference: {fileID: 0}
     - target: {fileID: -3887185075125053422, guid: a4f2e10c579201144982023cd5d23790, type: 3}
       propertyPath: m_BlendShapeWeights.Array.data[1]

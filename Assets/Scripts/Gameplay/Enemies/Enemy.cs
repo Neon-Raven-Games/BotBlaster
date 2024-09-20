@@ -1,6 +1,4 @@
-using System.Collections;
 using Gameplay.Enemies;
-using NRTools.AtlasHelper;
 using NRTools.GpuSkinning;
 using UnityEngine;
 
@@ -10,13 +8,14 @@ public class Enemy : Actor
     [SerializeField] private EnemyHealthBar healthBar;
     [SerializeField] private GameObject deathParticleSystem;
 
-    protected float lastAttackTime;
-    protected Transform player;
+    protected internal float lastAttackTime;
+    protected internal Transform player;
     protected Actor playerComponent;
     protected GpuMeshAnimator meshAnimator;
 
     private Rigidbody rigidbody;
     private bool _dead;
+    private bool _intro;
 
     protected virtual void OnEnable()
     {
@@ -39,8 +38,9 @@ public class Enemy : Actor
         meshAnimator.UpdateElement(element);
     }
 
-    public virtual void ApplyBalance(int waveNumber)
+    public void ApplyBalance(int waveNumber)
     {
+        _intro = true;
         var multipliers = GameBalancer.GetBalanceMultipliers(waveNumber);
 
         currentHealth = Mathf.CeilToInt(baseHealth * multipliers.HealthMultiplier);
@@ -59,12 +59,13 @@ public class Enemy : Actor
     protected override void Awake()
     {
         base.Awake();
+        meshAnimator = GetComponent<GpuMeshAnimator>();
         rigidbody = GetComponent<Rigidbody>();
         player = Camera.main.transform;
         playerComponent = FindObjectOfType<DevController>();
     }
 
-    protected void RotateToPlayer(float rotationSpeed)
+    protected internal void RotateToPlayer(float rotationSpeed)
     {
         var playerDirection = player.position - transform.position;
         if (playerDirection == Vector3.zero) return;
@@ -103,11 +104,23 @@ public class Enemy : Actor
         return timeSinceLastAttack >= adjustedAttackCooldown;
     }
 
+    public virtual void FinishIntro()
+    {
+        _intro = false;
+    }
+
     protected override void Update()
     {
         base.Update();
+
+        if (_intro)
+        {
+            if (playerComponent != null) RotateToPlayer(25);
+            return;
+        }
         if (WaveController.paused) return;
         var playerDistance = Vector3.Distance(transform.position, player.position);
+        
         if (playerDistance <= currentAttackRange && CanAttack())
         {
             lastAttackTime = Time.time;

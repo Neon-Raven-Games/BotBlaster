@@ -1,14 +1,14 @@
 ﻿using System.Collections;
+using Gameplay.Enemies.EnemyBehaviors;
+using Gameplay.Enemies.EnemyBehaviors.Base;
+using NRTools.GpuSkinning;
 using UnityEngine;
-using Util;
 
 namespace Gameplay.Enemies.EnemyTypes
 {
     public class GlassCannon : Enemy
     {
         [SerializeField] private Transform barrelTransform;
-        [SerializeField] private float chargeTime;
-        [SerializeField] private Vector2 ySpawnHeightRange;
         [SerializeField] private float rotationSpeed;
 
         [Header("Strafe Settings")] [SerializeField]
@@ -24,54 +24,50 @@ namespace Gameplay.Enemies.EnemyTypes
 
         private bool _isCharging;
         private float _strafeAngle;
+        private BaseEnemyBehavior _currentBehavior;
+        private GlassCannonAnimator anim;
+        public KamakzeGlassCannon kamakazeBehavior;
+        public SlowAdvanceGlassCannon slowAdvance;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            anim = meshAnimator as GlassCannonAnimator;
+            kamakazeBehavior = new KamakzeGlassCannon(this);
+            
+            slowAdvance = new SlowAdvanceGlassCannon(this, meshAnimator as GlassCannonAnimator);
+            slowAdvance.barrelTransform = barrelTransform;
+            
+            _currentBehavior = slowAdvance;
+
+            // todo, find common assignment and abstract to a base
+            slowAdvance.strafeSpeed = strafeSpeed;
+            slowAdvance.strafeDistance = strafeDistance;
+        }
+
+        public override void FinishIntro()
+        {
+            base.FinishIntro();
+            anim.PlayIdle();
+        }
 
         protected override void OnEnable()
         {
             base.OnEnable();
-            _isCharging = false;
-            _strafeAngle = 0f;
-
-            var pos = transform.position;
-            pos.y = Random.Range(ySpawnHeightRange.x, ySpawnHeightRange.y);
-            transform.position = pos;
+            slowAdvance.strafeSpeed = strafeSpeed;
+            slowAdvance.strafeDistance = strafeDistance;
+            _currentBehavior.OnEnable();
+            if (anim) anim.PlayIdle();
         }
 
         protected override void Attack()
         {
-            if (_isCharging) return;
-            _isCharging = true;
-            StartCoroutine(ChargeAttack());
-        }
-
-        private IEnumerator ChargeAttack()
-        {
-            var playerPosition = player.position;
-            transform.LookAt(player);
-            var projectile = ElementPool.GetElement(element, barrelTransform.position);
-            var proj = projectile.GetComponent<Projectile>();
-            proj.damage = currentDamage;
-            proj.effectiveDamage = currentDamage;
-            projectile.transform.LookAt(player);
-
-            var t = 0f;
-            while (t < chargeTime)
-            {
-                t += Time.deltaTime;
-                transform.LookAt(playerPosition);
-                projectile.transform.LookAt(playerPosition);
-                projectile.transform.position = barrelTransform.position;
-                yield return null;
-            }
-            
-            if (currentHealth > 0 && gameObject.activeInHierarchy)
-                projectile.gameObject.SetActive(true);
-            
-            lastAttackTime = Time.time;
-            _isCharging = false;
         }
 
         protected override void Move()
         {
+            _currentBehavior.Move();
+            return;
             if (_isCharging) return;
 
             var playerDistance = Vector3.Distance(transform.position, player.position);

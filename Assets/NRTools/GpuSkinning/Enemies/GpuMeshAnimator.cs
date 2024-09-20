@@ -29,15 +29,14 @@ namespace NRTools.GpuSkinning
 
         private AnimationData _animationData;
         private MaterialPropertyBlock _propertyBlock;
-        private int _numFrames;
-        private float _currentFrame;
+        internal int _numFrames;
+        internal float _currentFrame;
         private int _shaderFrameIndex;
         private bool _initialized;
         private AtlasIndex _atlasIndex;
 
         protected virtual void TransitionToNextAnimation()
         {
-            _currentFrame = 0;
         }
 
         protected virtual AnimationData GetNextAnimation()
@@ -158,7 +157,7 @@ namespace NRTools.GpuSkinning
             else OnAnimationManagerLoaded();
         }
 
-        private void Update()
+        protected virtual void Update()
         {
             if (!_initialized) return;
             _currentFrame += Time.deltaTime * animationSpeed;

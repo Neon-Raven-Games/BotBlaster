@@ -72,11 +72,12 @@ public class WaveController : MonoBehaviour
         {
             if (!paused && enemySpawner.WaveCompleted())
             {
+                Debug.Log("Wave completed!");
                 waveEnemies = 0;
                 await PauseForPlayerUpgrades();
 
-        totalKillsInWave = 0;
-        waveStartTime = Time.time;
+                totalKillsInWave = 0;
+                waveStartTime = Time.time;
                 EndWave();
                 enemySpawner.StartNextWave();
             }
@@ -99,7 +100,6 @@ public class WaveController : MonoBehaviour
         // Update the average kill rate across all waves
         totalKillRate = ((totalKillRate * wavesCompleted) + killsPerMinute) / (wavesCompleted + 1);
         wavesCompleted++;
-
     }
 
     private async UniTask PauseForPlayerUpgrades()
@@ -118,7 +118,7 @@ public class WaveController : MonoBehaviour
     public static float GetKillRate()
     {
         float waveDuration = Time.time - waveStartTime;
-        waveDuration = Mathf.Max(waveDuration, 1f); 
+        waveDuration = Mathf.Max(waveDuration, 1f);
         return totalKillsInWave / waveDuration * 60f;
     }
 

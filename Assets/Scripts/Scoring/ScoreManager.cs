@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -9,7 +8,7 @@ public class ScoreManager : MonoBehaviour
     private static ScoreManager _instance;
     private int _score;
     [SerializeField] private TextMeshPro textMeshPro;
-    [SerializeField] private TextMeshPro highScoreText;
+    [SerializeField] private TextMeshPro leaderboard;
     private void Awake()
     {
         if (_instance != null)
@@ -58,8 +57,8 @@ public class ScoreManager : MonoBehaviour
         var scoreStr = string.Join(";", scoreValues) + ";";
         PlayerPrefs.SetString("HighScores", scoreStr);
         
-        _instance.highScoreText.text = "";
+        _instance.leaderboard.text = "";
         for (int i = 0; i < scoreValues.Count; i++) 
-            _instance.highScoreText.text += $"{i + 1}: {scoreValues[i]}\n";
+            _instance.leaderboard.text += $"{i + 1}: {scoreValues[i]}\n";
     }
 }

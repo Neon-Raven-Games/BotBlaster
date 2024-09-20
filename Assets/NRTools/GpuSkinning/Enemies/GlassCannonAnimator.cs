@@ -46,6 +46,13 @@ namespace NRTools.GpuSkinning
             _nextAnimation = GlassCannonAnimation.Idle;
             AnimationClip = GlassCannonAnimation.Shoot;
         }
+
+        public void PlayDashAnimation(bool isLeft)
+        {
+            AnimationClip = isLeft ? GlassCannonAnimation.DashLeft : GlassCannonAnimation.DashRight;
+            _nextAnimation = isLeft ? GlassCannonAnimation.FlyLeft : GlassCannonAnimation.FlyRight;
+        }
+        
         public override void PlayOneShotHitAnimation()
         {
             base.PlayOneShotHitAnimation();
@@ -53,6 +60,7 @@ namespace NRTools.GpuSkinning
             {
                 return;
             }
+            
             _nextAnimation = GlassCannonAnimation.Idle;
             var hitIndex = Random.Range(0, 2);
             var hitAnimation = GlassCannonAnimation.HitLeft + hitIndex;
@@ -64,15 +72,23 @@ namespace NRTools.GpuSkinning
             base.TransitionToNextAnimation();
             AnimationClip = _nextAnimation;
         }
-        protected AnimationData FetchAnimationData(GlassCannonAnimation animationData)
+
+        private AnimationData FetchAnimationData(GlassCannonAnimation animationData)
         {
             return AnimationManager.GetAnimationData(botName, animationLookup[animationData]);
         }
         
         protected override AnimationData InitialAnimation()
         {
+            _nextAnimation = GlassCannonAnimation.Idle;
             return FetchAnimationData(GlassCannonAnimation.Idle);
         }
 
+        public void PlayIdle()
+        {
+            Debug.Log("playing idle");
+            if (_currentAnimation == GlassCannonAnimation.Idle) return;
+            AnimationClip = GlassCannonAnimation.Idle;
+        }
     }
 }

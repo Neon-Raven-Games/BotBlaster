@@ -131,8 +131,7 @@ namespace NRTools.GpuSkinning
             Debug.Log("Animations baked and serialized successfully.");
         }
 
-        private void BakeAnimationForSkinnedMesh(string enemyName, AnimationClip animClip,
-            SkinnedMeshRenderer skinnedMeshRenderer, ref int currentOffset)
+        private void BakeAnimationForSkinnedMesh(string enemyName, AnimationClip animClip, SkinnedMeshRenderer skinnedMeshRenderer, ref int currentOffset)
         {
             var bakedMesh = new Mesh();
             var animator = skinnedMeshRenderer.gameObject.transform.parent.GetComponent<Animator>();
@@ -141,16 +140,17 @@ namespace NRTools.GpuSkinning
                 animator = skinnedMeshRenderer.transform.GetComponent<Animator>();
                 if (!animator)
                 {
-                    Debug.LogError(
-                        $"Failed to find an animator on skinned mesh object: {skinnedMeshRenderer.gameObject.name}");
+                    Debug.LogError($"Failed to find an animator on skinned mesh object: {skinnedMeshRenderer.gameObject.name}");
                     return;
                 }
             }
 
+            var frameCount = Mathf.CeilToInt(animClip.length * animClip.frameRate); // Use the length and frame rate to calculate frame count
             var vertexCount = skinnedMeshRenderer.sharedMesh.vertexCount;
-            var keyFameTimes = GetKeyframeTimes(animClip);
-            foreach (var time in keyFameTimes)
+
+            for (var frame = 0; frame < frameCount; frame++)
             {
+                var time = (float)frame / frameCount * animClip.length;
                 animClip.SampleAnimation(animator.gameObject, time);
                 skinnedMeshRenderer.BakeMesh(bakedMesh);
 
@@ -159,9 +159,9 @@ namespace NRTools.GpuSkinning
             }
 
             _lookupTable.AddAnimation(enemyName, animClip.name,
-                new AnimationData(animClip.name, currentOffset, keyFameTimes.Count, vertexCount, true));
+                new AnimationData(animClip.name, currentOffset, frameCount, vertexCount, true));
 
-            currentOffset += keyFameTimes.Count * vertexCount;
+            currentOffset += frameCount * vertexCount;
         }
 
         private void BakeAnimationForMesh(string enemyName, AnimationClip animClip, MeshRenderer meshRenderer,
@@ -213,7 +213,6 @@ namespace NRTools.GpuSkinning
                 }
             }
 
-            Debug.Log(keyframeTimes.Count + " keyframes found");
             return keyframeTimes;
         }
 

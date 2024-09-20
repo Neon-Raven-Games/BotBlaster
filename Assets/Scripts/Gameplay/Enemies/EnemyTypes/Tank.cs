@@ -31,8 +31,9 @@ namespace Gameplay.Enemies.EnemyTypes
             proj.damage = currentDamage;
             proj.effectiveDamage = currentDamage;
             projectile.transform.LookAt(player);
-            var attackPosition = player.position;
+            
             var t = 0f;
+            
             while (t < attackDuration)
             {
                 RotateToFlatPlayer(rotationSpeed);

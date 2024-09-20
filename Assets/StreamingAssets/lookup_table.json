@@ -4,7 +4,7 @@
       "Ball Launch": {
         "animationName": "Ball Launch",
         "vertexOffset": 0,
-        "frameCount": 8,
+        "frameCount": 11,
         "vertexCount": 859,
         "loop": false
       }
@@ -12,57 +12,57 @@
     "GlassCannon": {
       "GCannon_Dash_L": {
         "animationName": "GCannon_Dash_L",
-        "vertexOffset": 6872,
-        "frameCount": 88,
+        "vertexOffset": 9449,
+        "frameCount": 11,
         "vertexCount": 272,
         "loop": true
       },
       "GCannon_Dash_R": {
         "animationName": "GCannon_Dash_R",
-        "vertexOffset": 30808,
-        "frameCount": 89,
+        "vertexOffset": 12441,
+        "frameCount": 11,
         "vertexCount": 272,
         "loop": true
       },
       "GCannon_Fly_L": {
         "animationName": "GCannon_Fly_L",
-        "vertexOffset": 55016,
-        "frameCount": 93,
+        "vertexOffset": 15433,
+        "frameCount": 11,
         "vertexCount": 272,
         "loop": true
       },
       "GCannon_Fly_R": {
         "animationName": "GCannon_Fly_R",
-        "vertexOffset": 80312,
-        "frameCount": 93,
+        "vertexOffset": 18425,
+        "frameCount": 10,
         "vertexCount": 272,
         "loop": true
       },
       "GCannon_Hit_L": {
         "animationName": "GCannon_Hit_L",
-        "vertexOffset": 105608,
-        "frameCount": 318,
+        "vertexOffset": 21145,
+        "frameCount": 26,
         "vertexCount": 272,
         "loop": true
       },
       "GCannon_Hit_R": {
         "animationName": "GCannon_Hit_R",
-        "vertexOffset": 192104,
-        "frameCount": 239,
+        "vertexOffset": 28217,
+        "frameCount": 21,
         "vertexCount": 272,
         "loop": true
       },
       "GCannon_Idle": {
         "animationName": "GCannon_Idle",
-        "vertexOffset": 257112,
-        "frameCount": 69,
+        "vertexOffset": 33929,
+        "frameCount": 40,
         "vertexCount": 272,
         "loop": true
       },
       "GCannon_Shoot": {
         "animationName": "GCannon_Shoot",
-        "vertexOffset": 275880,
-        "frameCount": 292,
+        "vertexOffset": 44809,
+        "frameCount": 41,
         "vertexCount": 272,
         "loop": true
       }
@@ -70,57 +70,57 @@
     "Grunt": {
       "Grunt_Draw_Wep": {
         "animationName": "Grunt_Draw_Wep",
-        "vertexOffset": 355304,
-        "frameCount": 261,
+        "vertexOffset": 55961,
+        "frameCount": 29,
         "vertexCount": 312,
         "loop": true
       },
       "Grunt_Final_Hit": {
         "animationName": "Grunt_Final_Hit",
-        "vertexOffset": 436736,
-        "frameCount": 377,
+        "vertexOffset": 65009,
+        "frameCount": 14,
         "vertexCount": 312,
         "loop": true
       },
       "Grunt_Hit_01": {
         "animationName": "Grunt_Hit_01",
-        "vertexOffset": 554360,
-        "frameCount": 307,
+        "vertexOffset": 69377,
+        "frameCount": 11,
         "vertexCount": 312,
         "loop": true
       },
       "Grunt_Hit_02": {
         "animationName": "Grunt_Hit_02",
-        "vertexOffset": 650144,
-        "frameCount": 353,
+        "vertexOffset": 72809,
+        "frameCount": 11,
         "vertexCount": 312,
         "loop": true
       },
       "Grunt_Hit_03": {
         "animationName": "Grunt_Hit_03",
-        "vertexOffset": 760280,
-        "frameCount": 302,
+        "vertexOffset": 76241,
+        "frameCount": 10,
         "vertexCount": 312,
         "loop": true
       },
       "Grunt_Idle": {
         "animationName": "Grunt_Idle",
-        "vertexOffset": 854504,
-        "frameCount": 288,
+        "vertexOffset": 79361,
+        "frameCount": 21,
         "vertexCount": 312,
         "loop": true
       },
       "Grunt_Moving": {
         "animationName": "Grunt_Moving",
-        "vertexOffset": 944360,
-        "frameCount": 251,
+        "vertexOffset": 85913,
+        "frameCount": 21,
         "vertexCount": 312,
         "loop": true
       },
       "Grunt_Shooting": {
         "animationName": "Grunt_Shooting",
-        "vertexOffset": 1022672,
-        "frameCount": 115,
+        "vertexOffset": 92465,
+        "frameCount": 11,
         "vertexCount": 312,
         "loop": true
       }
@@ -128,35 +128,35 @@
     "Swarm": {
       "Swarm_Diving": {
         "animationName": "Swarm_Diving",
-        "vertexOffset": 1058552,
+        "vertexOffset": 95897,
         "frameCount": 11,
         "vertexCount": 104,
         "loop": true
       },
       "Swarm_Floating": {
         "animationName": "Swarm_Floating",
-        "vertexOffset": 1059696,
+        "vertexOffset": 97041,
         "frameCount": 40,
         "vertexCount": 104,
         "loop": true
       },
       "Swarm_Hit_01": {
         "animationName": "Swarm_Hit_01",
-        "vertexOffset": 1063856,
+        "vertexOffset": 101201,
         "frameCount": 9,
         "vertexCount": 104,
         "loop": true
       },
       "Swarm_Hit_02": {
         "animationName": "Swarm_Hit_02",
-        "vertexOffset": 1064792,
+        "vertexOffset": 102137,
         "frameCount": 8,
         "vertexCount": 104,
         "loop": true
       },
       "Swarm_Hit_03": {
         "animationName": "Swarm_Hit_03",
-        "vertexOffset": 1065624,
+        "vertexOffset": 102969,
         "frameCount": 8,
         "vertexCount": 104,
         "loop": true
@@ -165,50 +165,50 @@
     "Tank": {
       "Tank_Dash_L": {
         "animationName": "Tank_Dash_L",
-        "vertexOffset": 1066456,
-        "frameCount": 298,
+        "vertexOffset": 103801,
+        "frameCount": 15,
         "vertexCount": 1133,
         "loop": true
       },
       "Tank_Dash_R": {
         "animationName": "Tank_Dash_R",
-        "vertexOffset": 1404090,
-        "frameCount": 297,
+        "vertexOffset": 120796,
+        "frameCount": 15,
         "vertexCount": 1133,
         "loop": true
       },
       "Tank_HIT_L": {
         "animationName": "Tank_HIT_L",
-        "vertexOffset": 1740591,
-        "frameCount": 359,
+        "vertexOffset": 137791,
+        "frameCount": 14,
         "vertexCount": 1133,
         "loop": true
       },
       "Tank_HIT_M": {
         "animationName": "Tank_HIT_M",
-        "vertexOffset": 2147338,
-        "frameCount": 445,
+        "vertexOffset": 153653,
+        "frameCount": 18,
         "vertexCount": 1133,
         "loop": true
       },
       "Tank_HIT_R": {
         "animationName": "Tank_HIT_R",
-        "vertexOffset": 2651523,
-        "frameCount": 376,
+        "vertexOffset": 174047,
+        "frameCount": 15,
         "vertexCount": 1133,
         "loop": true
       },
       "Tank_Idle": {
         "animationName": "Tank_Idle",
-        "vertexOffset": 3077531,
-        "frameCount": 152,
+        "vertexOffset": 191042,
+        "frameCount": 40,
         "vertexCount": 1133,
         "loop": true
       },
       "Tank_Shooting": {
         "animationName": "Tank_Shooting",
-        "vertexOffset": 3249747,
-        "frameCount": 355,
+        "vertexOffset": 236362,
+        "frameCount": 19,
         "vertexCount": 1133,
         "loop": true
       }

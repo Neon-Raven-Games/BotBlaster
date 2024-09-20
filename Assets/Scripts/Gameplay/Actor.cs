@@ -17,7 +17,7 @@ public class Actor : MonoBehaviour
 
     public int currentHealth;
     protected internal int currentDamage;
-    protected float currentSpeed;
+    protected internal float currentSpeed;
     protected internal float currentAttackRange;
     protected internal float currentAttackCoolDown;
 

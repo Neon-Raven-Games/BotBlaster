@@ -12,7 +12,7 @@ namespace NRTools.Analytics
         private static readonly StringBuilder _SCsvBuilder = new();
         private static DateTime _startTime;
         private static string _filePath;
-        private static readonly List<WaveAnalytics> _allWaveAnalytics = new(); // List to hold all wave data
+        private static readonly List<WaveAnalytics> _allWaveAnalytics = new(); 
 
         public static void InitializeAnalytics()
         {
@@ -26,8 +26,8 @@ namespace NRTools.Analytics
     public static void LogWaveData(WaveAnalytics waveAnalytics)
     {
 #if UNITY_EDITOR
-            waveAnalytics.UpdatePlayTime();
-            _allWaveAnalytics.Add(waveAnalytics);
+            // waveAnalytics.UpdatePlayTime();
+            // _allWaveAnalytics.Add(waveAnalytics);
             // Debug.Log($"Logged Wave {waveAnalytics.WaveNumber}");
 #endif
     }
@@ -36,7 +36,7 @@ namespace NRTools.Analytics
     {
 #if UNITY_EDITOR
             _SCsvBuilder.AppendLine(GenerateCsvData());
-            File.WriteAllText(_filePath, _SCsvBuilder.ToString());
+            // File.WriteAllText(_filePath, _SCsvBuilder.ToString());
             Debug.Log($"Game analytics saved to {_filePath}");
             ResetAnalytics();
 #endif

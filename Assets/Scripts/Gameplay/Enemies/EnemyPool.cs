@@ -15,7 +15,7 @@ public class ActorData
     public float baseSpeed;
     public float baseAttackRange;
     public float baseAttackCooldown;
-    
+
     public void Initialize(Actor character) =>
         character.Initialize(this);
 }
@@ -47,6 +47,7 @@ public class EnemyCollection
         currentIndex = 0;
     }
 
+
     public Enemy GetEnemy()
     {
         var enemy = enemies[currentIndex];
@@ -71,11 +72,19 @@ public class EnemyCollection
 
 public class EnemyPool : MonoBehaviour
 {
-    public static int CurrentEnemyCount { get; private set; } = 0; 
+    public static int CurrentEnemyCount { get; private set; } = 0;
     public List<EnemyData> enemyData;
     private static EnemyPool _instance;
     [SerializeField] private WaveController waveController;
     private static readonly ConcurrentDictionary<EnemyType, EnemyCollection> _SEnemyPool = new();
+
+    public void TestSpawnGlassCannon()
+    {
+        var enemy = GetEnemy(EnemyType.GlassCannon);
+        enemy.element = ElementFlag.Fire;
+        enemy.ApplyBalance(1);
+        IntroController.StartIntro(enemy);
+    }
 
     private void Awake()
     {
@@ -89,7 +98,7 @@ public class EnemyPool : MonoBehaviour
         XrPerformanceSettingsFeature.SetPerformanceLevelHint(PerformanceDomain.Gpu, PerformanceLevelHint.Boost);
         _instance = this;
         foreach (var data in enemyData)
-            _SEnemyPool.TryAdd(data.enemyType, new EnemyCollection(data.enemyType, 
+            _SEnemyPool.TryAdd(data.enemyType, new EnemyCollection(data.enemyType,
                 new List<Enemy>(data.poolSize + 1)));
         Initialize().Forget();
     }
@@ -107,13 +116,13 @@ public class EnemyPool : MonoBehaviour
 
         return null;
     }
-    
+
     public static void HandleEnemyDeactivation(Enemy enemy)
     {
         enemy.gameObject.SetActive(false);
         CurrentEnemyCount--;
     }
-    
+
     private async UniTaskVoid Initialize()
     {
         foreach (var data in enemyData)
@@ -146,7 +155,8 @@ public class EnemyPool : MonoBehaviour
                 }
             }
         }
-        CurrentEnemyCount = 0; 
+
+        CurrentEnemyCount = 0;
         _instance.waveController.Ready();
     }
 }

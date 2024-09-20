@@ -49,6 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deathParticles: {fileID: 4675578288651895485}
+  healthBar: {fileID: 0}
   speed: 5
   element: 2
 --- !u!65 &7421092160863170080

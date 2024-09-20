@@ -123,6 +123,35 @@ using UnityEngine;
 // Music: Intensity layering dynamically based on wave/enemies
 // Music: GameOver/Score menu tweening screen
 
+
+// Entrance Behaviors:
+// Each enemy should have a sub-set of entrances
+// We can either randomly choose between them, or we can use more difficult ones later
+
+// entrance:
+// tank/grunt, beam in
+// tank, every once and a while, slam down onto the stage
+// swarm, come in from sides or below the stage
+// glass cannon, comes in from below the stage, zips in like he does now (but as entry)
+
+// Below Stage Spawning area: Swarm/Glass Cannon
+// Side Stage Areas: Swarms (less often)
+// Beaming Into Play: Grunt/Tank
+// Slamming ont stage: Tank
+// Zip in: Glass Cannon (already there, less often earlier, more later)
+
+// Below Stage Spawning Area (and side stage)
+// pick below stage area randomly,
+// bezier curve control point in control area
+// generate random bezier, start->control->'landing'
+// landing would be the flying height we have now
+
+// Beaming into play
+// make vfx phase in of the character before allowing any damage or behavior
+// make the vfx phase really quick
+// pick a random point in the spawning area
+
+
 public static class SpawnPointGenerator
 {
     private static readonly EnemyType[] _SFlyingUnitTypes = {EnemyType.Swarm, EnemyType.GlassCannon};
