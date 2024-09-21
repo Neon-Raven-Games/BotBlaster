@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using Gameplay.Enemies;
-using Newtonsoft.Json;
 using NRTools.AtlasHelper;
-using UnityEditor;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace NRTools.GpuSkinning
 {
@@ -59,6 +54,49 @@ namespace NRTools.GpuSkinning
         {
         }
 
+        private void Start()
+        {
+            if (!AnimationManager.IsLoaded) AnimationManager.OnLoaded += OnAnimationManagerLoaded;
+            else OnAnimationManagerLoaded();
+        }
+
+        private void OnAnimationManagerLoaded()
+        {
+            _animationData = InitialAnimation();
+            if (_animationData == null || _animationData.frameCount == 0 || mesh == null)
+            {
+                Debug.LogError("Failed to load animation data or mesh.");
+                return;
+            }
+
+            _propertyBlock = new MaterialPropertyBlock();
+            _atlasIndex = GetComponent<AtlasIndex>();
+            _numFrames = _animationData.frameCount;
+            renderer.GetPropertyBlock(_propertyBlock);
+
+            _propertyBlock.SetInt(_SVertCount, _animationData.vertexCount);
+            _propertyBlock.SetInt(_SFrameOffset, _animationData.vertexOffset);
+
+            if (element == ElementFlag.None)
+            {
+                // todo, when we have uv mappings for none, we need to have a uv rect for the plain blaster/enemies
+                var uvRect = _atlasIndex.GetRect(ElementFlag.Electricity, out var page);
+                _propertyBlock.SetVector(_SUVOffset, new Vector4(
+                    uvRect.x, uvRect.y, uvRect.width, uvRect.height));
+            }
+            else
+            {
+                var uvRect = _atlasIndex.GetRect(element, out var page);
+                _propertyBlock.SetVector(_SUVOffset, new Vector4(
+                    uvRect.x, uvRect.y, uvRect.width, uvRect.height));
+            }
+
+            _propertyBlock.SetFloat(_SLocalScale, Math.Abs(transform.localScale.x));
+
+            renderer.SetPropertyBlock(_propertyBlock);
+            _initialized = true;
+        }
+
         public void UpdateElement(ElementFlag elementFlag)
         {
             element = elementFlag;
@@ -105,15 +143,10 @@ namespace NRTools.GpuSkinning
         }
 #endif
 
-        protected void OverrideFrameNumber(int frame)
-        {
-            _currentFrame = frame;
-        }
-
         private bool _blending;
         private AnimationData _nextAnimationData;
         private float _blendProgress;
-        private float _blendDuration = 0.1f;
+        private float _blendDuration = 0.5f;
 
         protected void TransitionToAnimation(AnimationData nextAnimation)
         {
@@ -121,10 +154,10 @@ namespace NRTools.GpuSkinning
             _propertyBlock.SetInt(_SNextAnimationOffset, nextAnimation.vertexOffset);
             _propertyBlock.SetFloat(_SBlendFactor, 0.01f);
             renderer.SetPropertyBlock(_propertyBlock);
-            _currentFrame = 0; 
+
+            _nextAnimationData = nextAnimation;
             _blendProgress = 0f;
             _blending = true;
-            _nextAnimationData = nextAnimation;
         }
 
         protected void SetAnimation(AnimationData data)
@@ -138,136 +171,98 @@ namespace NRTools.GpuSkinning
             renderer.SetPropertyBlock(_propertyBlock);
         }
 
-        private void OnAnimationManagerLoaded()
-        {
-            _animationData = InitialAnimation();
-            if (_animationData == null || _animationData.frameCount == 0 || mesh == null)
-            {
-                Debug.LogError("Failed to load animation data or mesh.");
-                return;
-            }
-
-            _propertyBlock = new MaterialPropertyBlock();
-            _atlasIndex = GetComponent<AtlasIndex>();
-            _numFrames = _animationData.frameCount;
-            renderer.GetPropertyBlock(_propertyBlock);
-
-            _propertyBlock.SetInt(_SVertCount, _animationData.vertexCount);
-            _propertyBlock.SetInt(_SFrameOffset, _animationData.vertexOffset);
-
-            if (element == ElementFlag.None)
-            {
-                // todo, when we have uv mappings for none, we need to have a uv rect for the plain blaster/enemies
-                var uvRect = _atlasIndex.GetRect(ElementFlag.Electricity, out var page);
-                _propertyBlock.SetVector(_SUVOffset, new Vector4(
-                    uvRect.x, uvRect.y, uvRect.width, uvRect.height));
-            }
-            else
-            {
-                var uvRect = _atlasIndex.GetRect(element, out var page);
-                _propertyBlock.SetVector(_SUVOffset, new Vector4(
-                    uvRect.x, uvRect.y, uvRect.width, uvRect.height));
-            }
-
-            _propertyBlock.SetFloat(_SLocalScale, Math.Abs(transform.localScale.x));
-
-            renderer.SetPropertyBlock(_propertyBlock);
-            _initialized = true;
-        }
-
-        private void Start()
-        {
-            if (!AnimationManager.IsLoaded) AnimationManager.OnLoaded += OnAnimationManagerLoaded;
-            else OnAnimationManagerLoaded();
-        }
-
         protected virtual void Update()
         {
             if (!_initialized) return;
 
-            // Update current frame
             _currentFrame += Time.deltaTime * animationSpeed;
             var frame0 = Mathf.FloorToInt(_currentFrame);
             var t = _currentFrame - frame0;
 
-            if (_currentFrame >= _numFrames - 1)
-            {
-                if (_nextAnimationData != null && _nextAnimationData != _animationData)
-                {
-                    _animationData = _nextAnimationData;
-                    _numFrames = _animationData.frameCount;
-                    _currentFrame = 0;
-                    renderer.GetPropertyBlock(_propertyBlock);
-                    _propertyBlock.SetInt(_SFrameOffset, _animationData.vertexOffset + _animationData.vertexCount * 2);
-                    renderer.SetPropertyBlock(_propertyBlock); 
-                }
-                else if (_animationData.loop)
-                {
-                    _currentFrame %= _numFrames; // Loop back to the beginning
-                    frame0 = Mathf.FloorToInt(_currentFrame);
-                    t = _currentFrame - frame0;
-                }
-                else
-                {
-                    renderer.GetPropertyBlock(_propertyBlock);
-                    _propertyBlock.SetInt(_SFrameOffset, 
-                        _animationData.vertexOffset + _animationData.vertexCount * (_numFrames - 2));
-                    renderer.SetPropertyBlock(_propertyBlock);
-                    return;
-                }
-            }
-
-
             renderer.GetPropertyBlock(_propertyBlock);
 
-            // Update frame offset and interpolation factor
+            if (!_blending && _currentFrame >= _numFrames - 1 &&
+                HandleTransitionlessAnimation(ref frame0, ref t)) return;
+
+            UpdateShaderFrame(frame0);
+            _propertyBlock.SetFloat(_SInterpolationFactor, t);
+
+            if (_blending) HandleBlending();
+            else _propertyBlock.SetFloat(_SBlendFactor, 0f);
+
+            renderer.SetPropertyBlock(_propertyBlock);
+        }
+
+        private void UpdateShaderFrame(int frame0)
+        {
             if (_shaderFrameIndex != frame0)
             {
                 _shaderFrameIndex = frame0;
                 _propertyBlock.SetInt(_SFrameOffset,
                     _animationData.vertexOffset + _animationData.vertexCount * _shaderFrameIndex);
             }
+        }
 
-            _propertyBlock.SetFloat(_SInterpolationFactor, t);
-
-            if (_blending)
-            {
-                _blendProgress += Time.deltaTime / _blendDuration;
-                
-                if (_blendProgress >= 1f)
-                {
-                    _blendProgress = 1f;
-                    _blending = false;
-                    _animationData = _nextAnimationData;
-                    if (_animationData != null)
-                    {
-                        _numFrames = _animationData.frameCount;
-                        _propertyBlock.SetInt(_SFrameOffset, _animationData.vertexOffset);
-                    }
-
-                    _currentFrame = 0f;
-
-                    _propertyBlock.SetFloat(_SInterpolationFactor, 0f);
-                    _propertyBlock.SetFloat(_SBlendFactor, 0f);
-                }
-                else
-                {
-                    // Update blend factor
-                    _propertyBlock.SetFloat(_SBlendFactor, _blendProgress);
-
-                    // Set next animation frame offset
-                    _propertyBlock.SetInt(_SNextAnimationOffset,
-                        _nextAnimationData.vertexOffset + _nextAnimationData.vertexCount * _shaderFrameIndex);
-                }
-            }
+        private bool HandleTransitionlessAnimation(ref int frame0, ref float t)
+        {
+            if (_animationData.loop) frame0 = WrapFrame(out t);
             else
             {
-                _propertyBlock.SetFloat(_SBlendFactor, 0f);
+                HoldLastFrame();
+                return true;
             }
 
+            return false;
+        }
+
+        private int WrapFrame(out float t)
+        {
+            _currentFrame %= _numFrames;
+            var frame0 = Mathf.FloorToInt(_currentFrame);
+            t = _currentFrame - frame0;
+            return frame0;
+        }
+
+        private void HoldLastFrame()
+        {
+            _propertyBlock.SetInt(_SFrameOffset,
+                _animationData.vertexOffset + _animationData.vertexCount * (_numFrames - 2));
             renderer.SetPropertyBlock(_propertyBlock);
         }
 
+        private void HandleBlending()
+        {
+            _blendProgress += Time.deltaTime / _blendDuration;
+            _blendProgress = Mathf.Clamp01(_blendProgress);
+
+            if (_blendProgress >= 1f) HandleBlendingFinished();
+            else UpdateBlendProgress();
+        }
+
+        private void UpdateBlendProgress()
+        {
+            _propertyBlock.SetFloat(_SBlendFactor, _blendProgress);
+            _propertyBlock.SetInt(_SNextAnimationOffset, _nextAnimationData.vertexOffset);
+        }
+
+        private void HandleBlendingFinished()
+        {
+            _blendProgress = 1f;
+            _blending = false;
+            _animationData = _nextAnimationData;
+
+            if (_animationData != null)
+            {
+                _numFrames = _animationData.frameCount;
+                _shaderFrameIndex = 0;
+                _propertyBlock.SetInt(_SFrameOffset, _animationData.vertexOffset);
+            }
+            else _animationData = InitialAnimation();
+
+            _propertyBlock.SetFloat(_SInterpolationFactor, 0f);
+            _propertyBlock.SetFloat(_SBlendFactor, 0f);
+            _currentFrame = 0;
+        }
 
         protected virtual AnimationData InitialAnimation()
         {

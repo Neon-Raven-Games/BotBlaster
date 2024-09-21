@@ -51,8 +51,6 @@ namespace NRTools.GpuSkinning
 
         public void PlayDashAnimation(bool isLeft)
         {
-            Debug.Log("Dashing animation");
-            // _nextAnimation = isLeft ? GlassCannonAnimation.FlyLeft : GlassCannonAnimation.FlyRight;
             AnimationClip = isLeft ? GlassCannonAnimation.DashLeft : GlassCannonAnimation.DashRight;
         }
         

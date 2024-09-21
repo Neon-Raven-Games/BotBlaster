@@ -41,7 +41,7 @@ namespace Gameplay.Enemies.EnemyBehaviors
         {
             if (_attacking || !enemy.gameObject.activeInHierarchy) return;
             _attacking = true;
-            _animator.PlayIdle();
+            _animator.PlayAttackAnimation();
             enemy.StartCoroutine(ChargeAttack());
         }
 
