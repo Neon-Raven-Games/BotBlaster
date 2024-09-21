@@ -36,12 +36,11 @@ using UnityEngine;
 // ------------------------------------------------
 // finished above, will implement after the gameplay elements are in place
 
-
-// continuing on:
 // Elemental Ammunition: Element Ammo Count
-// Combined: Validate combined elements are working to tie off all feature sets
 
-// Implement Single Blaster
+
+// Combined: Validate combined elements are working to tie off all feature sets
+// Implement Single Blaster artwork
 
 // ===Test the combined elements with the power ups and ensure the game is sound. Ship to play test here===
 

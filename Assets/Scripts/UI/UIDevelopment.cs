@@ -165,9 +165,9 @@ public class UIDevelopment : MonoBehaviour
 
     private void SelectElement(ElementFlag selectedElement)
     {
-        handCannon.InitializeElementChange();
-        handCannon.blasterElement = selectedElement;
-        handCannon.FinalizeElementChange();
+        // handCannon.InitializeElementChange();
+        // handCannon.blasterElement = selectedElement;
+        // handCannon.FinalizeElementChange();
     }
 
     private void HighlightChildBasedOnInput()

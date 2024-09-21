@@ -34,6 +34,9 @@ public class HandCannon : MonoBehaviour
     private BaseHandCanonState _currentState;
     private InputAction _triggerAction;
     public DevController actor;
+    
+    private int _currentAmmo;
+    private int _defaultAmmo;
 
     [SerializeField] internal bool soloCannon;
 
@@ -152,11 +155,26 @@ public class HandCannon : MonoBehaviour
 
     public void FinalizeElementChange()
     {
-        if ((_previousElement & blasterElement) == 0) SetBlasterMaterial();
+        if ((_previousElement & blasterElement) == 0)
+        {
+            SetBlasterMaterial();
+            _currentAmmo += _defaultAmmo;
+        }
     }
 
     public void InitializeElementChange()
     {
         _previousElement = blasterElement;
+    }
+
+    public void ReduceAmmuniton()
+    {
+        _currentAmmo--;
+        if (_currentAmmo <= 0)
+        {
+            blasterElement = ElementFlag.None;
+            SetBlasterMaterial();
+            _currentAmmo = 0;
+        }
     }
 }

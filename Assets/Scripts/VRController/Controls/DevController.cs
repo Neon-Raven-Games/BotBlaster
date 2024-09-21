@@ -101,19 +101,19 @@ public class DevController : Actor
     }
     public void HapticFeedback()
     {
-        leftHand.PlayHapticImpulse(0.5f, 0.5f);
-        rightHand.PlayHapticImpulse(0.5f, 0.5f);
+        leftHand.PlayHapticImpulse(0.75f, 0.5f);
+        rightHand.PlayHapticImpulse(0.75f, 0.5f);
         _vignetteController.PunchTweenDamageVignette();
     }
 
     public void PlayLeftFeedback()
     {
-        leftHand.PlayHapticImpulse(0.75f, 0.2f);
+        leftHand.PlayHapticImpulse(0.35f, 0.2f);
     }
 
     public void PlayRightFeedback()
     {
-        rightHand.PlayHapticImpulse(0.75f, 0.2f);
+        rightHand.PlayHapticImpulse(0.35f, 0.2f);
     }
 
     private void OnApplicationFocusChanged(bool hasFocus)

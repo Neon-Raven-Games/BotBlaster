@@ -111,5 +111,6 @@ public class ShootingState : BaseHandCanonState
         launchVelocity += _controller.velocity;
         rb.velocity = launchVelocity;
         handCannon.actor.HapticFeedback(handCannon.handSide);
+        handCannon.ReduceAmmuniton();
     }
 }

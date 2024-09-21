@@ -72,7 +72,6 @@ namespace NRTools.GpuSkinning
         
         protected override void TransitionToNextAnimation()
         {
-            
             base.TransitionToNextAnimation();
         }
 
