@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 
 [CustomEditor(typeof(ShootToPlay))]
-public class ShootToPlayEditor : UnityEditor.Editor
+public class ShootToPlayEditor : Editor
 {
     public override void OnInspectorGUI()
     {

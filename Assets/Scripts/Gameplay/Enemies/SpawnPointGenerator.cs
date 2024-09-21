@@ -23,24 +23,33 @@ using UnityEngine;
 // *fire rate offset to make each hand shoot alternating
 // ===Test the balance to ensure power ups feel rewarding and the game is challenging===
 
-// enemy movement pattern note:
-// War Planes flying over tank made cool scene (swarm)
-
-// 9/18, finish enemies and combined blasters, implement single cannons.
-// 9/19, finish rendering biz
-// 9/20, UI and game feel
-// 9/21, sound dev and polish passes
-
 // Enemies/Shooting - QoL
 // Enemies/Movement Patterns - Large improvement
 // ===Test to ensure we tightened up the enemies and polish them off to complete their mechanics and have a solid enemy system==
 
+
+// here we are! Do the combined elements and ammunition next for the gameloop testing
+
+// ---Need animation blending *Unseen blocker*-----
+// Finish animation library, if needed (see work flow)
+// if shader/vfx draw calls are hitting us, create vfx workflow in new render system
+// ------------------------------------------------
+// finished above, will implement after the gameplay elements are in place
+
+
+// continuing on:
+// Elemental Ammunition: Element Ammo Count
 // Combined: Validate combined elements are working to tie off all feature sets
+
+// Implement Single Blaster
+
 // ===Test the combined elements with the power ups and ensure the game is sound. Ship to play test here===
 
+// Scripted events
+// boss battle
+// 
+
 // ~~~Polish passing and visual fidelity/cohesion~~~
-// Rendering: Shader Library
-// Rendering: New Animation Library
 // Rendering: VFX for Enemies
 // Rendering: VFX for Blasters/Transitions
 

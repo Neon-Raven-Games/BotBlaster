@@ -94,9 +94,7 @@ namespace Gameplay.Enemies.EnemyBehaviors
             
             if (Mathf.Abs(enemy.transform.position.y - _targetY) > 0.1f)
             {
-                Debug.Log(_targetY);
                 newPosition.y = Mathf.Lerp(enemy.transform.position.y, _targetY, Time.deltaTime * 60f);
-                Debug.Log(newPosition.y);
             }
 
             _randomAttackTimer -= Time.deltaTime;
@@ -109,8 +107,8 @@ namespace Gameplay.Enemies.EnemyBehaviors
 
             if (newPosition.x < enemy.transform.position.x && !_left)
             {
+               if (!_left) _animator.PlayDashAnimation(true);
                 _left = true;
-                _animator.PlayDashAnimation(_left);
                 if (!_dashing)
                 {
                     _dashing = true;
@@ -119,8 +117,8 @@ namespace Gameplay.Enemies.EnemyBehaviors
             }
             else if (newPosition.x > enemy.transform.position.x && _left)
             {
+                if (_left) _animator.PlayDashAnimation(false);
                 _left = false;
-                _animator.PlayDashAnimation(_left);
                 if (!_dashing)
                 {
                     _dashing = true;

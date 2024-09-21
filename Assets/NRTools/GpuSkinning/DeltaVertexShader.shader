@@ -58,6 +58,11 @@
 
             // frame indexing
             UNITY_DEFINE_INSTANCED_PROP(int, _FrameOffset)
+
+            // can we use this to interpolate between animations when blend factor is not 0?
+            UNITY_DEFINE_INSTANCED_PROP(int, _NextAnimationOffset)
+            UNITY_DEFINE_INSTANCED_PROP(float, _BlendFactor)
+
             UNITY_DEFINE_INSTANCED_PROP(float, _InterpolationFactor)
 
             // vertex index wrapping
@@ -76,10 +81,6 @@
             TEXTURE2D(_MainTex);
             SAMPLER(sampler_MainTex);
 
-            // uv for wireframe
-            // TEXTURE2D(_UV);
-            // SAMPLER(sampler_UV);
-            
             StructuredBuffer<float3> vertices;
 
             v2f vert(const appdata v, uint id : SV_VertexID)
@@ -103,11 +104,17 @@
                 const int delta_index0 = frame_offset + id;
                 const int delta_index1 = frame_offset + id + v_count;
 
-                float3 interpolated_delta = lerp(
-                    vertices[delta_index0].xyz,
-                    vertices[delta_index1].xyz,
-                    interpolation);
-
+                float3 interpolated_delta = lerp(vertices[delta_index0].xyz,
+                    vertices[delta_index1].xyz, interpolation);
+                
+                const float anim_interp = UNITY_ACCESS_INSTANCED_PROP(Props, _BlendFactor);
+                if (anim_interp > 0.0)
+                {
+                    const int next_anim_offset = UNITY_ACCESS_INSTANCED_PROP(Props, _NextAnimationOffset);
+                    const float3 next_anim_vertex = vertices[next_anim_offset + id];
+                    interpolated_delta = lerp(interpolated_delta, next_anim_vertex, anim_interp);
+                }
+                
                 o.position = TransformObjectToHClip(interpolated_delta);
                 o.wireframe_uv = v.uv;
                 float4 uv_offset = UNITY_ACCESS_INSTANCED_PROP(Props, _UVOffset);

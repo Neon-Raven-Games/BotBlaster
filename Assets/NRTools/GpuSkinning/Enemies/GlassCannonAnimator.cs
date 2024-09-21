@@ -38,10 +38,11 @@ namespace NRTools.GpuSkinning
             get => _currentAnimation;
             set
             {
+                TransitionToAnimation(FetchAnimationData(value));
                 _currentAnimation = value;
-                SetAnimation(FetchAnimationData(value));
             }
         }
+
         public override void PlayAttackAnimation()
         {
             _nextAnimation = GlassCannonAnimation.Idle;
@@ -50,8 +51,9 @@ namespace NRTools.GpuSkinning
 
         public void PlayDashAnimation(bool isLeft)
         {
+            Debug.Log("Dashing animation");
+            // _nextAnimation = isLeft ? GlassCannonAnimation.FlyLeft : GlassCannonAnimation.FlyRight;
             AnimationClip = isLeft ? GlassCannonAnimation.DashLeft : GlassCannonAnimation.DashRight;
-            _nextAnimation = isLeft ? GlassCannonAnimation.FlyLeft : GlassCannonAnimation.FlyRight;
         }
         
         public override void PlayOneShotHitAnimation()
@@ -65,13 +67,13 @@ namespace NRTools.GpuSkinning
             _nextAnimation = GlassCannonAnimation.Idle;
             var hitIndex = Random.Range(0, 2);
             var hitAnimation = GlassCannonAnimation.HitLeft + hitIndex;
-            AnimationClip = hitAnimation;
+            SetAnimation(FetchAnimationData(hitAnimation));
         } 
         
         protected override void TransitionToNextAnimation()
         {
+            
             base.TransitionToNextAnimation();
-            AnimationClip = _nextAnimation;
         }
 
         private AnimationData FetchAnimationData(GlassCannonAnimation animationData)

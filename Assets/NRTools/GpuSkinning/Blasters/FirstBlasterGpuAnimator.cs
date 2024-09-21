@@ -30,8 +30,6 @@ namespace NRTools.GpuSkinning.Blasters
         {
             base.PlayOneShotHitAnimation();
             AnimationClip = BlasterAnimations.Shoot;
-            // todo, find out why the ball launcher loops twice in one clip
-            // it doesn't in the animation window, but does in vertex data?
         }
         private AnimationData FetchAnimationData(BlasterAnimations animationData)
         {

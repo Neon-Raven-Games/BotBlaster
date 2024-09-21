@@ -37,17 +37,18 @@ namespace Gameplay.Enemies.EnemyTypes
             base.Awake();
             _explodeObject = Instantiate(explodePrefab);
             _explodeObject.SetActive(false);
+            
             anim = meshAnimator as GlassCannonAnimator;
+            
             kamakazeBehavior = new KamakzeGlassCannon(this);
 
             slowAdvance = new SlowAdvanceGlassCannon(this, meshAnimator as GlassCannonAnimator);
             slowAdvance.barrelTransform = barrelTransform;
-
-            // _currentBehavior = slowAdvance;
-            _currentBehavior = kamakazeBehavior;
-            // todo, find common assignment and abstract to a base
             slowAdvance.strafeSpeed = strafeSpeed;
             slowAdvance.strafeDistance = strafeDistance;
+            
+            _currentBehavior = slowAdvance;
+            // _currentBehavior = kamakazeBehavior;
         }
 
         public override void FinishIntro()

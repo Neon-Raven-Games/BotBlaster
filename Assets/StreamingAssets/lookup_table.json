@@ -15,14 +15,14 @@
         "vertexOffset": 9449,
         "frameCount": 11,
         "vertexCount": 272,
-        "loop": true
+        "loop": false
       },
       "GCannon_Dash_R": {
         "animationName": "GCannon_Dash_R",
         "vertexOffset": 12441,
         "frameCount": 11,
         "vertexCount": 272,
-        "loop": true
+        "loop": false
       },
       "GCannon_Fly_L": {
         "animationName": "GCannon_Fly_L",
