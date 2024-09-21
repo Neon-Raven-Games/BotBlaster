@@ -1,8 +1,5 @@
 ﻿using UnityEditor;
 using UnityEngine;
-using Gameplay.Enemies;
-using UnityEditor;
-using UnityEngine;
 
 namespace Gameplay.Blaster
 {
@@ -15,7 +12,19 @@ namespace Gameplay.Blaster
             EnemyPool pool = (EnemyPool) target;
             if (GUILayout.Button("Spawn Glass Cannon"))
             {
-                pool.TestSpawnGlassCannon();
+                EnemyPool.TestSpawnGlassCannon();
+            }
+            if (GUILayout.Button("Spawn Tank"))
+            {
+                EnemyPool.TestSpawnTank();
+            }
+            if (GUILayout.Button("Spawn Swarm"))
+            {
+                EnemyPool.TestSpawnSwarm();
+            }
+            if (GUILayout.Button("Spawn Grunt"))
+            {
+                EnemyPool.TestSpawnGrunt();
             }
         }
     }

@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class ScoreManager : MonoBehaviour
 {
+    [SerializeField] private TextMeshPro textMeshPro;
+    [SerializeField] private TextMeshPro leaderboard;
+    
     private const int _SCORE_PER_ENEMY = 100;
     private static ScoreManager _instance;
     private int _score;
-    [SerializeField] private TextMeshPro textMeshPro;
-    [SerializeField] private TextMeshPro leaderboard;
+    
     private void Awake()
     {
         if (_instance != null)

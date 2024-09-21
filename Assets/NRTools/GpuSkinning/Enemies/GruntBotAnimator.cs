@@ -5,7 +5,20 @@ namespace NRTools.GpuSkinning
 {
     public class GruntBotAnimator : GpuMeshAnimator
     {
-
+        private string botName = "Grunt";
+        private GruntBotAnimation _nextAnimation;
+        private GruntBotAnimation _currentAnimation;
+        
+        private GruntBotAnimation AnimationClip
+        {
+            get => _currentAnimation;
+            set
+            {
+                _currentAnimation = value;
+                SetAnimation(FetchAnimationData(value));
+            }
+        }
+        
         private static readonly List<string> _SAnimationNames = new()
         {
             "Grunt_Draw_Wep",
@@ -17,7 +30,7 @@ namespace NRTools.GpuSkinning
             "Grunt_Moving",
             "Grunt_Shooting"
         };
-        
+
         private Dictionary<GruntBotAnimation, string> animationLookup = new()
         {
             {GruntBotAnimation.DrawWeapon, _SAnimationNames[0]},
@@ -29,25 +42,13 @@ namespace NRTools.GpuSkinning
             {GruntBotAnimation.Moving, _SAnimationNames[6]},
             {GruntBotAnimation.Shooting, _SAnimationNames[7]}
         };
-        private string botName = "Grunt";
 
-        private GruntBotAnimation _currentAnimation;
-        private GruntBotAnimation _nextAnimation;
-        public GruntBotAnimation AnimationClip
-        {
-            set
-            {
-                _currentAnimation = value;
-                SetAnimation(FetchAnimationData(value));
-            }
-        }
-        
         public override void PlayAttackAnimation()
         {
-            _nextAnimation = GruntBotAnimation.Idle;
+            _nextAnimation = GruntBotAnimation.Moving;
             AnimationClip = GruntBotAnimation.Shooting;
         }
-        
+
         public override void PlayOneShotHitAnimation()
         {
             base.PlayOneShotHitAnimation();
@@ -55,6 +56,13 @@ namespace NRTools.GpuSkinning
             var hitIndex = Random.Range(0, 3);
             var hitAnimation = GruntBotAnimation.Hit01 + hitIndex;
             AnimationClip = hitAnimation;
+        }
+
+        public void PlayIdle()
+        {
+            if (AnimationClip == GruntBotAnimation.Idle) return;
+            _nextAnimation = GruntBotAnimation.Idle;
+            AnimationClip = GruntBotAnimation.Idle;
         }
 
         protected override void TransitionToNextAnimation()
@@ -70,6 +78,7 @@ namespace NRTools.GpuSkinning
 
         protected override AnimationData InitialAnimation()
         {
+            _nextAnimation = GruntBotAnimation.Moving;
             return FetchAnimationData(GruntBotAnimation.Moving);
         }
     }

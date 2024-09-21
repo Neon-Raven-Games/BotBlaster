@@ -7,6 +7,7 @@ namespace Gameplay.Enemies.EnemyBehaviors.Base
         public EnemyType enemyType => enemy.enemyType;
         public Transform player => enemy.player;
         protected Enemy enemy;
+        
         public BaseEnemyBehavior(Enemy enemy)
         {
             this.enemy = enemy;

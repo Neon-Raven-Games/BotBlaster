@@ -78,7 +78,15 @@ public class EnemyPool : MonoBehaviour
     [SerializeField] private WaveController waveController;
     private static readonly ConcurrentDictionary<EnemyType, EnemyCollection> _SEnemyPool = new();
 
-    public void TestSpawnGlassCannon()
+    public static void TestSpawnTank()
+    {
+        var enemy = GetEnemy(EnemyType.Tank);
+        enemy.element = ElementFlag.Fire;
+        enemy.ApplyBalance(1);
+        IntroController.StartIntro(enemy);
+    }
+
+    public static void TestSpawnGlassCannon()
     {
         var enemy = GetEnemy(EnemyType.GlassCannon);
         enemy.element = ElementFlag.Fire;
@@ -86,6 +94,21 @@ public class EnemyPool : MonoBehaviour
         IntroController.StartIntro(enemy);
     }
 
+    public static void TestSpawnSwarm()
+    {
+        var enemy = GetEnemy(EnemyType.Swarm);
+        enemy.element = ElementFlag.Fire;
+        enemy.ApplyBalance(1);
+        IntroController.StartIntro(enemy);
+    }
+
+    public static void TestSpawnGrunt()
+    {
+        var enemy = GetEnemy(EnemyType.Grunt);
+        enemy.element = ElementFlag.Fire;
+        enemy.ApplyBalance(1);
+        IntroController.StartIntro(enemy);
+    }
     private void Awake()
     {
         if (_instance != null)

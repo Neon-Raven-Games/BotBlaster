@@ -42,7 +42,12 @@ namespace Gameplay.Enemies.EnemyTypes
             if (element == ElementFlag.None) return;
             _gpuMeshAnimator.UpdateElement(element);
         }
-        
+
+        private void OnDisable()
+        {
+            _isDiveBombing = false;
+        }
+
         private AtlasIndex _atlasIndex;
 
         private void Update()
@@ -66,6 +71,8 @@ namespace Gameplay.Enemies.EnemyTypes
         private void OnEnable()
         {
             healthBar.FillMax();
+            if (element == ElementFlag.None) return;
+            _gpuMeshAnimator.UpdateElement(element);
         }
 
         private void SetHitAnimation()

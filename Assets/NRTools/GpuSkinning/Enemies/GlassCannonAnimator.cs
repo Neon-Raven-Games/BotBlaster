@@ -5,7 +5,8 @@ namespace NRTools.GpuSkinning
 {
     public class GlassCannonAnimator : GpuMeshAnimator
     {
-        private string botName = "GlassCannon";
+        private const string _BOT_NAME = "GlassCannon";
+
         private static readonly List<string> _SAnimationNames = new()
         {
             "GCannon_Dash_L",
@@ -75,7 +76,7 @@ namespace NRTools.GpuSkinning
 
         private AnimationData FetchAnimationData(GlassCannonAnimation animationData)
         {
-            return AnimationManager.GetAnimationData(botName, animationLookup[animationData]);
+            return AnimationManager.GetAnimationData(_BOT_NAME, animationLookup[animationData]);
         }
         
         protected override AnimationData InitialAnimation()
@@ -86,7 +87,6 @@ namespace NRTools.GpuSkinning
 
         public void PlayIdle()
         {
-            Debug.Log("playing idle");
             if (_currentAnimation == GlassCannonAnimation.Idle) return;
             AnimationClip = GlassCannonAnimation.Idle;
         }

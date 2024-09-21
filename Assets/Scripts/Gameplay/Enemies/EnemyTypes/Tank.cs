@@ -1,4 +1,6 @@
 ﻿using System.Collections;
+using Gameplay.Enemies.EnemyBehaviors.Base;
+using Gameplay.Enemies.EnemyBehaviors.Tank;
 using UnityEngine;
 using Util;
 
@@ -15,12 +17,21 @@ namespace Gameplay.Enemies.EnemyTypes
         [SerializeField] private Transform barrelTransform;
         private bool _attacking;
         private bool _dashing;
+        private TankSnake _tankSnake;
+        private BaseEnemyBehavior _currentBehavior;
+        protected override void Awake()
+        {
+            base.Awake();
+            _tankSnake = new TankSnake(this, barrelTransform);
+            _currentBehavior = _tankSnake;
+        }
 
         protected override void Attack()
         {
             if (_attacking || _dashing || !gameObject.activeInHierarchy) return;
-            _attacking = true;
-            StartCoroutine(AttackRoutine());
+            // _currentBehavior.Attack();
+            // _attacking = true;
+            // StartCoroutine(AttackRoutine());
         }
 
         private IEnumerator AttackRoutine()
@@ -83,6 +94,8 @@ namespace Gameplay.Enemies.EnemyTypes
         
         protected override void Move()
         {
+            _currentBehavior.Move();
+            return;
             if (_attacking || _dashing) return;
 
             var playerDirection = player.position - transform.position;

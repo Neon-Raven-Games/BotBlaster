@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
+using Gameplay.Enemies.EnemyBehaviors.Base;
+using Gameplay.Enemies.EnemyBehaviors.Grunt;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -30,6 +32,15 @@ namespace Gameplay.Enemies.EnemyTypes
         private float _lastDiveBombTime;
         private bool _initialized;
         private float _orbitAngle;
+        private SwarmBloom _swarmBloom;
+        private BaseEnemyBehavior _currentBehavior;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            _swarmBloom = new SwarmBloom(this);
+            _currentBehavior = _swarmBloom;
+        }
 
         protected override void OnEnable()
         {
@@ -78,7 +89,7 @@ namespace Gameplay.Enemies.EnemyTypes
 
                 var swarmUnit = _swarmUnits[i];
                 swarmUnit.transform.position = position;
-                swarmUnit.speed = currentSpeed;
+                swarmUnit.speed = 15;
                 swarmUnit.SetSwarmCenter(transform);
                 swarmUnit.Initialize(playerComponent, currentDamage, currentHealth / count, element);
                 swarmUnit.gameObject.SetActive(true);
@@ -183,7 +194,7 @@ namespace Gameplay.Enemies.EnemyTypes
         {
         }
 
-        private void TriggerDiveBomb()
+        internal void TriggerDiveBomb()
         {
             _lastDiveBombTime = Time.time;
             var diveBombCount = Mathf.CeilToInt(currentSwarmUnitCount * diveBombPercentage);
@@ -210,8 +221,14 @@ namespace Gameplay.Enemies.EnemyTypes
             
         }
 
+        // i am moving the movement behavior to another object, the game is no longer a 360 exp, and only 180
+        // can we make this character make a cool blooming pattern that looks like the image?
+        // when they get in attack range we should call the enemy.TriggerDiveBomb() method,
+        // and the swarm should move left to right in front of the player
         protected override void Move()
         {
+            _currentBehavior.Move();
+            return;
             _orbitAngle += orbitSpeed * Time.deltaTime;
             var offset = new Vector3(Mathf.Sin(_orbitAngle), 0, Mathf.Cos(_orbitAngle)) * circleRadius;
             var targetPosition = player.position + offset;

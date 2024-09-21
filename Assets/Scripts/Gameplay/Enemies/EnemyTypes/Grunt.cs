@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using Gameplay.Enemies.EnemyBehaviors.Base;
+using Gameplay.Enemies.EnemyBehaviors.Grunt;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -12,8 +14,19 @@ namespace Gameplay.Enemies.EnemyTypes
         [SerializeField] private float attackDuration;
         [SerializeField] private float dashDuration;
         [SerializeField] private float rotationSpeed = 16f;
+        [SerializeField] private Transform barrelTransform;
         private bool _attacking;
         private bool _dashing;
+        
+        private BaseEnemyBehavior _currentBehavior;
+        private GruntBehavior _gruntBehavior;
+        
+        protected override void Awake()
+        {
+            base.Awake();
+            _gruntBehavior = new GruntBehavior(this, barrelTransform, meshAnimator);
+            _currentBehavior = _gruntBehavior;
+        }
 
         private void OnDisable()
         {
@@ -23,66 +36,11 @@ namespace Gameplay.Enemies.EnemyTypes
 
         protected override void Attack()
         {
-            if (_attacking || _dashing) return;
-            _attacking = true;
-            meshAnimator.PlayAttackAnimation();
-            StartCoroutine(AttackRoutine());
-        }
-
-        private IEnumerator AttackRoutine()
-        {
-            var attackPosition = player.position;
-            var t = 0f;
-            while (t < attackDuration)
-            {
-                RotateToFlatPlayer(rotationSpeed);
-                t += Time.deltaTime;
-                yield return null;
-            }
-            
-            lastAttackTime = Time.time;
-            playerComponent.ApplyDamage(currentDamage, element, attackPosition);
-            _attacking = false;
-        }
-
-        private IEnumerator DashRoutine()
-        {
-            var dashAngle = Random.Range(0, 2);
-            if (dashAngle == 0) dashAngle = -90;
-            else dashAngle = 90;
-            
-            var dashDirection = Quaternion.Euler(0, dashAngle, 0) * transform.forward;
-            dashDirection.y = 0;
-            
-            var t = 0f;
-            // dashing animation
-            while (t < dashDuration)
-            {
-                RotateToFlatPlayer(rotationSpeed);
-                t += Time.deltaTime * dashSpeed;
-                transform.position += dashDirection * Time.deltaTime * dashSpeed;
-                yield return null;
-            }
-
-            _dashing = false;
         }
 
         protected override void Move()
         {
-            if (_attacking || _dashing) return;
-
-            var playerDirection = player.position - transform.position;
-            if (playerDirection.magnitude > currentAttackRange)
-            {
-                if (Random.value < dashingChance)
-                {
-                    _dashing = true;
-                    StartCoroutine(DashRoutine());
-                }
-                else transform.position += transform.forward * currentSpeed * Time.deltaTime;
-            }
-
-            RotateToFlatPlayer(rotationSpeed);
+            _currentBehavior.Move();
         }
     }
 }

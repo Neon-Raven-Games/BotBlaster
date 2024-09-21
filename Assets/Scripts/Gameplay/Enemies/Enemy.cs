@@ -74,7 +74,7 @@ public class Enemy : Actor
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
     }
 
-    protected void RotateToFlatPlayer(float rotationSpeed)
+    protected internal void RotateToFlatPlayer(float rotationSpeed)
     {
         var playerDirection = player.position - transform.position;
         playerDirection.y = 0;

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using Gameplay.Enemies.EnemyBehaviors.Base;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -75,8 +74,12 @@ namespace Gameplay.Enemies
                 case EnemyType.Swarm:
                 case EnemyType.GlassCannon:
                     var belowData = _instance.GenerateBelowSpawnPath();
-                    Debug.Log($"Created spawn path: {belowData.startPosition}");
-                    Debug.DrawLine(belowData.startPosition, belowData.controlPoint, Color.red, 5f);
+                    if (enemy.enemyType == EnemyType.Swarm)
+                    {
+                        belowData.time += 2.7f;
+                        belowData.startPosition += Vector3.back * 15;
+                    }
+                    enemy.transform.position = belowData.startPosition;
                     _instance._enemyIntro.TryAdd(enemy, belowData);
                     enemy.gameObject.SetActive(true);
                     break;
@@ -146,7 +149,6 @@ namespace Gameplay.Enemies
                             break;
                     }
                 }
-
                 _enemyIntro[enemyData.Key] = enemy;
             }
 

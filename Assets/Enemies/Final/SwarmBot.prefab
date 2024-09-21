@@ -213,7 +213,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deathParticles: {fileID: 7698388881618291777}
   healthBar: {fileID: 6672307059376593475}
-  speed: 5
+  speed: 15
   element: 2
 --- !u!1 &619737124544083062
 GameObject:

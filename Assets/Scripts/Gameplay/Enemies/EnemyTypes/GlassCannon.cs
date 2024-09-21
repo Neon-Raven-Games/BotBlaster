@@ -11,6 +11,9 @@ namespace Gameplay.Enemies.EnemyTypes
         [SerializeField] private Transform barrelTransform;
         [SerializeField] private float rotationSpeed;
 
+        [SerializeField] private GameObject explodePrefab;
+        private GameObject _explodeObject;
+
         [Header("Strafe Settings")] [SerializeField]
         private float strafeSpeed;
 
@@ -32,14 +35,16 @@ namespace Gameplay.Enemies.EnemyTypes
         protected override void Awake()
         {
             base.Awake();
+            _explodeObject = Instantiate(explodePrefab);
+            _explodeObject.SetActive(false);
             anim = meshAnimator as GlassCannonAnimator;
             kamakazeBehavior = new KamakzeGlassCannon(this);
-            
+
             slowAdvance = new SlowAdvanceGlassCannon(this, meshAnimator as GlassCannonAnimator);
             slowAdvance.barrelTransform = barrelTransform;
-            
-            _currentBehavior = slowAdvance;
 
+            // _currentBehavior = slowAdvance;
+            _currentBehavior = kamakazeBehavior;
             // todo, find common assignment and abstract to a base
             slowAdvance.strafeSpeed = strafeSpeed;
             slowAdvance.strafeDistance = strafeDistance;
@@ -67,29 +72,13 @@ namespace Gameplay.Enemies.EnemyTypes
         protected override void Move()
         {
             _currentBehavior.Move();
-            return;
-            if (_isCharging) return;
+        }
 
-            var playerDistance = Vector3.Distance(transform.position, player.position);
-
-            if (playerDistance > currentAttackRange + swoopBufferDistance)
-            {
-                var targetPosition = player.position;
-                targetPosition.y = Mathf.Lerp(transform.position.y, targetHeight, Time.deltaTime * swoopSpeed);
-
-                transform.position =
-                    Vector3.MoveTowards(transform.position, targetPosition, currentSpeed * Time.deltaTime);
-            }
-            else
-            {
-                _strafeAngle += strafeSpeed * Time.deltaTime;
-                var offset = new Vector3(Mathf.Sin(_strafeAngle), 0, Mathf.Cos(_strafeAngle)) * strafeDistance;
-                var strafePosition = player.position + offset;
-
-                transform.position = Vector3.Lerp(transform.position, strafePosition, Time.deltaTime * currentSpeed);
-            }
-
-            RotateToPlayer(rotationSpeed);
+        public void Explode()
+        {
+            _explodeObject.transform.position = transform.position;
+            _explodeObject.SetActive(true);
+            gameObject.SetActive(false);
         }
     }
 }
