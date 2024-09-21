@@ -62,5 +62,6 @@ public class ScoreManager : MonoBehaviour
         _instance.leaderboard.text = "";
         for (int i = 0; i < scoreValues.Count; i++) 
             _instance.leaderboard.text += $"{i + 1}: {scoreValues[i]}\n";
+        _instance._score = 0;
     }
 }

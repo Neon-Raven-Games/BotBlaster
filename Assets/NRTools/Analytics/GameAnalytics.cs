@@ -26,9 +26,9 @@ namespace NRTools.Analytics
     public static void LogWaveData(WaveAnalytics waveAnalytics)
     {
 #if UNITY_EDITOR
-            // waveAnalytics.UpdatePlayTime();
-            // _allWaveAnalytics.Add(waveAnalytics);
-            // Debug.Log($"Logged Wave {waveAnalytics.WaveNumber}");
+            waveAnalytics.UpdatePlayTime();
+            _allWaveAnalytics.Add(waveAnalytics);
+            Debug.Log($"Logged Wave {waveAnalytics.WaveNumber}");
 #endif
     }
 
@@ -44,13 +44,16 @@ namespace NRTools.Analytics
 
     public static void ResetAnalytics()
     {
+#if UNITY_EDITOR
         _SCsvBuilder.Clear();
         _allWaveAnalytics.Clear();
+        #endif
     }
 
     // Generate the full CSV data, properly formatted
     private static string GenerateCsvData()
     {
+#if UNITY_EDITOR
         StringBuilder csvData = new StringBuilder();
 
         // 1. Wave Data Section
@@ -81,7 +84,7 @@ namespace NRTools.Analytics
 
         foreach (var wave in _allWaveAnalytics)
         {
-            foreach (var enemyBalance in wave.EnemyBalanceData)
+            foreach (var enemyBalance in wave.enemyBalanceData)
             {
                 if (!enemyDataByType.ContainsKey(enemyBalance.enemyType))
                 {
@@ -107,6 +110,8 @@ namespace NRTools.Analytics
         }
 
         return csvData.ToString();
+        #endif
+        return "";
     }
 }
 

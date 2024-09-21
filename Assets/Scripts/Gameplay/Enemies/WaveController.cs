@@ -1,4 +1,3 @@
-using System;
 using Cysharp.Threading.Tasks;
 using Gameplay.Util;
 using NRTools.Analytics;
@@ -11,10 +10,10 @@ public class WaveController : MonoBehaviour
     [SerializeField] public GameObject ui;
     [SerializeField] float menuSpawnDelay;
 
-    private static int totalKillsInWave;
-    private static float waveStartTime;
-    private static float totalKillRate = 1;
-    private static int wavesCompleted = 0;
+    private static int _totalKillsInWave;
+    private static float _waveStartTime;
+    private static float _totalKillRate = 1;
+    private static int _wavesCompleted;
 
     public EnemySpawner enemySpawner;
     private bool _waveSpawning;
@@ -42,7 +41,6 @@ public class WaveController : MonoBehaviour
         XrPerformanceSettingsFeature.SetPerformanceLevelHint(PerformanceDomain.Cpu, PerformanceLevelHint.Boost);
         enemySpawner.currentWave = 1;
         paused = false;
-        enemySpawner.paused = false;
         waveEnemies = 0;
         WaveRoutine().Forget();
         XrPerformanceSettingsFeature.SetPerformanceLevelHint(PerformanceDomain.Cpu, PerformanceLevelHint.SustainedHigh);
@@ -63,21 +61,22 @@ public class WaveController : MonoBehaviour
 
     private async UniTaskVoid WaveRoutine()
     {
-        totalKillsInWave = 0;
-        waveStartTime = Time.time;
+        _totalKillsInWave = 0;
+        _waveStartTime = Time.time;
         enemySpawner.StartNextWave();
         _waveSpawning = true;
 
         while (_waveSpawning)
         {
-            if (!paused && enemySpawner.WaveCompleted())
+            if (!paused && EnemySpawner.WaveCompleted())
             {
                 Debug.Log("Wave completed!");
                 waveEnemies = 0;
-                await PauseForPlayerUpgrades();
-
-                totalKillsInWave = 0;
-                waveStartTime = Time.time;
+                
+                await UniTask.Delay(750);
+                
+                _totalKillsInWave = 0;
+                _waveStartTime = Time.time;
                 EndWave();
                 enemySpawner.StartNextWave();
             }
@@ -88,18 +87,16 @@ public class WaveController : MonoBehaviour
         TimerManager.ClearTimers();
         EnemyPool.SleepAll();
         waveEnemies = 0;
-        enemySpawner.paused = true;
     }
 
     public static void EndWave()
     {
-        float waveDuration = Time.time - waveStartTime; // Duration of the wave in seconds
-        float killsPerSecond = totalKillsInWave / waveDuration; // Calculate kills per second
-        float killsPerMinute = killsPerSecond * 60f; // Convert to kills per minute
+        var waveDuration = Time.time - _waveStartTime;
+        var killsPerSecond = _totalKillsInWave / waveDuration;
+        var killsPerMinute = killsPerSecond * 60f; 
 
-        // Update the average kill rate across all waves
-        totalKillRate = ((totalKillRate * wavesCompleted) + killsPerMinute) / (wavesCompleted + 1);
-        wavesCompleted++;
+        _totalKillRate = ((_totalKillRate * _wavesCompleted) + killsPerMinute) / (_wavesCompleted + 1);
+        _wavesCompleted++;
     }
 
     private async UniTask PauseForPlayerUpgrades()
@@ -117,15 +114,15 @@ public class WaveController : MonoBehaviour
 
     public static float GetKillRate()
     {
-        float waveDuration = Time.time - waveStartTime;
+        var waveDuration = Time.time - _waveStartTime;
         waveDuration = Mathf.Max(waveDuration, 1f);
-        return totalKillsInWave / waveDuration * 60f;
+        return _totalKillsInWave / waveDuration * 60f;
     }
 
 
     public static float AverageKillRate()
     {
-        return totalKillRate; // Return the average kill rate across all waves
+        return _totalKillRate;
     }
 
     public static bool IsWaveSpawning() => _instance._waveSpawning;

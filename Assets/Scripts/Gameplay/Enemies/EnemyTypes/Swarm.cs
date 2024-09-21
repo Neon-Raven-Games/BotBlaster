@@ -10,14 +10,11 @@ namespace Gameplay.Enemies.EnemyTypes
 {
     public class Swarm : Enemy
     {
+        private int _currentSwarmUnitCount;
         [SerializeField] private GameObject swarmUnitPrefab;
         [SerializeField] internal int swarmCount = 5;
-        [SerializeField] private float circleRadius = 5f;
         [SerializeField] private float diveBombPercentage = 0.2f;
-        [SerializeField] private float diveBombCooldown = 5f;
         [SerializeField] private float swarmRadius = 2f;
-        [SerializeField] private float orbitSpeed = 2f;
-        [SerializeField] private float closingSpeedMultiplier = 0.1f;
         [SerializeField] private float cohesionFactor = 1f;
         [SerializeField] private float separationFactor = 1.5f;
         [SerializeField] private float alignmentFactor = 1f;
@@ -26,7 +23,6 @@ namespace Gameplay.Enemies.EnemyTypes
         [SerializeField] private float swayAmplitude = 0.5f;
         [SerializeField] private float swayFrequency = 1f;
         [SerializeField] private float noiseScale = 0.2f;
-        [SerializeField] private float circleRadiusMinDist = 7f;
 
         private List<SwarmUnit> _swarmUnits = new();
         private float _lastDiveBombTime;
@@ -59,7 +55,7 @@ namespace Gameplay.Enemies.EnemyTypes
         {
             SleepSwarm();
         }
-        
+
         private void SleepSwarm()
         {
             foreach (var swarmUnit in _swarmUnits)
@@ -72,15 +68,15 @@ namespace Gameplay.Enemies.EnemyTypes
         protected override void Update()
         {
             base.Update();
-            if (currentSwarmUnitCount <= 0) base.Die(StatusEffectiveness.Normal);
+            if (_currentSwarmUnitCount <= 0) base.Die(StatusEffectiveness.Normal);
         }
 
         private void SetSwarmActive(int count)
         {
-            currentSwarmUnitCount = count;
-            if (_swarmUnits.Count < count) 
+            _currentSwarmUnitCount = count;
+            if (_swarmUnits.Count < count)
                 InitializeSwarm(count - _swarmUnits.Count + 1);
-            
+
             for (var i = 0; i < count; i++)
             {
                 var angle = i * Mathf.PI * 2f / count;
@@ -94,11 +90,11 @@ namespace Gameplay.Enemies.EnemyTypes
                 swarmUnit.Initialize(playerComponent, currentDamage, currentHealth / count, element);
                 swarmUnit.gameObject.SetActive(true);
             }
-            
+
             MoveSwarmAsync().Forget();
         }
 
-        public void InitializeSwarm(int count)
+        private void InitializeSwarm(int count)
         {
             for (var i = 0; i < count; i++)
             {
@@ -113,6 +109,7 @@ namespace Gameplay.Enemies.EnemyTypes
                 swarmUnit.gameObject.SetActive(false);
             }
         }
+
         private async UniTaskVoid MoveSwarmAsync()
         {
             while (gameObject && gameObject.activeInHierarchy)
@@ -135,6 +132,7 @@ namespace Gameplay.Enemies.EnemyTypes
                 await UniTask.Yield();
             }
         }
+
         private async UniTask CalculateFlockingAsync(SwarmUnit swarmUnit)
         {
             var separation = Vector3.zero;
@@ -163,9 +161,9 @@ namespace Gameplay.Enemies.EnemyTypes
             cohesion = cohesion.normalized * cohesionFactor;
 
             var randomMovement = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)) * randomFactor;
-            
+
             if (!this || !swarmUnit) return;
-            
+
             var sway = Mathf.Sin(Time.time * swayFrequency + swarmUnit.transform.position.x) * swayAmplitude;
 
             var noiseX = Mathf.PerlinNoise(Time.time * noiseScale, swarmUnit.transform.position.y) * 2f - 1f;
@@ -177,6 +175,7 @@ namespace Gameplay.Enemies.EnemyTypes
             flockingDirection = Vector3.Lerp(swarmUnit.transform.forward, flockingDirection, 0.1f);
             swarmUnit.flockingDirection = flockingDirection;
         }
+
         private void ApplyMovement(SwarmUnit swarmUnit)
         {
             // Apply the final movement
@@ -197,9 +196,9 @@ namespace Gameplay.Enemies.EnemyTypes
         internal void TriggerDiveBomb()
         {
             _lastDiveBombTime = Time.time;
-            var diveBombCount = Mathf.CeilToInt(currentSwarmUnitCount * diveBombPercentage);
+            var diveBombCount = Mathf.CeilToInt(_currentSwarmUnitCount * diveBombPercentage);
             var activeUnits = _swarmUnits.Where(x => x.gameObject.activeInHierarchy).ToList();
-            
+
             if (activeUnits == null || activeUnits.Count == 0)
             {
                 base.Die(StatusEffectiveness.Strong);
@@ -216,40 +215,19 @@ namespace Gameplay.Enemies.EnemyTypes
         // todo, this is not killing enemies. Added one in the update loop
         protected override void Die(StatusEffectiveness status)
         {
-            if (currentSwarmUnitCount > 0) return;
+            if (_currentSwarmUnitCount > 0) return;
             base.Die(status);
-            
         }
 
-        // i am moving the movement behavior to another object, the game is no longer a 360 exp, and only 180
-        // can we make this character make a cool blooming pattern that looks like the image?
-        // when they get in attack range we should call the enemy.TriggerDiveBomb() method,
-        // and the swarm should move left to right in front of the player
         protected override void Move()
         {
             _currentBehavior.Move();
-            return;
-            _orbitAngle += orbitSpeed * Time.deltaTime;
-            var offset = new Vector3(Mathf.Sin(_orbitAngle), 0, Mathf.Cos(_orbitAngle)) * circleRadius;
-            var targetPosition = player.position + offset;
-            targetPosition.y = transform.position.y;
-
-            if (circleRadius > circleRadiusMinDist)
-                circleRadius =
-                    Mathf.Max(1f,
-                        circleRadius - closingSpeedMultiplier * Time.deltaTime); // Adjust the circleRadius over time
-
-            transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * currentSpeed);
-            if (circleRadius <= circleRadiusMinDist && Time.time - _lastDiveBombTime >= diveBombCooldown)
-                TriggerDiveBomb();
         }
-        private int currentSwarmUnitCount;
 
-        // todo, we called the base to avoid the race condition on another thread maybe?
         public void SwarmUnitDead()
         {
-            currentSwarmUnitCount--;
-            if (currentSwarmUnitCount <= 0) 
+            _currentSwarmUnitCount--;
+            if (_currentSwarmUnitCount <= 0)
                 base.Die(StatusEffectiveness.Strong);
         }
     }

@@ -9,14 +9,8 @@ namespace Gameplay.Enemies.EnemyTypes
 {
     public class Grunt : Enemy
     {
-        [SerializeField] private float dashingChance;
-        [SerializeField] private float dashSpeed;
         [SerializeField] private float attackDuration;
-        [SerializeField] private float dashDuration;
-        [SerializeField] private float rotationSpeed = 16f;
         [SerializeField] private Transform barrelTransform;
-        private bool _attacking;
-        private bool _dashing;
         
         private BaseEnemyBehavior _currentBehavior;
         private GruntBehavior _gruntBehavior;
@@ -28,10 +22,14 @@ namespace Gameplay.Enemies.EnemyTypes
             _currentBehavior = _gruntBehavior;
         }
 
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            _currentBehavior?.OnEnable();
+        }
+
         private void OnDisable()
         {
-            _dashing = false;
-            _attacking = false;
         }
 
         protected override void Attack()

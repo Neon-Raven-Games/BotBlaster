@@ -6,6 +6,7 @@ using Gameplay.Enemies;
 using Gameplay.Enemies.EnemyTypes;
 using NRTools.Analytics;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class EnemySpawner : MonoBehaviour
 {
@@ -13,7 +14,6 @@ public class EnemySpawner : MonoBehaviour
     private const int MAX_ENEMY_COUNT = 20;
     public Transform centralPoint;
     public int currentWave;
-    public bool paused;
 
     [SerializeField] private int bossWaveInterval = 20;
 
@@ -52,8 +52,8 @@ public class EnemySpawner : MonoBehaviour
     public void StartNextWave()
     {
         GameBalancer.InitializeElementProbability(currentWave);
-
         GameBalancer.CalculatePlayerPerformance(player);
+        
         currentWaveData = currentWave % bossWaveInterval != 0 && currentWave != 0
             ? GameBalancer.GenerateWave(currentWave)
             : GameBalancer.GenerateBossWave(currentWave / bossWaveInterval);
@@ -71,6 +71,7 @@ public class EnemySpawner : MonoBehaviour
             currentWaveData.numberOfEnemies,
             new BalanceObject(FindObjectOfType<DevController>()));
 #endif
+            
         WaveController.waveEnemies = currentWaveData.numberOfEnemies;
         SpawnWave().Forget();
         if (currentWave % bossWaveInterval == 0 && currentWave > 0) OnBossKilled();
@@ -82,19 +83,21 @@ public class EnemySpawner : MonoBehaviour
         GameBalancer.OnBossDefeated();
     }
 
-    public bool WaveCompleted() =>
+    public static bool WaveCompleted() =>
         EnemyPool.CurrentEnemyCount == 0 && WaveController.waveEnemies <= 0;
 
-    public async UniTaskVoid SpawnWave()
+    private async UniTaskVoid SpawnWave()
     {
-        for (int i = 0; i < currentWaveData.numberOfEnemies; i++)
+        for (var i = 0; i < currentWaveData.numberOfEnemies; i++)
         {
             while (EnemyPool.CurrentEnemyCount >= MAX_ENEMY_COUNT)
             {
                 await UniTask.Delay(50);
             }
 
-            await UniTask.Delay(TimeSpan.FromSeconds(currentWaveData.spawnInterval));
+            // variable spawn intervals, may need a better adjustment
+            var interval = Random.Range(currentWaveData.spawnInterval, currentWaveData.spawnInterval * 2);
+            await UniTask.Delay(TimeSpan.FromSeconds(interval));
 
             if (!WaveController.IsWaveSpawning()) return;
 
@@ -102,7 +105,7 @@ public class EnemySpawner : MonoBehaviour
             var element = GameBalancer._SElementProbabilityList.PickValue();
             SpawnEnemy(enemyType, currentWave, element);
 
-            // we should update the intensity here when approached on the todo
+            // todo, audio intensity
             // UpdateAudioIntensity(i);
 
             await UniTask.Yield();
@@ -122,12 +125,12 @@ public class EnemySpawner : MonoBehaviour
         IntroController.StartIntro(enemy);
 
 #if UNITY_EDITOR
-        var enemyBalance = _waveAnalytics.EnemyBalanceData.FirstOrDefault(e => e.enemyType == type);
+        var enemyBalance = _waveAnalytics.enemyBalanceData.FirstOrDefault(e => e.enemyType == type);
 
         if (enemyBalance == null)
         {
             enemyBalance = new EnemyBalanceObject(enemy) {count = 1, Elements = new List<ElementFlag> {element}};
-            _waveAnalytics.EnemyBalanceData.Add(enemyBalance);
+            _waveAnalytics.enemyBalanceData.Add(enemyBalance);
         }
         else
         {

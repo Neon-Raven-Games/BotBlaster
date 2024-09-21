@@ -7,16 +7,18 @@ namespace Gameplay.Enemies.EnemyBehaviors.Tank
 {
     public class TankSnake : BaseEnemyBehavior
     {
-        private Transform barrelTransform;
-        private float attackDuration = 1f;
-        private float currentAttackTime;
+        private readonly Transform _barrelTransform;
+        private float _currentAttackTime;
         private bool _attacking;
         private float _zigzagPhase;
-        private Vector2 randomAttackRange = new(4, 12);
+        
+        // we can balance these if needed
+        private readonly float attackDuration = 1f;
+        private readonly Vector2 randomAttackRange = new(4, 12);
 
         public TankSnake(Enemy enemy, Transform barrel) : base(enemy)
         {
-            barrelTransform = barrel;
+            _barrelTransform = barrel;
         }
 
         public override void Attack()
@@ -29,11 +31,11 @@ namespace Gameplay.Enemies.EnemyBehaviors.Tank
         public override void Move()
         {
             if (_attacking) return;
-            currentAttackTime -= Time.deltaTime;
+            _currentAttackTime -= Time.deltaTime;
             
-            if (currentAttackTime <= 0)
+            if (_currentAttackTime <= 0)
             {
-                currentAttackTime = Random.Range(randomAttackRange.x, randomAttackRange.y);
+                _currentAttackTime = Random.Range(randomAttackRange.x, randomAttackRange.y);
                 _targetRotation = Quaternion.LookRotation(player.position - enemy.transform.position);
                 Attack();
                 return;
@@ -67,7 +69,7 @@ namespace Gameplay.Enemies.EnemyBehaviors.Tank
 
         private IEnumerator AttackRoutine()
         {
-            var projectile = ElementPool.GetElement(enemy.element, barrelTransform.position);
+            var projectile = ElementPool.GetElement(enemy.element, _barrelTransform.position);
             var proj = projectile.GetComponent<Projectile>();
             proj.damage = enemy.currentDamage;
             proj.effectiveDamage = enemy.currentDamage;
@@ -78,13 +80,13 @@ namespace Gameplay.Enemies.EnemyBehaviors.Tank
             while (t < attackDuration)
             {
                 enemy.RotateToFlatPlayer(5f);
-                projectile.transform.position = barrelTransform.position;
+                projectile.transform.position = _barrelTransform.position;
                 t += Time.deltaTime;
                 yield return null;
             }
 
             projectile.gameObject.SetActive(true);
-            currentAttackTime = Random.Range(randomAttackRange.x, randomAttackRange.y);
+            _currentAttackTime = Random.Range(randomAttackRange.x, randomAttackRange.y);
             _attacking = false;
             
             
