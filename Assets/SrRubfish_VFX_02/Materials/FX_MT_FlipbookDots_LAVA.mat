@@ -85,11 +85,11 @@ Material:
     - _DistortionStrength: 1
     - _DistortionStrengthScaled: 0.1
     - _DstBlend: 10
-    - _EmissionSaturation: 4.53
+    - _EmissionSaturation: 7.21
     - _FlipbookBlending: 0
     - _FlipbookMode: 0
     - _Mode: 0
-    - _OpacitySaturation: 5.35
+    - _OpacitySaturation: 7.38
     - _PreLerp: 1
     - _QueueControl: 0
     - _QueueOffset: 0
@@ -110,8 +110,8 @@ Material:
     - _CameraFadeParams: {r: 0, g: 0, b: 0, a: 0}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _HighColor: {r: 0.85882354, g: 0.45892236, b: 0.1490196, a: 0}
-    - _MainColor: {r: 1, g: 0, b: 0, a: 1}
+    - _HighColor: {r: 0.7264151, g: 0.102262326, b: 0, a: 0}
+    - _MainColor: {r: 0.6886792, g: 0.45815414, b: 0, a: 1}
     - _SoftParticleFadeParams: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &4793656619605484218
