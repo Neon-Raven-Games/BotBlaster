@@ -25,16 +25,15 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _SURFACE_TYPE_TRANSPARENT
+  - _ALPHATEST_ON
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
+  m_CustomRenderQueue: 2450
   stringTagMap:
-    RenderType: Transparent
+    RenderType: TransparentCutout
   disabledShaderPasses:
-  - DepthOnly
   - SHADOWCASTER
   m_LockedProperties: 
   m_SavedProperties:
@@ -106,8 +105,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _AlphaClip: 0
-    - _AlphaToMask: 0
+    - _AlphaClip: 1
+    - _AlphaToMask: 1
     - _BUILTIN_AlphaClip: 0
     - _BUILTIN_Blend: 0
     - _BUILTIN_CullMode: 2
@@ -129,7 +128,7 @@ Material:
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
-    - _DstBlend: 10
+    - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EmissionSaturation: 4
     - _EnvironmentReflections: 1
@@ -154,15 +153,15 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SoftParticle: 0
     - _SpecularHighlights: 1
-    - _SrcBlend: 5
+    - _SrcBlend: 1
     - _SrcBlendAlpha: 1
-    - _Surface: 1
+    - _Surface: 0
     - _UVSec: 0
     - _UseSoftParticles: 0
     - _UserLerp: 1
     - _WorkflowMode: 1
     - _ZTest: 4
-    - _ZWrite: 0
+    - _ZWrite: 1
     - _ZWriteControl: 0
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
@@ -171,7 +170,7 @@ Material:
     - _HighColor: {r: 1, g: 1, b: 1, a: 0}
     - _MainColor: {r: 0.09433961, g: 0.09433961, b: 0.09433961, a: 0}
     - _NoiseHighColor: {r: 1, g: 1, b: 1, a: 1}
-    - _NoiseLowColor: {r: 1, g: 0.6313726, b: 0.56078434, a: 0}
+    - _NoiseLowColor: {r: 1, g: 0.96234804, b: 0.56078434, a: 0}
     - _NoisePanning: {r: 0, g: 0, b: 0, a: 0}
     - _NoiseTiling: {r: 1, g: 1, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
