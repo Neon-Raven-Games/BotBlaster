@@ -87,62 +87,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   textureType: 0
   enemyType: 0
-  AtlasData:
-  - textureType: 0
-    enemyType: 0
-    elementFlag: 32
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0
-      y: 0
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 0
-    enemyType: 0
-    elementFlag: 2
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.28173828
-      y: 0
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 0
-    enemyType: 0
-    elementFlag: 8
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0.56347656
-      y: 0
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 0
-    enemyType: 0
-    elementFlag: 4
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0
-      y: 0.28173828
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
-  - textureType: 0
-    enemyType: 0
-    elementFlag: 16
-    sceneName: 
-    UVRect:
-      serializedVersion: 2
-      x: 0
-      y: 0.56347656
-      width: 0.28125
-      height: 0.28125
-    AtlasPage: 0
+  AtlasData: []
 --- !u!1001 &3864653869926780756
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -189,7 +134,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 624a14fcc74ece94faab4db580ba6a03, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: -0.24080399
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 624a14fcc74ece94faab4db580ba6a03, type: 3}
       propertyPath: m_CastShadows
@@ -201,6 +146,14 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 9d334a500909f87468631d49be3f2609, type: 2}
     - target: {fileID: -7511558181221131132, guid: 624a14fcc74ece94faab4db580ba6a03, type: 3}
       propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5c386892a2fe6544eb51cae0f59d36a1, type: 2}
+    - target: {fileID: -2278759213394640744, guid: 624a14fcc74ece94faab4db580ba6a03, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -9.230747
+      objectReference: {fileID: 0}
+    - target: {fileID: -45090533996886627, guid: 624a14fcc74ece94faab4db580ba6a03, type: 3}
+      propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 5c386892a2fe6544eb51cae0f59d36a1, type: 2}
     - target: {fileID: 919132149155446097, guid: 624a14fcc74ece94faab4db580ba6a03, type: 3}
