@@ -55,7 +55,7 @@ MonoBehaviour:
   enemyType: 3
   element: 32
   mesh: {fileID: 4966343040005516717, guid: 2fbfb80c821470e4bacde2a00609d324, type: 3}
-  animationSpeed: 5
+  animationSpeed: 24
   renderer: {fileID: 7011291411316484579}
 --- !u!114 &6572719150219579689
 MonoBehaviour:
@@ -81,12 +81,7 @@ MonoBehaviour:
   enemyType: 3
   healthBar: {fileID: 2342992053896219034}
   deathParticleSystem: {fileID: 2924494586132692992}
-  dashingChance: 0.003
-  dashSpeed: 20
   attackDuration: 0.4
-  chargeDuration: 0.5
-  dashDuration: 2
-  rotationSpeed: 16
   barrelTransform: {fileID: 5424156944580274429}
 --- !u!114 &462369339730185926
 MonoBehaviour:

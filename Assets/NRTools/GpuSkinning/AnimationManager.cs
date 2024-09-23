@@ -10,54 +10,15 @@ namespace NRTools.GpuSkinning
 {
     public class AnimationManager : MonoBehaviour
     {
-        [SerializeField] private string vertexDataPath = "path_to_vertex_data.bin"; 
+        [SerializeField] private string vertexDataPath = "path_to_vertex_data.bin";
         [SerializeField] private string lookupTablePath = "path_to_lookup_table.json";
-        [SerializeField] private Material atlasMaterial;
+        [SerializeField] public Material atlasMaterial;
         private static ComputeBuffer _vertexBuffer;
-        private static Vector3[] _allVertices; 
+        private static Vector3[] _allVertices;
         private static AnimationLookupTable _lookupTable;
         private static readonly int _SVertices = Shader.PropertyToID("vertices");
         public static bool IsLoaded => _lookupTable != null && _allVertices != null;
         public static Action OnLoaded;
-
-        
-        // ================== Art ========================
-        // fire/water
-        // fire/electricity
-        // water/electricity
-        // blasters; fire, water, electricity, wind, rock
-        // combined blasters (make abstract with a color scheme for element combinations?)
-        // icons for upgrade menu
-        // icons for blaster element selection
-        // Boss
-        // Environment
-        
-        // ================== Code ========================
-        // beef up damage number oomph~
-        // projectile collisions~
-        // balance the enemies' health, damage speed~
-        // enemy health bars~
-        
-        // fix upgrade station design, needs to be better (git gud bro)
-        // generate waves on the fly instead of cached collections
-        // boss wave sequencing
-        // move the status defects to utilize the same as fire, remove status effects otherwise
-        // test and validate updated ui functionality
-        // animation polishing
-        
-        // ================= SoundDev ==================
-        // Wave Audio Mixing
-        // projectile launch
-        // projectile impact
-        // songs list, regular wave && boss wave
-        
-        // bot sounds;
-        // Common: death
-        // Tank: launch, tracks, hurt
-        // GlassCannon: hover/zoom, charge, hurt
-        // Grunt: moving, hurt, shoot
-        // SwarmBot: Hover, DiveBomb queue, diving sound
-        
         
         private void Awake()
         {
@@ -65,8 +26,50 @@ namespace NRTools.GpuSkinning
             StartCoroutine(DeserializeVertexData(vertexDataPath, AssignVertexData));
         }
 
+        public void EditorDeserialize()
+        {
+            _lookupTable = null;
+            _vertexBuffer?.Dispose();
+            _vertexBuffer = null;
+            
+            DeserializeLocalLookupTable(lookupTablePath, AssignLookupCallback);
+            DeserializeLocalVertexData(vertexDataPath, AssignVertexData);
+        }
+
+        private static void DeserializeLocalLookupTable(string filename, Action<AnimationLookupTable> callback)
+        {
+            var path = Path.Combine(Application.streamingAssetsPath, "lookup_table.json");
+            var json = File.ReadAllText(path);
+            var lookupTable = JsonConvert.DeserializeObject<AnimationLookupTable>(json);
+            callback(lookupTable);
+        }
+
+        private static void DeserializeLocalVertexData(string filename, Action<Vector3[]> callback)
+        {
+            var path = Path.Combine(Application.streamingAssetsPath, "vertex_data.bin");
+            var data = File.ReadAllBytes(path);
+
+            using var ms = new MemoryStream(data);
+            using var reader = new BinaryReader(ms);
+            var length = reader.ReadInt32();
+            var vertices = new Vector3[length];
+
+            for (var i = 0; i < length; i++)
+            {
+                var x = reader.ReadSingle();
+                var y = reader.ReadSingle();
+                var z = reader.ReadSingle();
+
+                vertices[i] = new Vector3(x, y, z);
+            }
+
+            callback(vertices);
+        }
+
         public static AnimationData GetAnimationData(string enemyType, string animationName)
         {
+            if (_lookupTable == null) return null;
+            
             return _lookupTable.GetAnimationData(enemyType, animationName);
         }
 
@@ -79,22 +82,32 @@ namespace NRTools.GpuSkinning
                 OnLoaded = null;
             }
         }
-        
+
         private void AssignVertexData(Vector3[] vertices)
         {
             _allVertices = vertices;
             _vertexBuffer = new ComputeBuffer(_allVertices.Length, sizeof(float) * 3);
             _vertexBuffer.SetData(_allVertices);
+            
             atlasMaterial.SetBuffer(_SVertices, _vertexBuffer);
+            
             if (_lookupTable != null)
             {
                 OnLoaded?.Invoke();
                 OnLoaded = null;
             }
         }
-        private void OnDestroy()
+
+        public void OnDestroy()
         {
             _vertexBuffer?.Release();
+            OnLoaded = null;
+        }
+
+        public void ReleaseBuffer()
+        {
+            _vertexBuffer?.Release();
+            _vertexBuffer = null;
         }
 
         private static IEnumerator DeserializeLookupTable(string fileName, Action<AnimationLookupTable> callback)
@@ -115,7 +128,7 @@ namespace NRTools.GpuSkinning
                 callback(lookupTable);
             }
         }
-     
+
         private static IEnumerator DeserializeVertexData(string filename, Action<Vector3[]> callback)
         {
             var path = Path.Combine(Application.streamingAssetsPath, filename);
@@ -141,7 +154,7 @@ namespace NRTools.GpuSkinning
                     var x = reader.ReadSingle();
                     var y = reader.ReadSingle();
                     var z = reader.ReadSingle();
-                    
+
                     vertices[i] = new Vector3(x, y, z);
                 }
 

@@ -95,7 +95,6 @@ namespace Gameplay.Enemies.EnemyBehaviors.Grunt
 
         private void DrawWeapon()
         {
-            Debug.Log("Grunt is drawing weapon.");
         }
 
         private IEnumerator AttackRoutine()

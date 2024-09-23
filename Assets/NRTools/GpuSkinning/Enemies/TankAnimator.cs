@@ -36,13 +36,29 @@ namespace NRTools.GpuSkinning
             get => _currentAnimation;
             set
             {
+                TransitionToAnimation(FetchAnimationData(value));
                 _currentAnimation = value;
-                SetAnimation(FetchAnimationData(value));
             }
+        }
+        public TankAnimation AnimationClipNoBlend
+        {
+            get => _currentAnimation;
+            set
+            {
+                SetAnimation(FetchAnimationData(value));
+                _currentAnimation = value;
+            }
+        } 
+        public void PlayIdle()
+        {
+            AnimationClip = TankAnimation.Idle;
         }
         
         public override void PlayOneShotHitAnimation()
         {
+            if (AnimationClip is TankAnimation.HitMiddle or TankAnimation.HitLeft or TankAnimation.HitRight) 
+                return;
+            
             base.PlayOneShotHitAnimation();
             _nextAnimation = TankAnimation.Idle;
             var hitIndex = Random.Range(0, 3);
@@ -59,8 +75,8 @@ namespace NRTools.GpuSkinning
         protected override void TransitionToNextAnimation()
         {
             base.TransitionToNextAnimation();
-            AnimationClip = _nextAnimation;
         }
+        
         private AnimationData FetchAnimationData(TankAnimation animationData)
         {
             return AnimationManager.GetAnimationData(botName, animationLookup[animationData]);
@@ -68,7 +84,7 @@ namespace NRTools.GpuSkinning
         
         protected override AnimationData InitialAnimation()
         {
-            return FetchAnimationData(TankAnimation.Idle);
+            return FetchAnimationData(TankAnimation.Shooting);
         }
     }
 }

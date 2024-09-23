@@ -6,6 +6,7 @@ namespace Gameplay.Enemies.EnemyTypes
 {
     public class Tank : Enemy
     {
+        private bool _initialized;
         [SerializeField] private float attackDuration;
         [SerializeField] private Transform barrelTransform;
         private bool _attacking;
@@ -15,14 +16,15 @@ namespace Gameplay.Enemies.EnemyTypes
         protected override void Awake()
         {
             base.Awake();
-            _tankSnake = new TankSnake(this, barrelTransform);
+            // todo, we need to transition from one animation to the next now, we have been manually transitioning on glass cannon
+            _tankSnake = new TankSnake(this, barrelTransform, meshAnimator);
             _currentBehavior = _tankSnake;
         }
-
         protected override void OnEnable()
         {
             base.OnEnable();
-            _currentBehavior?.OnEnable();
+            if (_initialized) _currentBehavior?.OnEnable();
+            else _initialized = true;
         }
 
         protected override void Attack()

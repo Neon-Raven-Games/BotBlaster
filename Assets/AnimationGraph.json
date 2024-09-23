@@ -1,0 +1,152 @@
+{
+    "nodes": [
+        {
+            "nodeId": "f5633a77-0246-4b44-989e-5fe2119fcc16",
+            "nodeType": "NRTools.Animator.NRNodes.AnimatorNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "position": {
+                "x": 268.0,
+                "y": 159.0
+            },
+            "ports": [
+                {
+                    "fieldName": "inputAnimation",
+                    "isInput": true
+                },
+                {
+                    "fieldName": "animationName",
+                    "isInput": false
+                }
+            ],
+            "nodeCustomIdentifier": "123"
+        },
+        {
+            "nodeId": "72795172-9071-479a-a21f-097a70ba11b0",
+            "nodeType": "NRTools.Animator.NRNodes.AnimatorNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "position": {
+                "x": 568.0,
+                "y": 61.0
+            },
+            "ports": [
+                {
+                    "fieldName": "inputAnimation",
+                    "isInput": true
+                },
+                {
+                    "fieldName": "animationName",
+                    "isInput": false
+                }
+            ],
+            "nodeCustomIdentifier": "fda"
+        },
+        {
+            "nodeId": "5457919c-e149-488d-bc17-73f5efba9a91",
+            "nodeType": "NRTools.Animator.NRNodes.AnimatorNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "position": {
+                "x": 954.0,
+                "y": 214.5
+            },
+            "ports": [
+                {
+                    "fieldName": "inputAnimation",
+                    "isInput": true
+                },
+                {
+                    "fieldName": "animationName",
+                    "isInput": false
+                }
+            ],
+            "nodeCustomIdentifier": "zzzz"
+        },
+        {
+            "nodeId": "f5633a77-0246-4b44-989e-5fe2119fcc16",
+            "nodeType": "NRTools.Animator.NRNodes.AnimatorNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "position": {
+                "x": 268.0,
+                "y": 159.0
+            },
+            "ports": [
+                {
+                    "fieldName": "inputAnimation",
+                    "isInput": true
+                },
+                {
+                    "fieldName": "animationName",
+                    "isInput": false
+                }
+            ],
+            "nodeCustomIdentifier": "123"
+        },
+        {
+            "nodeId": "72795172-9071-479a-a21f-097a70ba11b0",
+            "nodeType": "NRTools.Animator.NRNodes.AnimatorNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "position": {
+                "x": 568.0,
+                "y": 61.0
+            },
+            "ports": [
+                {
+                    "fieldName": "inputAnimation",
+                    "isInput": true
+                },
+                {
+                    "fieldName": "animationName",
+                    "isInput": false
+                }
+            ],
+            "nodeCustomIdentifier": "fda"
+        },
+        {
+            "nodeId": "5457919c-e149-488d-bc17-73f5efba9a91",
+            "nodeType": "NRTools.Animator.NRNodes.AnimatorNode, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null",
+            "position": {
+                "x": 954.0,
+                "y": 214.5
+            },
+            "ports": [
+                {
+                    "fieldName": "inputAnimation",
+                    "isInput": true
+                },
+                {
+                    "fieldName": "animationName",
+                    "isInput": false
+                }
+            ],
+            "nodeCustomIdentifier": "zzzz"
+        }
+    ],
+    "edges": [
+        {
+            "inputNodeId": "72795172-9071-479a-a21f-097a70ba11b0",
+            "outputNodeId": "f5633a77-0246-4b44-989e-5fe2119fcc16",
+            "inputFieldName": "inputAnimation",
+            "inputPortIdentifier": "",
+            "outputFieldName": "animationName",
+            "outputPortIdentifier": ""
+        },
+        {
+            "inputNodeId": "5457919c-e149-488d-bc17-73f5efba9a91",
+            "outputNodeId": "72795172-9071-479a-a21f-097a70ba11b0",
+            "inputFieldName": "inputAnimation",
+            "inputPortIdentifier": "",
+            "outputFieldName": "animationName",
+            "outputPortIdentifier": ""
+        },
+        {
+            "inputNodeId": "72795172-9071-479a-a21f-097a70ba11b0",
+            "outputNodeId": "f5633a77-0246-4b44-989e-5fe2119fcc16",
+            "inputFieldName": "inputAnimation",
+            "inputPortIdentifier": "",
+            "outputFieldName": "animationName",
+            "outputPortIdentifier": ""
+        },
+        {
+            "inputNodeId": "5457919c-e149-488d-bc17-73f5efba9a91",
+            "outputNodeId": "72795172-9071-479a-a21f-097a70ba11b0",
+            "inputFieldName": "inputAnimation",
+            "inputPortIdentifier": "",
+            "outputFieldName": "animationName",
+            "outputPortIdentifier": ""
+        }
+    ]
+}

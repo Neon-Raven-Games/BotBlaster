@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using Gameplay.Enemies.EnemyBehaviors.Base;
+using NRTools.GpuSkinning;
 using UnityEngine;
 using Util;
 
@@ -15,10 +16,12 @@ namespace Gameplay.Enemies.EnemyBehaviors.Tank
         // we can balance these if needed
         private readonly float attackDuration = 1f;
         private readonly Vector2 randomAttackRange = new(4, 12);
+        private TankAnimator _anim;
 
-        public TankSnake(Enemy enemy, Transform barrel) : base(enemy)
+        public TankSnake(Enemy enemy, Transform barrel, GpuMeshAnimator tankAnimator) : base(enemy)
         {
             _barrelTransform = barrel;
+            _anim = tankAnimator as TankAnimator;
         }
 
         public override void Attack()
@@ -77,6 +80,7 @@ namespace Gameplay.Enemies.EnemyBehaviors.Tank
 
             var t = 0f;
 
+            _anim.PlayAttackAnimation();
             while (t < attackDuration)
             {
                 enemy.RotateToFlatPlayer(5f);
@@ -89,6 +93,7 @@ namespace Gameplay.Enemies.EnemyBehaviors.Tank
             _currentAttackTime = Random.Range(randomAttackRange.x, randomAttackRange.y);
             _attacking = false;
             
+            _anim.PlayIdle();
             
             while (t < 1f)
             {
@@ -100,6 +105,7 @@ namespace Gameplay.Enemies.EnemyBehaviors.Tank
 
         public override void OnEnable()
         {
+            _anim.PlayIdle();
         }
 
         public override void OnDisable()

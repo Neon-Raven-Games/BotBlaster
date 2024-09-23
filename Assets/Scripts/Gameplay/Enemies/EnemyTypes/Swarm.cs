@@ -41,6 +41,7 @@ namespace Gameplay.Enemies.EnemyTypes
         protected override void OnEnable()
         {
             base.OnEnable();
+            _currentBehavior?.OnEnable();
             if (!_initialized)
             {
                 _initialized = true;
@@ -53,6 +54,7 @@ namespace Gameplay.Enemies.EnemyTypes
 
         private void OnDisable()
         {
+            _currentBehavior?.OnDisable();
             SleepSwarm();
         }
 
@@ -112,12 +114,13 @@ namespace Gameplay.Enemies.EnemyTypes
 
         private async UniTaskVoid MoveSwarmAsync()
         {
-            while (gameObject && gameObject.activeInHierarchy)
+            while (this && gameObject.activeInHierarchy)
             {
                 var separationTasks = new List<UniTask>();
                 foreach (var swarmUnit in _swarmUnits)
                 {
                     if (swarmUnit.isDiveBombing) continue;
+                    if (swarmUnit == null) return;
                     separationTasks.Add(CalculateFlockingAsync(swarmUnit));
                 }
 
@@ -126,6 +129,7 @@ namespace Gameplay.Enemies.EnemyTypes
                 foreach (var swarmUnit in _swarmUnits)
                 {
                     if (swarmUnit.isDiveBombing) continue;
+                    if (swarmUnit == null) return;
                     ApplyMovement(swarmUnit);
                 }
 
@@ -178,7 +182,6 @@ namespace Gameplay.Enemies.EnemyTypes
 
         private void ApplyMovement(SwarmUnit swarmUnit)
         {
-            // Apply the final movement
             swarmUnit.transform.position += swarmUnit.flockingDirection * (swarmUnit.speed * Time.deltaTime);
 
             if (swarmUnit.flockingDirection != Vector3.zero)

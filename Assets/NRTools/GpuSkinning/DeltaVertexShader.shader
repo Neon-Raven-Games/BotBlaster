@@ -104,7 +104,8 @@
                 const int delta_index0 = frame_offset + id;
                 const int delta_index1 = frame_offset + id + v_count;
 
-                float3 interpolated_delta = lerp(vertices[delta_index0].xyz,
+                float3 interpolated_delta =
+                    lerp(vertices[delta_index0].xyz,
                     vertices[delta_index1].xyz, interpolation);
                 
                 const float anim_interp = UNITY_ACCESS_INSTANCED_PROP(Props, _BlendFactor);

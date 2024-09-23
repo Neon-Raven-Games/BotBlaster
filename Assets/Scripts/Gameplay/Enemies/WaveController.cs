@@ -52,7 +52,7 @@ public class WaveController : MonoBehaviour
         _waveSpawning = false;
         enemySpawner.currentWave = 1;
 #if UNITY_EDITOR
-        GameAnalytics.LogWaveData(enemySpawner._waveAnalytics);
+        if (enemySpawner._waveAnalytics != null) GameAnalytics.LogWaveData(enemySpawner._waveAnalytics);
         GameAnalytics.FinalizeAnalytics();
 #endif
         waveEnemies = 0;
@@ -72,9 +72,9 @@ public class WaveController : MonoBehaviour
             {
                 Debug.Log("Wave completed!");
                 waveEnemies = 0;
-                
+
                 await UniTask.Delay(750);
-                
+
                 _totalKillsInWave = 0;
                 _waveStartTime = Time.time;
                 EndWave();
@@ -93,7 +93,7 @@ public class WaveController : MonoBehaviour
     {
         var waveDuration = Time.time - _waveStartTime;
         var killsPerSecond = _totalKillsInWave / waveDuration;
-        var killsPerMinute = killsPerSecond * 60f; 
+        var killsPerMinute = killsPerSecond * 60f;
 
         _totalKillRate = ((_totalKillRate * _wavesCompleted) + killsPerMinute) / (_wavesCompleted + 1);
         _wavesCompleted++;

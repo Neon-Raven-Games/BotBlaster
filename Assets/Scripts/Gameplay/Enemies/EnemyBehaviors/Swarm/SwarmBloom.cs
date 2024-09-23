@@ -69,8 +69,8 @@ namespace Gameplay.Enemies.EnemyBehaviors.Grunt
 
         public override void OnEnable()
         {
-            _lastDiveBombTime = Time.time;
             _initialDiveBombTriggered = false;
+            _lastDiveBombTime = Time.time;
         }
 
 

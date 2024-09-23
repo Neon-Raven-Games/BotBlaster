@@ -134,10 +134,10 @@ namespace NRTools.GpuSkinning
         private void BakeAnimationForSkinnedMesh(string enemyName, AnimationClip animClip, SkinnedMeshRenderer skinnedMeshRenderer, ref int currentOffset)
         {
             var bakedMesh = new Mesh();
-            var animator = skinnedMeshRenderer.gameObject.transform.parent.GetComponent<Animator>();
+            var animator = skinnedMeshRenderer.gameObject.transform.parent.GetComponent<UnityEngine.Animator>();
             if (!animator)
             {
-                animator = skinnedMeshRenderer.transform.GetComponent<Animator>();
+                animator = skinnedMeshRenderer.transform.GetComponent<UnityEngine.Animator>();
                 if (!animator)
                 {
                     Debug.LogError($"Failed to find an animator on skinned mesh object: {skinnedMeshRenderer.gameObject.name}");

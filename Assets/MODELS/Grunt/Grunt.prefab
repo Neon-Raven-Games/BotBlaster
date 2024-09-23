@@ -60,11 +60,7 @@ MonoBehaviour:
   enemyType: 0
   healthBar: {fileID: 0}
   deathParticleSystem: {fileID: 4007890294480360152}
-  dashingChance: 0.003
-  dashSpeed: 32
   attackDuration: 0.4
-  dashDuration: 4
-  rotationSpeed: 16
   barrelTransform: {fileID: 0}
 --- !u!65 &8505621878895323371
 BoxCollider:

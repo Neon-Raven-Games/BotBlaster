@@ -32,6 +32,8 @@ namespace NRTools.GpuSkinning
         private static readonly int _SNextAnimationOffset = Shader.PropertyToID("_NextAnimationOffset");
         private static readonly int _SBlendFactor = Shader.PropertyToID("_BlendFactor");
 
+        public float AnimationDuration => _numFrames / 24f;
+
         protected virtual void TransitionToNextAnimation()
         {
             if (_nextAnimationData != null && _nextAnimationData != _animationData)
@@ -62,6 +64,8 @@ namespace NRTools.GpuSkinning
 
         private void OnAnimationManagerLoaded()
         {
+            if (_initialized) return;
+            AnimationManager.OnLoaded -= OnAnimationManagerLoaded;
             _animationData = InitialAnimation();
             if (_animationData == null || _animationData.frameCount == 0 || mesh == null)
             {
@@ -102,7 +106,7 @@ namespace NRTools.GpuSkinning
             element = elementFlag;
             if (element != ElementFlag.None)
             {
-                if (AnimationManager.IsLoaded) OnAnimationManagerLoaded();
+                if (!_initialized && AnimationManager.IsLoaded) OnAnimationManagerLoaded();
 
                 _atlasIndex = GetComponent<AtlasIndex>();
 
@@ -119,6 +123,8 @@ namespace NRTools.GpuSkinning
                 }
             }
         }
+        
+        public void SetUninitialized() => _initialized = false;
 
 #if UNITY_EDITOR
         private void OnDrawGizmos()
@@ -165,13 +171,37 @@ namespace NRTools.GpuSkinning
             _animationData = data;
             _currentFrame = 0;
             _numFrames = _animationData.frameCount;
-            _shaderFrameIndex = -1;
+            _shaderFrameIndex = 0;
             renderer.GetPropertyBlock(_propertyBlock);
             _propertyBlock.SetInt(_SFrameOffset, _animationData.vertexOffset);
+            _propertyBlock.SetFloat(_SBlendFactor, 0f);
+            _propertyBlock.SetFloat(_SInterpolationFactor, 0f);
             renderer.SetPropertyBlock(_propertyBlock);
         }
 
-        protected virtual void Update()
+        public void EditorUpdate(float seconds)
+        {
+            if (!_initialized) return;
+
+            _currentFrame = seconds * 24f;
+            var frame0 = Mathf.FloorToInt(_currentFrame);
+            var t = _currentFrame - frame0;
+
+            renderer.GetPropertyBlock(_propertyBlock);
+
+            if (!_blending && _currentFrame >= _numFrames - 2 &&
+                HandleTransitionlessAnimation(ref frame0, ref t)) return;
+
+            UpdateShaderFrame(frame0);
+            _propertyBlock.SetFloat(_SInterpolationFactor, t);
+
+            if (_blending) HandleBlending();
+            else _propertyBlock.SetFloat(_SBlendFactor, 0f);
+
+            renderer.SetPropertyBlock(_propertyBlock);
+        }
+
+        public virtual void Update()
         {
             if (!_initialized) return;
 
@@ -220,6 +250,7 @@ namespace NRTools.GpuSkinning
             _currentFrame %= _numFrames;
             var frame0 = Mathf.FloorToInt(_currentFrame);
             t = _currentFrame - frame0;
+            _shaderFrameIndex = frame0;
             return frame0;
         }
 
@@ -267,6 +298,19 @@ namespace NRTools.GpuSkinning
         protected virtual AnimationData InitialAnimation()
         {
             return null;
+        }
+
+        public void PlayAnimation(string animator, string animName)
+        {
+            _animationData = AnimationManager.GetAnimationData(animator, animName); 
+            _currentFrame = 0;
+            _numFrames = _animationData.frameCount;
+            _shaderFrameIndex = -1;
+            renderer.GetPropertyBlock(_propertyBlock);
+            _propertyBlock.SetInt(_SFrameOffset, _animationData.vertexOffset);
+            _propertyBlock.SetFloat(_SBlendFactor, 0f);
+            _propertyBlock.SetFloat(_SInterpolationFactor, 0f);
+            renderer.SetPropertyBlock(_propertyBlock);
         }
     }
 }
