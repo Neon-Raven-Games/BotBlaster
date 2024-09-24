@@ -8,9 +8,8 @@ public class AnimationWindow : BaseGraphWindow
 {
     CustomToolbarView _toolbarView;
 
-    // todo, why does this not work?
     [MenuItem("Development/Animation Graph")]
-    public static AnimationWindow OpenWithTmpGraph()
+    public static AnimationWindow OpenWithLoadedGraph()
     {
         var graphWindow = GetWindow<AnimationWindow>();
         var graph = AssetDatabase.LoadAssetAtPath<AnimationGraph>("Assets/animations.asset");

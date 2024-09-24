@@ -32,6 +32,11 @@ namespace NRTools.CustomAnimator
             EditorApplication.update += OnEditorUpdate;
             lastEditorTime = EditorApplication.timeSinceStartup;
         }
+        public void SetPlaying(bool playing)
+        {
+            lastEditorTime = EditorApplication.timeSinceStartup;
+            isPlaying = playing;
+        }
 
         public void Disable()
         {
@@ -121,10 +126,7 @@ namespace NRTools.CustomAnimator
             var editorTime = EditorApplication.timeSinceStartup;
             var deltaTime = editorTime - lastEditorTime;
             lastEditorTime = editorTime;
-
-            currentTime += (float) (deltaTime * playSpeed);
-
-            if (currentTime >= animationDuration) currentTime = 0f;
+            currentTime = (float) (deltaTime * playSpeed);
             onUpdateFrame?.Invoke(currentTime);
         }
     }

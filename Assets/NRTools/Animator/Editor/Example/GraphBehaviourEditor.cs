@@ -24,7 +24,7 @@ public class GraphBehaviourEditor : Editor
         var graphContainer = graphEditor != null ? 
             graphEditor.CreateInspectorGUI().Q("ExposedParameters") : null;
 
-        root.Add(new Button(() => AnimationWindow.OpenWithTmpGraph())
+        root.Add(new Button(() => AnimationWindow.OpenWithLoadedGraph())
         {
             text = "Open"
         });

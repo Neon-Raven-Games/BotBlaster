@@ -1,11 +1,23 @@
 ﻿using System.Collections.Generic;
 using NRTools.CustomAnimator;
+using NRTools.GpuSkinning;
 using UnityEngine;
 using UnityEditor;
 
+
+/*
+ *  todo, this is transition timeline, we need to make a new component for it lol
+ *             float startTimeProgress = transition.blendStartTime / AnimationPreviewWindow.GetDuration();
+            float startX = Mathf.Lerp(timelineRect.x, timelineRect.xMax, startTimeProgress);
+            float endTimeProgress = (transition.blendStartTime + transition.blendDuration) /
+                                    AnimationPreviewWindow.GetDuration();
+            float endX = Mathf.Lerp(timelineRect.x, timelineRect.xMax, endTimeProgress);
+            Rect startRect = new Rect(startX - 5, timelineRect.y, endX - startX + 10, 10);
+            EditorGUI.DrawRect(startRect, new Color(0.5f, 1f, 1f));
+ */
+
 public class TimelineEditorWindow : EditorWindow
 {
-
     [MenuItem("Development/Timeline Editor")]
     public static void ShowWindow()
     {
@@ -14,6 +26,7 @@ public class TimelineEditorWindow : EditorWindow
 
     private AnimationPreviewWindow AnimationPreviewWindow;
     private float smoothProgress;
+
     private void OnEnable()
     {
         AnimationPreviewWindow = GetWindow<AnimationPreviewWindow>();
@@ -27,10 +40,11 @@ public class TimelineEditorWindow : EditorWindow
             eventTimes.Add(1.8f);
             eventTimes.Add(4.2f);
         }
+
         EditorGUILayout.BeginVertical(GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
 
         NREditorStyle.InitializeStyles();
-        
+
         EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
         DrawTimeline();
         EditorGUILayout.EndHorizontal();
@@ -49,22 +63,23 @@ public class TimelineEditorWindow : EditorWindow
         if (Event.current.type == EventType.Repaint)
             Repaint();
     }
-    
+
     private void DrawTimeline()
     {
-        Rect timelineRect = GUILayoutUtility.GetRect(200, 100, 
+        Rect timelineRect = GUILayoutUtility.GetRect(200, 100,
             GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
         EditorGUI.DrawRect(timelineRect, new Color(0.15f, 0.15f, 0.15f));
 
         int markerCount = 10;
-        
+
         for (int i = 0; i <= markerCount; i++)
         {
-            float x = Mathf.Lerp(timelineRect.x, timelineRect.xMax, i / (float)markerCount);
+            float x = Mathf.Lerp(timelineRect.x, timelineRect.xMax, i / (float) markerCount);
             EditorGUI.DrawRect(new Rect(x, timelineRect.y, 1, timelineRect.height), Color.gray);
-            EditorGUI.LabelField(new Rect(x + 3f, timelineRect.y -1, 50, 20), (i * AnimationPreviewWindow.GetDuration() / markerCount).ToString("F1"));
+            EditorGUI.LabelField(new Rect(x + 3f, timelineRect.y - 1, 50, 20),
+                (i * AnimationPreviewWindow.GetDuration() / markerCount).ToString("F1"));
         }
-        
+
         foreach (var time in eventTimes)
         {
             float eventProgress = time / AnimationPreviewWindow.GetDuration();
@@ -72,15 +87,16 @@ public class TimelineEditorWindow : EditorWindow
             Rect markerRect = new Rect(x - 5, timelineRect.y, 10, 10);
             EditorGUI.DrawRect(markerRect, new Color(0.5f, 1f, 1f));
         }
-        
+
         float targetProgress = AnimationPreviewWindow.currentTime / AnimationPreviewWindow.GetDuration();
         smoothProgress = Mathf.Lerp(smoothProgress, targetProgress, Time.deltaTime * 10f);
         smoothProgress = Mathf.Clamp01(smoothProgress);
-        EditorGUI.DrawRect(new Rect(timelineRect.x + timelineRect.width * smoothProgress, timelineRect.y, 2, timelineRect.height), Color.white);
+        EditorGUI.DrawRect(
+            new Rect(timelineRect.x + timelineRect.width * smoothProgress, timelineRect.y, 2, timelineRect.height),
+            Color.white);
         HandleScrubbing(timelineRect);
-        
-
     }
+
     private List<float> eventTimes = new();
 
     private void DrawEventArea()
@@ -137,7 +153,7 @@ public class TimelineEditorWindow : EditorWindow
 
         HandleScrubbing(scrubRect);
     }
-    
+
     private void HandleScrubbing(Rect scrubRect)
     {
         Event currentEvent = Event.current;
@@ -147,13 +163,11 @@ public class TimelineEditorWindow : EditorWindow
             if (scrubRect.Contains(currentEvent.mousePosition))
             {
                 float relativePosition = (currentEvent.mousePosition.x - scrubRect.x) / scrubRect.width;
-                AnimationPreviewWindow.currentTime = Mathf.Clamp(relativePosition * 
-                                                                 AnimationPreviewWindow.GetDuration(), 0, 
+                AnimationPreviewWindow.currentTime = Mathf.Clamp(relativePosition *
+                                                                 AnimationPreviewWindow.GetDuration(), 0,
                     AnimationPreviewWindow.GetDuration());
                 currentEvent.Use();
             }
         }
     }
-
-
 }

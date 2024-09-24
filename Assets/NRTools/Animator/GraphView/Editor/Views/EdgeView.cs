@@ -58,15 +58,14 @@ namespace GraphProcessor
                         toAnim,
                         duration: 0.5f,
                         blend: true,
-                        loop: false,
-                        hold: false,
-                        fallback: "Idle"
+                        loop: false
                     );
                 }
                 transition.fromAnimation = fromAnim;
                 transition.toAnimation = toAnim;
-                if (TransitionElementView.Instance != null)
+                if (TransitionElementView.Instance != null) 
                     TransitionElementView.Instance.SetTransitionData(transition);
+                
             }
         }
 
@@ -78,11 +77,9 @@ namespace GraphProcessor
             PortData inputPortData = (input as PortView)?.portData;
             PortData outputPortData = (output as PortView)?.portData;
 
-            for (int i = 1; i < 20; i++)
-                RemoveFromClassList($"edge_{i}");
+            for (int i = 1; i < 20; i++) RemoveFromClassList($"edge_{i}");
             int maxPortSize = Mathf.Max(inputPortData?.sizeInPixel ?? 0, outputPortData?.sizeInPixel ?? 0);
-            if (maxPortSize > 0)
-                AddToClassList($"edge_{Mathf.Max(1, maxPortSize - 6)}");
+            if (maxPortSize > 0) AddToClassList($"edge_{Mathf.Max(1, maxPortSize - 6)}");
         }
 
         protected override void OnCustomStyleResolved(ICustomStyle styles)
@@ -118,9 +115,7 @@ namespace GraphProcessor
                             toAnim,
                             duration: 0.5f,
                             blend: true,
-                            loop: false,
-                            hold: false,
-                            fallback: "Idle"
+                            loop: false
                         );
                     }
                     transition.fromAnimation = fromAnim;

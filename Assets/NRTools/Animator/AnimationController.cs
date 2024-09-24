@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using NRTools.GpuSkinning;
 using UnityEngine;
 
 namespace NRTools.CustomAnimator
 {
+    
+    // todo,
+    // this is for the editor code
+    // we can populate this stuff with our lookup data, but this is to have finer control during debugging
     public class AnimationController : MonoBehaviour
     {
         public static List<string> animators = new()
@@ -58,6 +63,8 @@ namespace NRTools.CustomAnimator
             "Swarm_Hit_03",
         };
 
+        public static event Action<AnimationTransitionData> OnTransitionSelected;
+        public static void RaiseTransitionSelected(AnimationTransitionData data) => OnTransitionSelected?.Invoke(data);
         public static List<string> GetAnimations(string animator)
         {
             var anim = animator switch
@@ -88,11 +95,13 @@ namespace NRTools.CustomAnimator
 
         public static event Action<List<string>> OnAnimatorChanged;
         public static event Action<string> OnAnimationChanged;
-        public static void RaiseAnimationChanged(string animation) => OnAnimationChanged?.Invoke(animation);
-        public static string currentAnimator = "Tank";
         
-        // we need a slick way to populate these prefabs
-        // Assets/Enemies/Final is ok for now
+        public static event Action<AnimationTransitionData, string, string> OnTransition;
+        public static void RaiseAnimationChanged(string animation) => OnAnimationChanged?.Invoke(animation);
+        public static void RaiseTransition(AnimationTransitionData data, string from, string to) => 
+            OnTransition?.Invoke(data, from, to);
+        public static string currentAnimator = "Tank";
+
         public GameObject tankPrefab;
         public GameObject gruntPrefab;
         public GameObject glassCannonPrefab;

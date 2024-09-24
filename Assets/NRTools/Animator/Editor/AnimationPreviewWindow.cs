@@ -20,6 +20,14 @@ public class AnimationPreviewWindow : EditorWindow
         return _meshAnimator.AnimationDuration;
     }
 
+    // todo, this needs to be brought into preferences
+    private static void CreateAtlasMaterial()
+    {
+        var materialPath = "Assets/NRTools/GpuSkinning/Skinning2.0.mat";
+        _material = AssetDatabase.LoadAssetAtPath<Material>(materialPath);
+        _animationManager.atlasMaterial = _material;
+    }
+
     private float _distance = 5f;
     private static Camera _previewCamera;
     private RenderTexture _previewTexture;
@@ -27,16 +35,18 @@ public class AnimationPreviewWindow : EditorWindow
     private Scene _previewScene;
     private Vector2 _cameraRotation = Vector2.zero;
     private static PreviewPlayBar _playBar;
-    private float _rotationSpeed = 0.5f;
+    private readonly float _rotationSpeed = 0.5f;
     private Rect _previewRect;
     private static GpuMeshAnimator _meshAnimator;
     private static AnimationManager _animationManager;
+    private static Material _material;
 
     private static readonly int _SColor0 = Shader.PropertyToID("_Color0");
     private static readonly int _SColor1 = Shader.PropertyToID("_Color1");
     private static readonly int _SExp = Shader.PropertyToID("_Exp");
     private static readonly int _SIntensity = Shader.PropertyToID("_Intensity");
     private static readonly int _SRotation = Shader.PropertyToID("_Rotation");
+    private AnimationTransitionController _transitionController;
 
     [MenuItem("Development/Animation Preview")]
     public static void ShowWindow()
@@ -44,24 +54,23 @@ public class AnimationPreviewWindow : EditorWindow
         GetWindow<AnimationPreviewWindow>("Animation Preview");
     }
 
-    private void OnFrameUpdate(float obj)
+    // editor updateloop
+    private void OnFrameUpdate(float deltaSeconds)
     {
         if (_meshAnimator == null) return;
-        _meshAnimator.EditorUpdate(obj);
+        _meshAnimator.EditorUpdate(deltaSeconds);
     }
 
-    private  void OnBeforeAssemblyReload()
+    private void OnBeforeAssemblyReload()
     {
         _animationManager.ReleaseBuffer();
+        OnDestroy();
         AssemblyReloadEvents.beforeAssemblyReload -= OnBeforeAssemblyReload;
     }
 
-    private  void OnAfterAssemblyReload()
+    private void OnAfterAssemblyReload()
     {
-        _animationManager = _previewCamera.GetComponent<AnimationManager>();
-        AnimationManager.OnLoaded += SetPreviewModel;
-        _animationManager.EditorDeserialize();
-        
+        OnEnable();
         AssemblyReloadEvents.afterAssemblyReload -= OnAfterAssemblyReload;
     }
 
@@ -76,6 +85,7 @@ public class AnimationPreviewWindow : EditorWindow
         _meshAnimator = null;
         AnimationController.OnAnimatorChanged -= OnAnimatorChanged;
         AnimationController.OnAnimationChanged -= OnAnimationChanged;
+        AnimationController.OnTransition -= OnPreviewTransition;
     }
 
     private void OnEnable()
@@ -94,15 +104,14 @@ public class AnimationPreviewWindow : EditorWindow
         PopulateAndDeserializeAnimManager();
 
         if (_playBar != null) _playBar.Disable();
-        
-        // update the UI
+
         _playBar = new PreviewPlayBar(this);
         _playBar.onUpdateFrame += OnFrameUpdate;
         _playBar.Enable();
-        // make the scene dirty
 
         AnimationController.OnAnimatorChanged += OnAnimatorChanged;
         AnimationController.OnAnimationChanged += OnAnimationChanged;
+        AnimationController.OnTransition += OnPreviewTransition;
     }
 
     private static void CreateCamera()
@@ -116,9 +125,14 @@ public class AnimationPreviewWindow : EditorWindow
         _previewCamera.cameraType = CameraType.Preview;
         _previewCamera.scene = _previewScene;
         _previewCamera.targetTexture = _previewTexture;
-
         _previewCamera.clearFlags = CameraClearFlags.Skybox;
         CreateSkyboxMaterial();
+    }
+
+    private void OnPreviewTransition(AnimationTransitionData transitionData, string from, string to)
+    {
+        _meshAnimator.TransitionTo(transitionData, AnimationController.currentAnimator, from, to);
+        _playBar.SetPlaying(true);
     }
 
     private void OnAnimationChanged(string obj)
@@ -149,18 +163,12 @@ public class AnimationPreviewWindow : EditorWindow
         cameraSkybox.material = gradientSkyboxMaterial;
     }
 
-    private static Material material;
 
     private void OnGUI()
     {
         if (!previewPrefab) return;
         if (_animationManager == null || _previewCamera == null) return;
         if (_previewObject == null) return;
-
-        // do we want to add element select?
-        // if (_meshAnimator != null && GUILayout.Button("PlayAttack"))
-            // _meshAnimator.UpdateElement(ElementFlag.Electricity);
-
 
         _previewRect = GUILayoutUtility.GetAspectRect(1.5f, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
 
@@ -185,19 +193,19 @@ public class AnimationPreviewWindow : EditorWindow
 
     private void InitializePreviewObjectInPreviewScene(GameObject prefab)
     {
+        if (_previewScene.IsValid()) EditorSceneManager.ClosePreviewScene(_previewScene);
         _previewScene = EditorSceneManager.NewPreviewScene();
+        if (!_previewCamera) CreateCamera();
         SetupCameraScene();
 
         SceneManager.MoveGameObjectToScene(_previewCamera.gameObject, _previewScene);
 
-        // populate the preview scene we our new spawned dood
         _previewObject = Instantiate(prefab, Vector3.zero, Quaternion.identity);
         SceneManager.MoveGameObjectToScene(_previewObject, _previewScene);
 
         _previewCamera.transform.position = _previewObject.transform.position + new Vector3(0, 1, -5);
         _previewCamera.transform.LookAt(_previewObject.transform.position);
 
-        // set the mesh animator to preview from the prefab.
         GetMeshAnimator();
         SetMeshAnimatorEnemyType();
         EditorSceneManager.MarkSceneDirty(_previewScene);
@@ -208,38 +216,27 @@ public class AnimationPreviewWindow : EditorWindow
         var enemy = _previewObject.GetComponent<Enemy>();
         if (!enemy) _meshAnimator.enemyType = EnemyType.Swarm;
         else _meshAnimator.enemyType = enemy.enemyType;
-        
+
         _meshAnimator.UpdateElement(ElementFlag.Electricity);
     }
 
     private static void GetMeshAnimator()
     {
         _meshAnimator = _previewObject.GetComponent<GpuMeshAnimator>();
+        _meshAnimator.SetTransitionController();
     }
 
     private void PopulateAndDeserializeAnimManager()
     {
-        // get the animation controller and preview prefab
         var animController = FindObjectOfType<AnimationController>();
         AnimationController.SetInstance(animController);
         previewPrefab = AnimationController.GetPrefab();
 
-        // create the animation manager
         _animationManager = _previewCamera.AddComponent<AnimationManager>();
-
-        // sets material
         CreateAtlasMaterial();
 
-        // material used for preview mode, so has to go last
         AnimationManager.OnLoaded += SetPreviewModel;
         _animationManager.EditorDeserialize();
-    }
-
-    private static void CreateAtlasMaterial()
-    {
-        var materialPath = "Assets/NRTools/GpuSkinning/Skinning2.0.mat";
-        material = AssetDatabase.LoadAssetAtPath<Material>(materialPath);
-        _animationManager.atlasMaterial = material;
     }
 
     private void SetPreviewModel()
@@ -253,7 +250,7 @@ public class AnimationPreviewWindow : EditorWindow
 
         if (_previewRect.Contains(e.mousePosition))
         {
-            if (e.type == EventType.MouseDrag && e.button == 0) // Left mouse button drag
+            if (e.type == EventType.MouseDrag && e.button == 0)
             {
                 _cameraRotation.x += e.delta.x * _rotationSpeed;
                 _cameraRotation.y += e.delta.y * _rotationSpeed;
@@ -264,7 +261,6 @@ public class AnimationPreviewWindow : EditorWindow
             }
         }
     }
-
     private void HandleCameraZoom()
     {
         var e = Event.current;
@@ -274,7 +270,7 @@ public class AnimationPreviewWindow : EditorWindow
             if (e.type == EventType.ScrollWheel)
             {
                 float zoomAmount = e.delta.y * 0.1f;
-                _distance = Mathf.Clamp(_distance + zoomAmount, 1f, 10f); // Adjust min and max distances
+                _distance = Mathf.Clamp(_distance + zoomAmount, 1f, 10f);
 
                 e.Use();
             }

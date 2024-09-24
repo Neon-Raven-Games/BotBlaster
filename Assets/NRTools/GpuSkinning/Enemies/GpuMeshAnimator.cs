@@ -1,6 +1,7 @@
 ﻿using System;
 using Gameplay.Enemies;
 using NRTools.AtlasHelper;
+using NRTools.CustomAnimator;
 using UnityEngine;
 
 namespace NRTools.GpuSkinning
@@ -123,7 +124,7 @@ namespace NRTools.GpuSkinning
                 }
             }
         }
-        
+
         public void SetUninitialized() => _initialized = false;
 
 #if UNITY_EDITOR
@@ -179,10 +180,13 @@ namespace NRTools.GpuSkinning
             renderer.SetPropertyBlock(_propertyBlock);
         }
 
+        private AnimationTransitionController _transitionController;
+
         public void EditorUpdate(float seconds)
         {
             if (!_initialized) return;
-
+            _transitionController.EditorUpdate(seconds);
+            return;
             _currentFrame = seconds * 24f;
             var frame0 = Mathf.FloorToInt(_currentFrame);
             var t = _currentFrame - frame0;
@@ -254,6 +258,30 @@ namespace NRTools.GpuSkinning
             return frame0;
         }
 
+        public void SetTransitionController()
+        {
+            if (!_transitionController)
+            {
+                _transitionController ??= gameObject.GetComponent<AnimationTransitionController>();
+                _transitionController ??= gameObject.AddComponent<AnimationTransitionController>();
+                _transitionController.Start();
+                _transitionController.renderer = renderer;
+                _transitionController.PlayAnimation(InitialAnimation());
+            }
+        }
+
+        // todo, this will only transition the controller to whenever we hit it.
+        // play the animation and click play to watch the transition
+        public void TransitionTo(AnimationTransitionData blend, string animator, string from, string to)
+        {
+            var data = AnimationManager.GetAnimationData(animator, from);
+            var todata = AnimationManager.GetAnimationData(animator, to);
+            _transitionController.SetNextAnimation(data,todata,  blend);
+
+            // data = AnimationManager.GetAnimationData(animator, to);
+            // _transitionController.SetNextAnimation(data, blend);
+        }
+
         private void HoldLastFrame()
         {
             _propertyBlock.SetInt(_SFrameOffset,
@@ -302,15 +330,16 @@ namespace NRTools.GpuSkinning
 
         public void PlayAnimation(string animator, string animName)
         {
-            _animationData = AnimationManager.GetAnimationData(animator, animName); 
+            _animationData = AnimationManager.GetAnimationData(animator, animName);
             _currentFrame = 0;
             _numFrames = _animationData.frameCount;
-            _shaderFrameIndex = -1;
-            renderer.GetPropertyBlock(_propertyBlock);
-            _propertyBlock.SetInt(_SFrameOffset, _animationData.vertexOffset);
-            _propertyBlock.SetFloat(_SBlendFactor, 0f);
-            _propertyBlock.SetFloat(_SInterpolationFactor, 0f);
-            renderer.SetPropertyBlock(_propertyBlock);
+            _transitionController.PlayAnimation(_animationData);
+            // _shaderFrameIndex = -1;
+            // renderer.GetPropertyBlock(_propertyBlock);
+            // _propertyBlock.SetInt(_SFrameOffset, _animationData.vertexOffset);
+            // _propertyBlock.SetFloat(_SBlendFactor, 0f);
+            // _propertyBlock.SetFloat(_SInterpolationFactor, 0f);
+            // renderer.SetPropertyBlock(_propertyBlock);
         }
     }
 }

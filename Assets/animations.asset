@@ -85,25 +85,21 @@ MonoBehaviour:
     color: {r: 0, g: 0, b: 0, a: 0.3}
     position:
       serializedVersion: 2
-      x: -415.37595
-      y: -92.397095
-      width: 646
-      height: 349
+      x: -334.32755
+      y: -131.70753
+      width: 647
+      height: 353
     size: {x: 400, y: 200}
-    innerNodeGUIDs:
-    - e1357805-6d1a-4ee2-938b-67d31f251a07
-    - 91e34994-95f3-4c02-8be3-eef52b24894e
-    - 88f2732d-d59e-4a50-b019-bca85823ca7e
-    - 0ff65689-d0dd-4c00-b703-6be57a553fc1
+    innerNodeGUIDs: []
   stackNodes: []
   pinnedElements:
   - position:
       serializedVersion: 2
-      x: 448
-      y: 121
-      width: 150
-      height: 200
-    opened: 0
+      x: 640
+      y: 331
+      width: 507
+      height: 320
+    opened: 1
     editorType:
       serializedType: NRTools.CustomAnimator.TransitionElementView, Assembly-CSharp-Editor,
         Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -129,11 +125,11 @@ MonoBehaviour:
         Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   - position:
       serializedVersion: 2
-      x: 31
-      y: 196
-      width: 161
-      height: 221
-    opened: 0
+      x: 116
+      y: 57
+      width: 143
+      height: 173
+    opened: 1
     editorType:
       serializedType: NRTools.CustomAnimator.AnimationsElementView, Assembly-CSharp-Editor,
         Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -149,8 +145,8 @@ MonoBehaviour:
     title: Conditional Loop
     content: 
   nodeInspectorReference: {fileID: 0}
-  position: {x: 606, y: 335, z: 0}
-  scale: {x: 0.43232757, y: 0.43232757, z: 1}
+  position: {x: 798, y: 119, z: 0}
+  scale: {x: 1.15, y: 1.15, z: 1}
   references:
     version: 2
     RefIds:
@@ -162,8 +158,8 @@ MonoBehaviour:
         computeOrder: 0
         position:
           serializedVersion: 2
-          x: -390.37604
-          y: -33.3972
+          x: -320
+          y: -23.599998
           width: 152
           height: 75
         expanded: 0
@@ -180,8 +176,8 @@ MonoBehaviour:
         computeOrder: 1
         position:
           serializedVersion: 2
-          x: -390.37604
-          y: 156.6028
+          x: -319.64612
+          y: 104.27044
           width: 152
           height: 75
         expanded: 0
@@ -198,8 +194,8 @@ MonoBehaviour:
         computeOrder: 2
         position:
           serializedVersion: 2
-          x: -151.37604
-          y: 81.6028
+          x: -76.00004
+          y: 29.000006
           width: 152
           height: 75
         expanded: 1
@@ -216,8 +212,8 @@ MonoBehaviour:
         computeOrder: 3
         position:
           serializedVersion: 2
-          x: 53.623962
-          y: 81.6028
+          x: 126.6575
+          y: 38
           width: 152
           height: 75
         expanded: 0
@@ -288,8 +284,8 @@ MonoBehaviour:
         computeOrder: 7
         position:
           serializedVersion: 2
-          x: 539.374
-          y: 148.41177
+          x: 542
+          y: 148.00005
           width: 152
           height: 75
         expanded: 0

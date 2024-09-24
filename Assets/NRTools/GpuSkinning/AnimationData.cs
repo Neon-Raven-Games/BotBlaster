@@ -43,6 +43,19 @@ namespace NRTools.GpuSkinning
         }
     }
 
+    public class AnimationTransitionData
+    {
+        public bool loop;
+        // what frame to start on in the from animation
+        public float blendStartTime;
+        
+        // in seconds
+        public float blendDuration;
+        public float blendWeight;
+        
+        public string fromAnimation;
+        public string toAnimation;
+    }
 
     [Serializable]
     public class AnimationData

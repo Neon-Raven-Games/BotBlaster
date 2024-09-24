@@ -4,11 +4,6 @@
     {
         _MainTex ("Texture", 2D) = "white" {}
         _UVOffset ("UV Offset", Vector) = (0, 0, 1, 1)
-
-        // uv map for the wireframe: nrtools/gpuskinning/tankuv.png
-        //        _UV ("Wireframe UV Map", 2D) = "white" {}
-        // served as glow color for the wireframe
-        //        _Color ("Color", Color) = (1, 1, 1, 1)
     }
     SubShader
     {
@@ -129,18 +124,6 @@
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
                 half4 texColor = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, i.uv);
                 return texColor;
-                // code for wireframe
-                // half4 uvColor = SAMPLE_TEXTURE2D(_UV, sampler_UV, i.wireframe_uv);
-                // const float3 glowColor = UNITY_ACCESS_INSTANCED_PROP(Props, _Color);
-                //
-                // if (uvColor.r < 0.15)
-                // {
-                //     return float4(lerp(float3(0, 0, 0), texColor, 0), 1);
-                // }
-                //
-                // const float wireframeIntensity = 1;
-                // float3 wireframeGlow = lerp(float3(0, 0, 0), glowColor, wireframeIntensity);
-                // return float4(wireframeGlow, 1);
             }
             ENDHLSL
         }
