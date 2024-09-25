@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace NRTools.GpuSkinning
 {
@@ -23,7 +25,22 @@ namespace NRTools.GpuSkinning
         }
 
         public int Count => lookupTable.Count;
+        
+        public void SetLoop(string animator, string animationName, bool loop)
+        {
+            if (lookupTable.ContainsKey(animator) && lookupTable[animator].ContainsKey(animationName))
+                lookupTable[animator][animationName].loop = loop;
+        }
 
+        public List<string> GetAnimators()
+        {
+            return lookupTable.Keys.ToList();
+        }
+
+        public List<string> GetAnimationFiles(string animator)
+        {
+            return lookupTable[animator].Keys.ToList();
+        }
         public void AddAnimation(string enemyType, string animationName, AnimationData animData)
         {
             if (!lookupTable.ContainsKey(enemyType))
@@ -43,18 +60,42 @@ namespace NRTools.GpuSkinning
         }
     }
 
+    [Serializable]
     public class AnimationTransitionData
     {
-        public bool loop;
-        // what frame to start on in the from animation
-        public float blendStartTime;
-        
-        // in seconds
+        public bool shouldBlend;
         public float blendDuration;
-        public float blendWeight;
-        
         public string fromAnimation;
         public string toAnimation;
+    }
+
+    public class AnimationGraphNode
+    {
+        public string nextNode;
+        public float duration;
+
+        // Add condition or randomization data
+        public bool hasCondition;
+        public Func<bool> condition;
+
+        public bool isRandomTransition;
+        public List<string> possibleNodes;
+
+        public string GetNextNode()
+        {
+            if (hasCondition && condition != null && !condition.Invoke())
+            {
+                return null;
+            }
+
+            if (isRandomTransition && possibleNodes.Count > 0)
+            {
+                int randomIndex = Random.Range(0, possibleNodes.Count);
+                return possibleNodes[randomIndex];
+            }
+
+            return nextNode;
+        }
     }
 
     [Serializable]

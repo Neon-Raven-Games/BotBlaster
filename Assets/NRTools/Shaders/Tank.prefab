@@ -166,12 +166,7 @@ MonoBehaviour:
   enemyType: 3
   healthBar: {fileID: 808437543388219791}
   deathParticleSystem: {fileID: 4702841770219478086}
-  dashingChance: 0.003
-  dashSpeed: 20
   attackDuration: 0.4
-  chargeDuration: 0.5
-  dashDuration: 2
-  rotationSpeed: 16
   barrelTransform: {fileID: 7705767953728356000}
 --- !u!114 &8044734632165985957
 MonoBehaviour:

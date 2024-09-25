@@ -35,7 +35,10 @@ namespace GraphProcessor
 			int count = processList.Count;
 
 			for (int i = 0; i < count; i++)
+			{
+				Debug.Log(processList[i].name);
 				processList[i].OnProcess();
+			}
 		}
 	}
 }

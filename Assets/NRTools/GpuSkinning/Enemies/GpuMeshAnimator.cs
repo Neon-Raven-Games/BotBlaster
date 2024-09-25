@@ -1,5 +1,6 @@
 ﻿using System;
 using Gameplay.Enemies;
+using NRTools.Animator.NRNodes;
 using NRTools.AtlasHelper;
 using NRTools.CustomAnimator;
 using UnityEngine;
@@ -269,17 +270,11 @@ namespace NRTools.GpuSkinning
                 _transitionController.PlayAnimation(InitialAnimation());
             }
         }
-
-        // todo, this will only transition the controller to whenever we hit it.
-        // play the animation and click play to watch the transition
-        public void TransitionTo(AnimationTransitionData blend, string animator, string from, string to)
+        
+        public void TransitionTo(AnimationTransitionData blend)
         {
-            var data = AnimationManager.GetAnimationData(animator, from);
-            var todata = AnimationManager.GetAnimationData(animator, to);
-            _transitionController.SetNextAnimation(data,todata,  blend);
-
-            // data = AnimationManager.GetAnimationData(animator, to);
-            // _transitionController.SetNextAnimation(data, blend);
+            if (blend == null) return;
+            // _transitionController.Transition(blend);
         }
 
         private void HoldLastFrame()
@@ -328,18 +323,16 @@ namespace NRTools.GpuSkinning
             return null;
         }
 
+        public void PlayAnimation(AnimatorNode node)
+        {
+            _transitionController.PlayAnimation(node.data); 
+        }
         public void PlayAnimation(string animator, string animName)
         {
             _animationData = AnimationManager.GetAnimationData(animator, animName);
             _currentFrame = 0;
             _numFrames = _animationData.frameCount;
             _transitionController.PlayAnimation(_animationData);
-            // _shaderFrameIndex = -1;
-            // renderer.GetPropertyBlock(_propertyBlock);
-            // _propertyBlock.SetInt(_SFrameOffset, _animationData.vertexOffset);
-            // _propertyBlock.SetFloat(_SBlendFactor, 0f);
-            // _propertyBlock.SetFloat(_SInterpolationFactor, 0f);
-            // renderer.SetPropertyBlock(_propertyBlock);
         }
     }
 }

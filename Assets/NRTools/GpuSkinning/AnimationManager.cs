@@ -26,8 +26,24 @@ namespace NRTools.GpuSkinning
             StartCoroutine(DeserializeVertexData(vertexDataPath, AssignVertexData));
         }
 
+        public static void EDITOR_SetLooping(string animator, string animation, bool loop)
+        {
+            _lookupTable.SetLoop(animator, animation, loop);
+            EditorSerialize();
+        }
+        
+        public static void EditorSerialize()
+        {
+            var path = Path.Combine(Application.streamingAssetsPath,  "lookup_table.json");
+            var json = JsonConvert.SerializeObject(_lookupTable);
+            File.WriteAllText(path, json);
+            Debug.Log($"Serialized lookup, {_editorInstance}");
+        }
+        
+        public static AnimationManager _editorInstance;
         public void EditorDeserialize()
         {
+            _editorInstance = this;
             _lookupTable = null;
             _vertexBuffer?.Dispose();
             _vertexBuffer = null;
@@ -69,10 +85,22 @@ namespace NRTools.GpuSkinning
         public static AnimationData GetAnimationData(string enemyType, string animationName)
         {
             if (_lookupTable == null) return null;
-            
             return _lookupTable.GetAnimationData(enemyType, animationName);
         }
-
+        
+        public static List<string> GetAnimations(string animator)
+        {
+            if (_lookupTable == null) return null;
+            return _lookupTable.GetAnimationFiles(animator);
+        }
+        
+        public static List<string> GetAnimators()
+        {
+            if (_lookupTable == null) return null;
+            return _lookupTable.GetAnimators();
+        }
+        
+        
         private static void AssignLookupCallback(AnimationLookupTable lookupTable)
         {
             _lookupTable = lookupTable;
@@ -100,16 +128,17 @@ namespace NRTools.GpuSkinning
 
         public void OnDestroy()
         {
-            _vertexBuffer?.Release();
+            ReleaseBuffer();
             OnLoaded = null;
         }
 
         public void ReleaseBuffer()
         {
-            _vertexBuffer?.Release();
+            if (_vertexBuffer == null) return;
+            _vertexBuffer.Release();
             _vertexBuffer = null;
         }
-
+        
         private static IEnumerator DeserializeLookupTable(string fileName, Action<AnimationLookupTable> callback)
         {
             var path = Path.Combine(Application.streamingAssetsPath, fileName);
@@ -161,5 +190,6 @@ namespace NRTools.GpuSkinning
                 callback(vertices);
             }
         }
+
     }
 }
