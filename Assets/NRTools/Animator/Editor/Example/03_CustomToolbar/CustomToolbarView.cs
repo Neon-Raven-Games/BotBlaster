@@ -10,16 +10,22 @@ public class CustomToolbarView : ToolbarView
 {
     private readonly AnimationGraphView _animationGraphView;
     private AnimationGraph _animationGraph;
+    private ProcessGraphProcessor processor;
     public CustomToolbarView(BaseGraphView graphView) : base(graphView)
     {
         _animationGraphView = graphView as AnimationGraphView;
         _animationGraph = graphView.graph as AnimationGraph;
+        processor = new ProcessGraphProcessor(_animationGraph);
     }
 
     protected override void AddButtons()
     {
         base.AddButtons();
-        AddButton("Refresh", () => Debug.Log("todo: Reload Animation File"), left: false);
+        AddButton("Refresh", () =>
+        {
+            processor.Run();
+            Debug.Log("Processing");
+        }, left: false);
         
         bool conditionalProcessorVisible = graphView.GetPinnedElementStatus<AnimatorsElementView>() != Status.Hidden;
         AddToggle("Open Animators", conditionalProcessorVisible,
@@ -27,7 +33,11 @@ public class CustomToolbarView : ToolbarView
         
         bool animationsVisible = graphView.GetPinnedElementStatus<AnimationsElementView>() != Status.Hidden;
         AddToggle("Open Animations", animationsVisible,
-            (v) => graphView.ToggleView<AnimationsElementView>());
+            (v) =>
+            {
+                graphView.ToggleView<AnimationsElementView>();
+                
+            });
         
         // todo, these buttons do nothing
         AddButton("Save graph", () =>

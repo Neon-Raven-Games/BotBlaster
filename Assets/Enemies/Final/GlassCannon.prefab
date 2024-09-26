@@ -164,13 +164,9 @@ MonoBehaviour:
   healthBar: {fileID: 5149546694655544694}
   deathParticleSystem: {fileID: 307862527925926402}
   barrelTransform: {fileID: 7988026351725322619}
-  rotationSpeed: 16
   explodePrefab: {fileID: 866156331970592653, guid: 623197bdedaadcf4facdfbb506a17bd6, type: 3}
   strafeSpeed: 1
   strafeDistance: 4
-  targetHeight: 7.52
-  swoopSpeed: 6
-  swoopBufferDistance: 15
 --- !u!114 &8785655592681641459
 MonoBehaviour:
   m_ObjectHideFlags: 0

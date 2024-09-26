@@ -14,109 +14,190 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   serializedNodes: []
   nodes:
-  - rid: 294958803049251703
-  - rid: 294958803049251704
-  - rid: 294958803049251705
-  - rid: 294958803049251706
-  - rid: 294958814284742659
-  - rid: 294958814284742665
-  - rid: 294958814284742666
-  - rid: 294958814284742667
-  - rid: 294958814284742672
+  - rid: 294958873602949120
+  - rid: 294958873602949121
+  - rid: 294958873602949122
+  - rid: 294958873602949123
+  - rid: 294958873602949124
+  - rid: 294958890932764672
+  - rid: 294958890932764674
+  - rid: 294958890932764675
+  - rid: 294958890932764676
+  - rid: 294958890932764677
+  - rid: 294958890932764678
+  - rid: 294958890932764679
+  - rid: 294958890932764680
   edges:
-  - GUID: 9e481390-1684-429f-a8c6-269927406983
+  - GUID: 5f02cb7e-03ec-418c-98bf-f3168462b055
     owner: {fileID: 11400000}
-    inputNodeGUID: 88f2732d-d59e-4a50-b019-bca85823ca7e
-    outputNodeGUID: e1357805-6d1a-4ee2-938b-67d31f251a07
+    inputNodeGUID: dffacb5d-a073-4369-90c4-c21d237056f7
+    outputNodeGUID: 7b436bcd-cdfd-448b-8d4c-f370265379f4
     inputFieldName: inputAnimation
     outputFieldName: animationName
     inputPortIdentifier: 
     outputPortIdentifier: 
-  - GUID: 2227e43e-6067-4354-9a68-72418fc89869
+  - GUID: 35927268-7146-42f5-aa58-e0a13a4fcda2
     owner: {fileID: 11400000}
-    inputNodeGUID: 88f2732d-d59e-4a50-b019-bca85823ca7e
-    outputNodeGUID: 91e34994-95f3-4c02-8be3-eef52b24894e
+    inputNodeGUID: a1c5610d-6696-430f-866a-55ef56624974
+    outputNodeGUID: dffacb5d-a073-4369-90c4-c21d237056f7
     inputFieldName: inputAnimation
     outputFieldName: animationName
     inputPortIdentifier: 
     outputPortIdentifier: 
-  - GUID: 8333e3fa-6215-4d39-8ad9-cb2d995808c6
+  - GUID: a14a0282-27b6-4aec-8103-59d5dde4ce7f
     owner: {fileID: 11400000}
-    inputNodeGUID: 0ff65689-d0dd-4c00-b703-6be57a553fc1
-    outputNodeGUID: 88f2732d-d59e-4a50-b019-bca85823ca7e
+    inputNodeGUID: 13ad7a0c-3920-4fc1-acd0-921488c47b06
+    outputNodeGUID: a1c5610d-6696-430f-866a-55ef56624974
     inputFieldName: inputAnimation
     outputFieldName: animationName
     inputPortIdentifier: 
     outputPortIdentifier: 
-  - GUID: 92e3c96c-16d7-4856-90da-6515116dce6c
+  - GUID: 4a10454f-4046-48ce-97a4-dac2e5409da4
     owner: {fileID: 11400000}
-    inputNodeGUID: e618e67a-e2bd-4694-adeb-9ea963eaca60
-    outputNodeGUID: c8e58d43-2327-47c2-b52d-941eade7bf54
+    inputNodeGUID: dffacb5d-a073-4369-90c4-c21d237056f7
+    outputNodeGUID: d1086682-3929-4017-a454-225b7350abe3
     inputFieldName: inputAnimation
     outputFieldName: animationName
     inputPortIdentifier: 
     outputPortIdentifier: 
-  - GUID: 12966d28-3cff-474f-872a-1e3cab4c1dd7
+  - GUID: 3b92971a-cd16-464f-81e0-c6cc1b7d8c5d
     owner: {fileID: 11400000}
-    inputNodeGUID: b25421e4-b0f2-461b-81a1-86f2ba88510c
-    outputNodeGUID: e618e67a-e2bd-4694-adeb-9ea963eaca60
+    inputNodeGUID: ef2cc54c-f01c-4705-9c6e-9258b62824ad
+    outputNodeGUID: 13ad7a0c-3920-4fc1-acd0-921488c47b06
     inputFieldName: inputAnimation
     outputFieldName: animationName
     inputPortIdentifier: 
     outputPortIdentifier: 
-  - GUID: 348637f0-95ca-47fd-9a96-cd80b76d7e56
+  - GUID: 7b7239a0-ebd0-4cf1-90f3-95fdd829b311
     owner: {fileID: 11400000}
-    inputNodeGUID: a2a66a37-270e-49c4-a68e-0ed0b7b3e70d
-    outputNodeGUID: b25421e4-b0f2-461b-81a1-86f2ba88510c
+    inputNodeGUID: c76c2514-dd02-4888-91be-3dff23f21528
+    outputNodeGUID: 13ad7a0c-3920-4fc1-acd0-921488c47b06
     inputFieldName: inputAnimation
     outputFieldName: animationName
     inputPortIdentifier: 
     outputPortIdentifier: 
-  - GUID: 8a146d59-a7a8-4835-8275-0c15c7babd29
+  - GUID: 28537833-e48b-4a65-b01c-88ec223cc834
     owner: {fileID: 11400000}
-    inputNodeGUID: 1cabc780-af60-4ae4-80ae-e933535ba1c4
-    outputNodeGUID: a2a66a37-270e-49c4-a68e-0ed0b7b3e70d
+    inputNodeGUID: 3b76f9ef-7f15-4d7f-b1ae-85ecc18a4ffb
+    outputNodeGUID: 13ad7a0c-3920-4fc1-acd0-921488c47b06
+    inputFieldName: inputAnimation
+    outputFieldName: animationName
+    inputPortIdentifier: 
+    outputPortIdentifier: 
+  - GUID: bfb9b925-0904-4e72-9283-cc33f4e99196
+    owner: {fileID: 11400000}
+    inputNodeGUID: c68f932b-e1a7-4a29-9506-a21b505e324b
+    outputNodeGUID: c76c2514-dd02-4888-91be-3dff23f21528
+    inputFieldName: inputAnimation
+    outputFieldName: animationName
+    inputPortIdentifier: 
+    outputPortIdentifier: 
+  - GUID: 0d463e06-4d17-45eb-b412-12f9d034f23c
+    owner: {fileID: 11400000}
+    inputNodeGUID: c68f932b-e1a7-4a29-9506-a21b505e324b
+    outputNodeGUID: ef2cc54c-f01c-4705-9c6e-9258b62824ad
+    inputFieldName: inputAnimation
+    outputFieldName: animationName
+    inputPortIdentifier: 
+    outputPortIdentifier: 
+  - GUID: e1ddce99-e9a7-4e48-84ab-04b2cb7bb3f6
+    owner: {fileID: 11400000}
+    inputNodeGUID: c68f932b-e1a7-4a29-9506-a21b505e324b
+    outputNodeGUID: 3b76f9ef-7f15-4d7f-b1ae-85ecc18a4ffb
+    inputFieldName: inputAnimation
+    outputFieldName: animationName
+    inputPortIdentifier: 
+    outputPortIdentifier: 
+  - GUID: cdbc9d0c-df95-428d-a087-3806d6b0bac4
+    owner: {fileID: 11400000}
+    inputNodeGUID: ae7ae6e0-91a9-4bd6-a464-e151257daceb
+    outputNodeGUID: c68f932b-e1a7-4a29-9506-a21b505e324b
+    inputFieldName: inputAnimation
+    outputFieldName: animationName
+    inputPortIdentifier: 
+    outputPortIdentifier: 
+  - GUID: 96318585-5773-4abf-84ef-b0684a6e42f4
+    owner: {fileID: 11400000}
+    inputNodeGUID: 105e8fc4-1b62-4adf-8727-2d530677c9a9
+    outputNodeGUID: c68f932b-e1a7-4a29-9506-a21b505e324b
+    inputFieldName: inputAnimation
+    outputFieldName: animationName
+    inputPortIdentifier: 
+    outputPortIdentifier: 
+  - GUID: 352cdf03-f46e-46b7-8ef3-b5fa0a943497
+    owner: {fileID: 11400000}
+    inputNodeGUID: 0f295385-ad04-4090-b979-b6bb8d9efc65
+    outputNodeGUID: 105e8fc4-1b62-4adf-8727-2d530677c9a9
+    inputFieldName: inputAnimation
+    outputFieldName: animationName
+    inputPortIdentifier: 
+    outputPortIdentifier: 
+  - GUID: afcdba15-22fd-4f66-ba3f-87cd885244ae
+    owner: {fileID: 11400000}
+    inputNodeGUID: 0f295385-ad04-4090-b979-b6bb8d9efc65
+    outputNodeGUID: ae7ae6e0-91a9-4bd6-a464-e151257daceb
+    inputFieldName: inputAnimation
+    outputFieldName: animationName
+    inputPortIdentifier: 
+    outputPortIdentifier: 
+  - GUID: 5b505805-6f80-4d7a-9965-8b356f96905b
+    owner: {fileID: 11400000}
+    inputNodeGUID: bc047a4d-33ee-4359-aef6-2d6bf12a688f
+    outputNodeGUID: 0f295385-ad04-4090-b979-b6bb8d9efc65
     inputFieldName: inputAnimation
     outputFieldName: animationName
     inputPortIdentifier: 
     outputPortIdentifier: 
   groups:
-  - title: DashToShoot
-    color: {r: 0, g: 0, b: 0, a: 0.3}
+  - title: Patrol Pattern One
+    color: {r: 0.0627451, g: 0.0627451, b: 0.0627451, a: 0.3}
     position:
       serializedVersion: 2
-      x: -334.32755
-      y: -131.70753
-      width: 647
-      height: 353
+      x: 180.5823
+      y: -157.75967
+      width: 2292
+      height: 470
     size: {x: 400, y: 200}
-    innerNodeGUIDs: []
+    innerNodeGUIDs:
+    - d1086682-3929-4017-a454-225b7350abe3
+    - 7b436bcd-cdfd-448b-8d4c-f370265379f4
+    - dffacb5d-a073-4369-90c4-c21d237056f7
+    - a1c5610d-6696-430f-866a-55ef56624974
+    - 13ad7a0c-3920-4fc1-acd0-921488c47b06
+    - ef2cc54c-f01c-4705-9c6e-9258b62824ad
+    - 3b76f9ef-7f15-4d7f-b1ae-85ecc18a4ffb
+    - c76c2514-dd02-4888-91be-3dff23f21528
+    - c68f932b-e1a7-4a29-9506-a21b505e324b
+    - ae7ae6e0-91a9-4bd6-a464-e151257daceb
+    - 105e8fc4-1b62-4adf-8727-2d530677c9a9
+    - 0f295385-ad04-4090-b979-b6bb8d9efc65
+    - bc047a4d-33ee-4359-aef6-2d6bf12a688f
   stackNodes: []
   pinnedElements:
   - position:
       serializedVersion: 2
-      x: 640
-      y: 331
-      width: 507
-      height: 320
-    opened: 1
+      x: 0
+      y: 0
+      width: 150
+      height: 200
+    opened: 0
     editorType:
-      serializedType: NRTools.CustomAnimator.TransitionElementView, Assembly-CSharp-Editor,
+      serializedType: NRTools.CustomAnimator.AnimationsElementView, Assembly-CSharp-Editor,
         Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   - position:
       serializedVersion: 2
       x: 24
       y: 46
-      width: 133
-      height: 159
+      width: 150
+      height: 200
     opened: 1
     editorType:
       serializedType: NRTools.CustomAnimator.AnimatorsElementView, Assembly-CSharp-Editor,
         Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   - position:
       serializedVersion: 2
-      x: 140
-      y: 322
+      x: 74
+      y: 274
       width: 150
       height: 200
     opened: 0
@@ -125,190 +206,345 @@ MonoBehaviour:
         Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   - position:
       serializedVersion: 2
-      x: 116
-      y: 57
-      width: 143
-      height: 173
+      x: 24
+      y: 46
+      width: 150
+      height: 200
     opened: 1
     editorType:
-      serializedType: NRTools.CustomAnimator.AnimationsElementView, Assembly-CSharp-Editor,
+      serializedType: NRTools.CustomAnimator.TransitionElementView, Assembly-CSharp-Editor,
         Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   exposedParameters: []
   serializedParameterList: []
-  stickyNotes:
-  - position:
-      serializedVersion: 2
-      x: 350.37384
-      y: 92.41177
-      width: 360
-      height: 160
-    title: Conditional Loop
-    content: 
+  stickyNotes: []
   nodeInspectorReference: {fileID: 0}
-  position: {x: 798, y: 119, z: 0}
-  scale: {x: 1.15, y: 1.15, z: 1}
+  position: {x: -1329, y: 218, z: 0}
+  scale: {x: 0.8695652, y: 0.8695652, z: 1}
   references:
     version: 2
     RefIds:
-    - rid: 294958803049251703
+    - rid: 294958873602949120
       type: {class: AnimatorNode, ns: NRTools.Animator.NRNodes, asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        GUID: e1357805-6d1a-4ee2-938b-67d31f251a07
+        GUID: d1086682-3929-4017-a454-225b7350abe3
         computeOrder: 0
         position:
           serializedVersion: 2
-          x: -320
-          y: -23.599998
-          width: 152
-          height: 75
+          x: 200.99997
+          y: -25.826088
+          width: 244
+          height: 107
         expanded: 0
         debug: 0
         nodeLock: 0
         animationName: Tank_Dash_L
         inputAnimation: 
         animator: Tank
-    - rid: 294958803049251704
+        data:
+          animationName: Tank_Dash_L
+          vertexOffset: 103801
+          frameCount: 15
+          vertexCount: 1133
+          loop: 0
+        isActive: 0
+    - rid: 294958873602949121
       type: {class: AnimatorNode, ns: NRTools.Animator.NRNodes, asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        GUID: 91e34994-95f3-4c02-8be3-eef52b24894e
+        GUID: 7b436bcd-cdfd-448b-8d4c-f370265379f4
         computeOrder: 1
         position:
           serializedVersion: 2
-          x: -319.64612
-          y: 104.27044
-          width: 152
-          height: 75
-        expanded: 0
+          x: 206
+          y: 108.99998
+          width: 239
+          height: 107
+        expanded: 1
         debug: 0
         nodeLock: 0
         animationName: Tank_Dash_R
         inputAnimation: 
         animator: Tank
-    - rid: 294958803049251705
+        data:
+          animationName: Tank_Dash_R
+          vertexOffset: 120796
+          frameCount: 15
+          vertexCount: 1133
+          loop: 0
+        isActive: 0
+    - rid: 294958873602949122
       type: {class: AnimatorNode, ns: NRTools.Animator.NRNodes, asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        GUID: 88f2732d-d59e-4a50-b019-bca85823ca7e
+        GUID: dffacb5d-a073-4369-90c4-c21d237056f7
         computeOrder: 2
         position:
           serializedVersion: 2
-          x: -76.00004
-          y: 29.000006
-          width: 152
-          height: 75
-        expanded: 1
+          x: 488.5823
+          y: 55.240265
+          width: 236
+          height: 107
+        expanded: 0
         debug: 0
         nodeLock: 0
         animationName: Tank_Idle
         inputAnimation: 
         animator: Tank
-    - rid: 294958803049251706
+        data:
+          animationName: Tank_Idle
+          vertexOffset: 191042
+          frameCount: 40
+          vertexCount: 1133
+          loop: 1
+        isActive: 0
+    - rid: 294958873602949123
       type: {class: AnimatorNode, ns: NRTools.Animator.NRNodes, asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        GUID: 0ff65689-d0dd-4c00-b703-6be57a553fc1
+        GUID: a1c5610d-6696-430f-866a-55ef56624974
         computeOrder: 3
         position:
           serializedVersion: 2
-          x: 126.6575
-          y: 38
-          width: 152
-          height: 75
+          x: 746.5823
+          y: 55.240265
+          width: 239
+          height: 107
         expanded: 0
         debug: 0
         nodeLock: 0
         animationName: Tank_Shooting
         inputAnimation: 
         animator: Tank
-    - rid: 294958814284742659
+        data:
+          animationName: Tank_Shooting
+          vertexOffset: 236362
+          frameCount: 19
+          vertexCount: 1133
+          loop: 0
+        isActive: 0
+    - rid: 294958873602949124
       type: {class: AnimatorNode, ns: NRTools.Animator.NRNodes, asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        GUID: e618e67a-e2bd-4694-adeb-9ea963eaca60
-        computeOrder: 5
-        position:
-          serializedVersion: 2
-          x: 128.37393
-          y: 148.41177
-          width: 152
-          height: 75
-        expanded: 0
-        debug: 0
-        nodeLock: 0
-        animationName: Grunt_Draw_Wep
-        inputAnimation: 
-        animator: Grunt
-    - rid: 294958814284742665
-      type: {class: AnimatorNode, ns: NRTools.Animator.NRNodes, asm: Assembly-CSharp}
-      data:
-        nodeCustomName: 
-        GUID: c8e58d43-2327-47c2-b52d-941eade7bf54
+        GUID: 13ad7a0c-3920-4fc1-acd0-921488c47b06
         computeOrder: 4
         position:
           serializedVersion: 2
-          x: -80.626114
-          y: 148.41177
-          width: 152
-          height: 75
+          x: 1013.5823
+          y: 55.240265
+          width: 237
+          height: 107
         expanded: 0
         debug: 0
         nodeLock: 0
-        animationName: Grunt_Moving
+        animationName: Tank_Idle
         inputAnimation: 
-        animator: Grunt
-    - rid: 294958814284742666
+        animator: Tank
+        data:
+          animationName: Tank_Idle
+          vertexOffset: 191042
+          frameCount: 40
+          vertexCount: 1133
+          loop: 1
+        isActive: 0
+    - rid: 294958890932764672
       type: {class: AnimatorNode, ns: NRTools.Animator.NRNodes, asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        GUID: b25421e4-b0f2-461b-81a1-86f2ba88510c
+        GUID: ef2cc54c-f01c-4705-9c6e-9258b62824ad
+        computeOrder: 5
+        position:
+          serializedVersion: 2
+          x: 1284
+          y: -68.99999
+          width: 237
+          height: 107
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        animationName: Tank_HIT_M
+        inputAnimation: 
+        animator: Tank
+        data:
+          animationName: Tank_HIT_M
+          vertexOffset: 153653
+          frameCount: 18
+          vertexCount: 1133
+          loop: 1
+        isActive: 0
+    - rid: 294958890932764674
+      type: {class: AnimatorNode, ns: NRTools.Animator.NRNodes, asm: Assembly-CSharp}
+      data:
+        nodeCustomName: 
+        GUID: 3b76f9ef-7f15-4d7f-b1ae-85ecc18a4ffb
         computeOrder: 6
         position:
           serializedVersion: 2
-          x: 357.37387
-          y: 148.41177
-          width: 152
-          height: 75
+          x: 1284
+          y: 171
+          width: 223
+          height: 107
         expanded: 0
         debug: 0
         nodeLock: 0
-        animationName: Grunt_Idle
+        animationName: Tank_HIT_R
         inputAnimation: 
-        animator: Grunt
-    - rid: 294958814284742667
+        animator: Tank
+        data:
+          animationName: Tank_HIT_R
+          vertexOffset: 174047
+          frameCount: 15
+          vertexCount: 1133
+          loop: 1
+        isActive: 0
+    - rid: 294958890932764675
       type: {class: AnimatorNode, ns: NRTools.Animator.NRNodes, asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        GUID: a2a66a37-270e-49c4-a68e-0ed0b7b3e70d
+        GUID: c76c2514-dd02-4888-91be-3dff23f21528
         computeOrder: 7
         position:
           serializedVersion: 2
-          x: 542
-          y: 148.00005
-          width: 152
-          height: 75
+          x: 1284.0001
+          y: 54.999996
+          width: 234
+          height: 107
         expanded: 0
         debug: 0
         nodeLock: 0
-        animationName: Grunt_Shooting
+        animationName: Tank_HIT_L
         inputAnimation: 
-        animator: Grunt
-    - rid: 294958814284742672
+        animator: Tank
+        data:
+          animationName: Tank_HIT_L
+          vertexOffset: 137791
+          frameCount: 14
+          vertexCount: 1133
+          loop: 1
+        isActive: 0
+    - rid: 294958890932764676
       type: {class: AnimatorNode, ns: NRTools.Animator.NRNodes, asm: Assembly-CSharp}
       data:
         nodeCustomName: 
-        GUID: 1cabc780-af60-4ae4-80ae-e933535ba1c4
+        GUID: c68f932b-e1a7-4a29-9506-a21b505e324b
         computeOrder: 8
         position:
           serializedVersion: 2
-          x: 779.374
-          y: 148.41177
-          width: 152
-          height: 75
+          x: 1583.761
+          y: 55.000015
+          width: 240
+          height: 107
         expanded: 0
         debug: 0
         nodeLock: 0
-        animationName: Grunt_Hit_01
+        animationName: Tank_Idle
         inputAnimation: 
-        animator: Grunt
+        animator: Tank
+        data:
+          animationName: Tank_Idle
+          vertexOffset: 191042
+          frameCount: 40
+          vertexCount: 1133
+          loop: 1
+        isActive: 0
+    - rid: 294958890932764677
+      type: {class: AnimatorNode, ns: NRTools.Animator.NRNodes, asm: Assembly-CSharp}
+      data:
+        nodeCustomName: 
+        GUID: ae7ae6e0-91a9-4bd6-a464-e151257daceb
+        computeOrder: 9
+        position:
+          serializedVersion: 2
+          x: 1865
+          y: -15.500019
+          width: 239
+          height: 107
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        animationName: Tank_Dash_L
+        inputAnimation: 
+        animator: Tank
+        data:
+          animationName: Tank_Dash_L
+          vertexOffset: 103801
+          frameCount: 15
+          vertexCount: 1133
+          loop: 0
+        isActive: 0
+    - rid: 294958890932764678
+      type: {class: AnimatorNode, ns: NRTools.Animator.NRNodes, asm: Assembly-CSharp}
+      data:
+        nodeCustomName: 
+        GUID: 105e8fc4-1b62-4adf-8727-2d530677c9a9
+        computeOrder: 10
+        position:
+          serializedVersion: 2
+          x: 1864.9014
+          y: 135.00003
+          width: 236
+          height: 107
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        animationName: Tank_Dash_R
+        inputAnimation: 
+        animator: Tank
+        data:
+          animationName: Tank_Dash_R
+          vertexOffset: 120796
+          frameCount: 15
+          vertexCount: 1133
+          loop: 0
+        isActive: 0
+    - rid: 294958890932764679
+      type: {class: AnimatorNode, ns: NRTools.Animator.NRNodes, asm: Assembly-CSharp}
+      data:
+        nodeCustomName: 
+        GUID: 0f295385-ad04-4090-b979-b6bb8d9efc65
+        computeOrder: 11
+        position:
+          serializedVersion: 2
+          x: 2142
+          y: 55.00001
+          width: 243
+          height: 107
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        animationName: Tank_Shooting
+        inputAnimation: 
+        animator: Tank
+        data:
+          animationName: Tank_Shooting
+          vertexOffset: 236362
+          frameCount: 19
+          vertexCount: 1133
+          loop: 0
+        isActive: 1
+    - rid: 294958890932764680
+      type: {class: AnimatorNode, ns: NRTools.Animator.NRNodes, asm: Assembly-CSharp}
+      data:
+        nodeCustomName: 
+        GUID: bc047a4d-33ee-4359-aef6-2d6bf12a688f
+        computeOrder: 12
+        position:
+          serializedVersion: 2
+          x: 2410.3955
+          y: 55.00001
+          width: 236
+          height: 107
+        expanded: 0
+        debug: 0
+        nodeLock: 0
+        animationName: Tank_Idle
+        inputAnimation: 
+        animator: Tank
+        data:
+          animationName: Tank_Idle
+          vertexOffset: 191042
+          frameCount: 40
+          vertexCount: 1133
+          loop: 1
+        isActive: 0

@@ -130,14 +130,10 @@ MonoBehaviour:
   debuffs: 0
   showDamageNumbers: 1
   enemyType: 3
-  knockBackTime: 0
+  healthBar: {fileID: 0}
   deathParticleSystem: {fileID: 1876355520819786475}
-  dashingChance: 0.003
-  dashSpeed: 20
   attackDuration: 0.4
-  chargeDuration: 0.5
-  dashDuration: 2
-  rotationSpeed: 16
+  barrelTransform: {fileID: 0}
 --- !u!114 &-6151839960709358009
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -152,7 +148,62 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   textureType: 0
   enemyType: 0
-  AtlasData: []
+  AtlasData:
+  - textureType: 0
+    enemyType: 0
+    elementFlag: 32
+    sceneName: 
+    UVRect:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 0.28125
+      height: 0.28125
+    AtlasPage: 0
+  - textureType: 0
+    enemyType: 0
+    elementFlag: 2
+    sceneName: 
+    UVRect:
+      serializedVersion: 2
+      x: 0.28173828
+      y: 0
+      width: 0.28125
+      height: 0.28125
+    AtlasPage: 0
+  - textureType: 0
+    enemyType: 0
+    elementFlag: 8
+    sceneName: 
+    UVRect:
+      serializedVersion: 2
+      x: 0.56347656
+      y: 0
+      width: 0.28125
+      height: 0.28125
+    AtlasPage: 0
+  - textureType: 0
+    enemyType: 0
+    elementFlag: 4
+    sceneName: 
+    UVRect:
+      serializedVersion: 2
+      x: 0
+      y: 0.28173828
+      width: 0.28125
+      height: 0.28125
+    AtlasPage: 0
+  - textureType: 0
+    enemyType: 0
+    elementFlag: 16
+    sceneName: 
+    UVRect:
+      serializedVersion: 2
+      x: 0
+      y: 0.56347656
+      width: 0.28125
+      height: 0.28125
+    AtlasPage: 0
 --- !u!1001 &1143396302527402397
 PrefabInstance:
   m_ObjectHideFlags: 0
