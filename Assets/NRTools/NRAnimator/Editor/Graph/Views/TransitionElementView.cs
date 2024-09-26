@@ -1,5 +1,4 @@
 ﻿using GraphProcessor;
-using NRTools.Animator.GraphView;
 using NRTools.GpuSkinning;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -28,7 +27,6 @@ namespace NRTools.CustomAnimator
             // AnimationController.RaiseTransition();
         }
 
-
         protected override void Initialize(BaseGraphView graphView)
         {
             this.graphView = graphView;
@@ -51,11 +49,11 @@ namespace NRTools.CustomAnimator
             _blendDuration.RegisterValueChangedCallback(evt =>
             {
                 transition.blendDuration = evt.newValue;
-                if (_transitionData != null) UpdateUIAndRaiseSelect(_transitionData);
+                if (_transitionData != null) UpdateUIAndRaiseSelect(_transitionData, "");
             });
             scrollView.Add(_blendDuration);
 
-            _animationTransitionField = new Label($"{transition?.fromAnimation} -> {transition?.toAnimation}");
+            _animationTransitionField = new Label($"From Animation -> {transition?.toAnimation}");
             scrollView.Add(_animationTransitionField);
 
             // var previewButton = new Button(InitiateTransition) {text = "Preview Transition"};
@@ -68,12 +66,12 @@ namespace NRTools.CustomAnimator
         }
 
         private AnimationTransitionData _transitionData;
-        private void UpdateUIAndRaiseSelect(AnimationTransitionData obj)
+        private void UpdateUIAndRaiseSelect(AnimationTransitionData obj, string from)
         {
             _transitionData = obj;
             _shouldBlend.value = obj.shouldBlend;
             _blendDuration.value = obj.blendDuration;
-            _animationTransitionField.text = $"{obj.fromAnimation} -> {obj.toAnimation}";
+            _animationTransitionField.text = $"{from} -> {obj.toAnimation}";
             content.MarkDirtyRepaint();
         }
     }

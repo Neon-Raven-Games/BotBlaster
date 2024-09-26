@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using GraphProcessor;
-using NRTools.Animator.NRNodes;
 using NRTools.GpuSkinning;
 using UnityEngine;
-using AnimatorNode = NRTools.Animator.NRNodes.AnimatorNode;
+
+// system needs an instanced observer, editor code is via actions for decoupling
+// we need to separate the graphs based on the animator, but support editor reload on the fly
+//
 
 namespace NRTools.CustomAnimator
 {
@@ -41,6 +42,7 @@ namespace NRTools.CustomAnimator
                 graph.DeserializeGraph(json);
             }
 
+
             _propertyBlock = new MaterialPropertyBlock();
             renderer = GetComponent<Renderer>();
 
@@ -61,56 +63,66 @@ namespace NRTools.CustomAnimator
 
         protected internal void AnimationEnd()
         {
-            if (_transitionData != null)
+            _currentState.OnExit();
+            TransitionToNext(graph);
+        }
+
+        private void Transition(AnimationTransitionData data, AnimationData animData)
+        {
+            _transitionData = animData;
+            var nextAnimation = AnimationManager.GetAnimationData(
+                AnimationController.currentAnimator, data.toAnimation);
+
+            renderer.GetPropertyBlock(_propertyBlock);
+            _propertyBlock.SetInt(_SNextAnimationOffset, nextAnimation.vertexOffset);
+            renderer.SetPropertyBlock(_propertyBlock);
+
+            ChangeState(animData.loop ? TransitionState.Loop : TransitionState.Fallback);
+            
+            // todo, this needs to happen on interrupt, needs some timing work again
+            // if (data.blendDuration > 0) blendingState.SetNextAnimation(nextAnimation, data);
+            // else ChangeState(data.blendDuration > 0 ? TransitionState.Blending : TransitionState.Fallback);
+        }
+
+        public void TransitionToNext(RuntimeAnimationGraph graph)
+        {
+            var nextNode = graph.Traverse(out var transitionData);
+            if (nextNode != null)
             {
-                // Trigger the next animation via graph traversal
-                string currentAnim = _currentAnimationData.animationName; // Assuming animation data has a name
-                TransitionToNext(AnimationController.currentAnimator, currentAnim, graph);
+                var currentAnim = _currentAnimationData.animationName;
+                _currentAnimationData = AnimationManager.GetAnimationData(AnimationController.currentAnimator,
+                    nextNode.toNode.animationName);
+
+                if (nextNode.toNode.transitions.Count == 0)
+                {
+                    Debug.Log("Animation Sequence finished. what do?" + nextNode.toNode.animationName);
+                    ChangeState(_currentAnimationData.loop ? TransitionState.Loop : TransitionState.Fallback);
+                    return;
+                }
+
+                if (transitionData != null)
+                {
+                    Transition(transitionData, _currentAnimationData);
+                    AnimationController.RaiseTransitionSelected(transitionData,currentAnim);
+                    AnimationController.RaiseEditorAnimationChanged(nextNode.toNode.GUID);
+                }
+                else
+                {
+                    Debug.LogError("Transition data was null. Loop back to root or somthin");
+                }
             }
             else
             {
                 ChangeState(TransitionState.Ended);
             }
         }
-
-
-        // todo, we need an animator property for this controller
-        internal void Transition(AnimationTransitionData data, AnimationData animData)
+        
+        public void PreviewSequence(string animationName)
         {
-            _transitionData = animData;
-            var blendingState = (BlendingTransition) _transitionStates[TransitionState.Blending];
-            var nextAnimation =
-                AnimationManager.GetAnimationData(AnimationController.currentAnimator, data.toAnimation);
-
-            renderer.GetPropertyBlock(_propertyBlock);
-            _propertyBlock.SetInt(_SNextAnimationOffset, nextAnimation.vertexOffset);
-            renderer.SetPropertyBlock(_propertyBlock);
-
-            if (data.blendDuration > 0) blendingState.SetNextAnimation(nextAnimation, data);
-            ChangeState(data.blendDuration > 0 ? TransitionState.Blending : TransitionState.Fallback);
-        }
-
-
-        public void StartAtNode(AnimatorNode node)
-        {
-            var animNode = graph.Traverse(AnimationController.currentAnimator, node.animationName, node.transitionsTo.Keys.First());
-            PlayAnimation(animNode.data);
-        }
-
-        public void TransitionToNext(string currentNode, string currentAnim, RuntimeAnimationGraph graph)
-        {
-            var nextNode = graph.Traverse(AnimationController.currentAnimator, currentNode, currentAnim);
-
-            if (nextNode != null)
-            {
-                var nextAnimationData =
-                    AnimationManager.GetAnimationData(AnimationController.currentAnimator, nextNode.animationName);
-                Transition(nextNode.transitionsTo[currentAnim], nextAnimationData);
-            }
-            else
-            {
-                Debug.LogWarning("No valid transition found.");
-            }
+            graph.SetNode(animationName);
+            _currentAnimationData = AnimationManager.GetAnimationData(AnimationController.currentAnimator,
+                graph.GetCurrentNode().animationName);
+            PlayAnimation(_currentAnimationData, TransitionState.Fallback);
         }
 
         public void PlayAnimation(AnimationData animationData, TransitionState initialState = TransitionState.Loop)
@@ -139,21 +151,6 @@ namespace NRTools.CustomAnimator
             renderer.GetPropertyBlock(_propertyBlock);
             _currentState?.UpdateState(renderer, _propertyBlock, deltaSeconds);
             renderer.SetPropertyBlock(_propertyBlock);
-        }
-
-        public void SetNextAnimation(AnimationData currentAnimation, AnimationData nextAnimation,
-            AnimationTransitionData data)
-        {
-            if (_currentState.state == TransitionState.Blending) return;
-
-            var blendingState = (BlendingTransition) _transitionStates[TransitionState.Blending];
-
-            renderer.GetPropertyBlock(_propertyBlock);
-            _propertyBlock.SetInt(_SNextAnimationOffset, nextAnimation.vertexOffset);
-            renderer.SetPropertyBlock(_propertyBlock);
-            _currentAnimationData = currentAnimation;
-            blendingState.SetNextAnimation(nextAnimation, data);
-            ChangeState(TransitionState.Blending);
         }
     }
 }

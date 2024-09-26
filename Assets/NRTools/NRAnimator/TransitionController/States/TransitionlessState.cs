@@ -35,7 +35,11 @@ namespace NRTools.CustomAnimator
         public override void UpdateState(Renderer renderer, MaterialPropertyBlock propertyBlock, float seconds)
         {
             base.UpdateState(renderer, propertyBlock, seconds);
-            if (currentFrame >= numFrames - 2) controller.ChangeState(TransitionState.Ended);
+            if (currentFrame >= numFrames - 2)
+            {
+                Debug.Log("Calling end from tranistionless state");
+                controller.ChangeState(TransitionState.Ended);
+            }
         }
     }
 }

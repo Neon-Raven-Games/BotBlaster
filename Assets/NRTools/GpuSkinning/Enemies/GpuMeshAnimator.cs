@@ -129,6 +129,7 @@ namespace NRTools.GpuSkinning
         public void SetUninitialized() => _initialized = false;
 
 #if UNITY_EDITOR
+        [ExecuteAlways]
         private void OnDrawGizmos()
         {
             if (Application.isPlaying) return;
@@ -186,6 +187,7 @@ namespace NRTools.GpuSkinning
         public void EditorUpdate(float seconds)
         {
             if (!_initialized) return;
+            
             _transitionController.EditorUpdate(seconds);
             return;
             _currentFrame = seconds * 24f;
@@ -206,10 +208,13 @@ namespace NRTools.GpuSkinning
             renderer.SetPropertyBlock(_propertyBlock);
         }
 
+        // we need to load in the transition controller with the proper graph
         public virtual void Update()
         {
             if (!_initialized) return;
-
+            EditorUpdate(Time.deltaTime);
+            return;
+            
             _currentFrame += Time.deltaTime * animationSpeed;
             var frame0 = Mathf.FloorToInt(_currentFrame);
             var t = _currentFrame - frame0;
@@ -325,7 +330,8 @@ namespace NRTools.GpuSkinning
 
         public void PlayAnimation(AnimatorNode node)
         {
-            _transitionController.PlayAnimation(node.data); 
+            // _transitionController.PlayAnimation(node.data); 
+            _transitionController.PreviewSequence(node.GUID); 
         }
         public void PlayAnimation(string animator, string animName)
         {

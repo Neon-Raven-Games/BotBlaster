@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using GraphProcessor;
-using NRTools.CustomAnimator;
 using NRTools.GpuSkinning;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace NRTools.Animator.NRNodes
@@ -14,7 +13,6 @@ namespace NRTools.Animator.NRNodes
         public string animationName;
         public override string name => animationName;
 
-
         [Input(name = "Input", allowMultiple = true)]
         public string inputAnimation;
 
@@ -22,8 +20,8 @@ namespace NRTools.Animator.NRNodes
 
         public AnimationData data;
         public Dictionary<string, AnimationTransitionData> transitionsTo = new();
+        public bool isActive;
 
-        
         public void AddTransition(string fromAnim, AnimationTransitionData transitionData)
         {
             if (transitionsTo.ContainsKey(fromAnim))

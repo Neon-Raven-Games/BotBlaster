@@ -74,19 +74,24 @@ namespace NRTools.CustomAnimator
 
             blendProgress = Mathf.Clamp01(blend);
 
-            if (1 - blendProgress < 0.001 || currentFrame >= numFrames)
+            if (blendProgress >= 0.9 || currentFrame >= numFrames - 2)
             {
-                controller.PlayAnimation(_nextAnimation,
-                    _looping ? TransitionState.Loop : TransitionState.Transitionless);
+                currentFrame = 0;
+                controller.AnimationEnd();
                 
                 propertyBlock.SetFloat(_SBlendFactor, 0f);
                 renderer.SetPropertyBlock(propertyBlock);
                 active = false;
+                Debug.Log("Calling end in blend");
                 return;
             }
             
             propertyBlock.SetFloat(_SBlendFactor, blendProgress);
-            base.UpdateState(renderer, propertyBlock, seconds);
+            
+            currentFrame += seconds * 24f;
+            var frame0 = Mathf.FloorToInt(currentFrame);
+            var t = currentFrame - frame0;
+            OverwriteFrameOffset(propertyBlock, frame0, t);
         }
     }
 }

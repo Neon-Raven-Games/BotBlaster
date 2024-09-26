@@ -21,7 +21,11 @@ namespace NRTools.CustomAnimator
             var frame0 = Mathf.FloorToInt(currentFrame);
             var t = currentFrame - frame0;
             OverwriteFrameOffset(propertyBlock, frame0, t);
-            if (currentFrame >= numFrames - 1) controller.AnimationEnd();
+            if (currentFrame >= numFrames - 1)
+            {
+                
+                controller.AnimationEnd();
+            }
         }
     }
 }

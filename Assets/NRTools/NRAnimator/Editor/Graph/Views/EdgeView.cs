@@ -34,19 +34,10 @@ namespace GraphProcessor
             UpdateEdgeSize();
             if (input != null && output != null)
             {
-                var fromAnim = "";
-                if ((output as PortView).owner.nodeTarget is AnimatorNode animNode)
-                {
-                    fromAnim = animNode.animationName;
-                }
-
-                var toAnim = "";
-
-                if ((input as PortView).owner.nodeTarget is AnimatorNode outNode)
-                {
-                    toAnim = outNode.animationName;
-                }
-
+                var animNode = (output as PortView).owner.nodeTarget as AnimatorNode;
+                var fromAnim = animNode?.animationName;
+                var outNode = (input as PortView).owner.nodeTarget as AnimatorNode;
+                var toAnim = outNode?.animationName;
 
                 if (transition == null)
                 {
@@ -54,15 +45,16 @@ namespace GraphProcessor
                     {
                         blendDuration = 0.5f,
                         shouldBlend = true,
-                        fromAnimation = fromAnim,
                         toAnimation = toAnim,
                     };
                 }
 
-                AnimationController.RaiseTransitionSelected(transition);
-                var next = output as PortView;
-                var nextTransition = next?.owner.nodeTarget as AnimatorNode;
-                nextTransition?.AddTransition(fromAnim, transition);
+                if (animNode != null)
+                {
+                    animNode.AddTransition(toAnim, transition);
+                }
+
+                AnimationController.RaiseTransitionSelected(transition, fromAnim);
             }
         }
 
@@ -91,19 +83,10 @@ namespace GraphProcessor
             {
                 if (input != null && output != null)
                 {
-                    var fromAnim = "";
-                    if ((output as PortView).owner.nodeTarget is AnimatorNode animNode)
-                    {
-                        fromAnim = animNode.animationName;
-                    }
-
-                    var toAnim = "";
-
-                    if ((input as PortView).owner.nodeTarget is AnimatorNode outNode)
-                    {
-                        toAnim = outNode.animationName;
-                    }
-
+                    var animNode = (output as PortView).owner.nodeTarget as AnimatorNode;
+                    var fromAnim = animNode?.animationName;
+                    var outNode = (input as PortView).owner.nodeTarget as AnimatorNode;
+                    var toAnim = outNode?.animationName;
 
                     if (transition == null)
                     {
@@ -111,15 +94,16 @@ namespace GraphProcessor
                         {
                             blendDuration = 0.5f,
                             shouldBlend = true,
-                            fromAnimation = fromAnim,
                             toAnimation = toAnim,
                         };
                     }
 
-                    AnimationController.RaiseTransitionSelected(transition);
-                    var next = output as PortView;
-                    var nextTransition = next?.owner.nodeTarget as AnimatorNode;
-                    nextTransition?.AddTransition(fromAnim, transition);
+                    if (animNode != null)
+                    {
+                        animNode.AddTransition(toAnim, transition);
+                    }
+
+                    AnimationController.RaiseTransitionSelected(transition, fromAnim);
                 }
             }
 

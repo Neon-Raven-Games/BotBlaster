@@ -102,7 +102,7 @@ public class AnimationPreviewWindow : EditorWindow
         _meshAnimator = null;
         AnimationController.OnAnimatorChanged -= OnAnimatorChanged;
         AnimationController.OnAnimationChanged -= OnAnimationChanged;
-        AnimationController.OnTransition -= OnPreviewTransition;
+        // AnimationController.OnTransition -= OnPreviewTransition;
     }
 
     private void OnEnable()
@@ -126,7 +126,7 @@ public class AnimationPreviewWindow : EditorWindow
 
         AnimationController.OnAnimatorChanged += OnAnimatorChanged;
         AnimationController.OnAnimationChanged += OnAnimationChanged;
-        AnimationController.OnTransition += OnPreviewTransition;
+        // AnimationController.OnTransition += OnPreviewTransition;
         AssemblyReloadEvents.afterAssemblyReload += OnAfterAssemblyReload;
         AssemblyReloadEvents.beforeAssemblyReload += OnBeforeAssemblyReload;
     }

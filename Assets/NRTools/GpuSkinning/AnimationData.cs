@@ -65,7 +65,6 @@ namespace NRTools.GpuSkinning
     {
         public bool shouldBlend;
         public float blendDuration;
-        public string fromAnimation;
         public string toAnimation;
     }
 

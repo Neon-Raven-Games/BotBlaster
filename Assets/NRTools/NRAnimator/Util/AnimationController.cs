@@ -6,13 +6,8 @@ using UnityEngine;
 
 namespace NRTools.CustomAnimator
 {
-    
-    // todo,
-    // this is for the editor code
-    // we can populate this stuff with our lookup data, but this is to have finer control during debugging
     public class AnimationController : MonoBehaviour
     {
-        // todo, we need to have some data that lets us set up all that animation jazz
         public GameObject tankPrefab;
         public GameObject gruntPrefab;
         public GameObject glassCannonPrefab;
@@ -20,28 +15,17 @@ namespace NRTools.CustomAnimator
         public GameObject blasterPrefab;
         
         public static AnimationController instance;
-        
         public static string currentAnimator = "Tank";
-        private static event Action onLoaded;
-        public static event Action OnLoaded
-        {
-            add
-            {
-                onLoaded += value;
-            }
-            remove
-            {
-                onLoaded -= value;
-            }
-        }
-
-        public static event Action<AnimationTransitionData> OnTransitionSelected;
+        public static event Action OnLoaded;
+        public static event Action<AnimationTransitionData, string> OnTransitionSelected;
+        public static event Action<string> OnEditorAnimationChanged;
         public static event Action<List<string>> OnAnimatorChanged;
         public static event Action<AnimatorNode> OnAnimationChanged;
         public static event Action<AnimatorNode> OnTransition;
         public static bool IsLoaded;
-        public static void RaiseTransitionSelected(AnimationTransitionData data) => OnTransitionSelected?.Invoke(data);
+        public static void RaiseTransitionSelected(AnimationTransitionData data, string from) => OnTransitionSelected?.Invoke(data, from);
         public static void RaiseAnimationChanged(AnimatorNode animation) => OnAnimationChanged?.Invoke(animation);
+        public static void RaiseEditorAnimationChanged(string guid) => OnEditorAnimationChanged?.Invoke(guid);
         public static void RaiseTransition(AnimatorNode data) => 
             OnTransition?.Invoke(data);
         public static List<string> GetAnimations(string animator)
@@ -80,7 +64,7 @@ namespace NRTools.CustomAnimator
 
         public static void RaiseOnLoaded()
         {
-            onLoaded?.Invoke();
+            OnLoaded?.Invoke();
             IsLoaded = true;
         }
     }

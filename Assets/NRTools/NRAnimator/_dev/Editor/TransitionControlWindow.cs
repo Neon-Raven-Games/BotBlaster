@@ -30,7 +30,7 @@ namespace NRTools.CustomAnimator
             _drawing = true;
         }
 
-        private void OnTransitionSelected(AnimationTransitionData data)
+        private void OnTransitionSelected(AnimationTransitionData data, string from)
         {
             _transitionData = data;
             if (data == null)
@@ -39,7 +39,7 @@ namespace NRTools.CustomAnimator
                 return;
             }
 
-            _fromAnimation = AnimationManager.GetAnimationData(AnimationController.currentAnimator, data.fromAnimation);
+            _fromAnimation = AnimationManager.GetAnimationData(AnimationController.currentAnimator, from);
             _toAnimation = AnimationManager.GetAnimationData(AnimationController.currentAnimator , data.toAnimation);
             _drawing = true;
             Repaint();
